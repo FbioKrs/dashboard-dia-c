@@ -7,11 +7,13 @@
 
 <title>Dia C | Dashboard</title>
 
-<!-- Chart.js -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- =====================================================
+     BIBLIOTECAS LOCAIS
+===================================================== -->
 
-<!-- Plugin para exibir os valores nas barras -->
-<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+<script src="./js/chart.umd.min.js"></script>
+<script src="./js/chartjs-plugin-datalabels.min.js"></script>
+
 
 <style>
 
@@ -73,6 +75,7 @@ body {
 .logo-mark {
     width: 54px;
     height: 54px;
+
     border-radius: 14px;
 
     background: rgba(255,255,255,.10);
@@ -118,7 +121,9 @@ body {
 .status-dot {
     width: 8px;
     height: 8px;
+
     border-radius: 50%;
+
     background: #68d391;
 }
 
@@ -156,19 +161,25 @@ body {
 .cards {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
+
     gap: 18px;
+
     margin-bottom: 24px;
 }
 
 .card {
     background: var(--surface);
+
     border-radius: 16px;
+
     padding: 22px 24px;
 
     border: 1px solid var(--border);
 
     display: flex;
+
     justify-content: space-between;
+
     align-items: center;
 
     min-height: 135px;
@@ -181,22 +192,31 @@ body {
 
 .card-title {
     color: var(--muted);
+
     font-size: 12px;
+
     font-weight: 700;
+
     text-transform: uppercase;
+
     letter-spacing: .6px;
 }
 
 .card-value {
     font-size: 42px;
+
     font-weight: 700;
+
     line-height: 1;
+
     margin-top: 14px;
 }
 
 .card-description {
     margin-top: 8px;
+
     color: var(--muted);
+
     font-size: 12px;
 }
 
@@ -208,10 +228,13 @@ body {
 .card-icon {
     width: 58px;
     height: 58px;
+
     border-radius: 16px;
 
     display: flex;
+
     align-items: center;
+
     justify-content: center;
 
     font-size: 25px;
@@ -251,15 +274,21 @@ body {
 
 .dashboard-grid {
     display: grid;
+
     grid-template-columns: 2fr 1fr;
+
     gap: 18px;
+
     margin-bottom: 24px;
 }
 
 .panel {
     background: var(--surface);
+
     border-radius: 16px;
+
     border: 1px solid var(--border);
+
     padding: 22px 24px;
 }
 
@@ -269,19 +298,45 @@ body {
 
 .panel-title {
     margin: 0;
+
     font-size: 16px;
+
     font-weight: 700;
 }
 
 .panel-subtitle {
     margin: 5px 0 0;
+
     color: var(--muted);
+
     font-size: 12px;
 }
 
 .chart-container {
     position: relative;
+
     height: 360px;
+}
+
+
+/* MENSAGEM DE ERRO DO GRÁFICO */
+
+.chart-error {
+    height: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    text-align: center;
+
+    color: var(--muted);
+
+    font-size: 13px;
+
+    padding: 30px;
 }
 
 
@@ -295,11 +350,13 @@ body {
 
 .table-container {
     width: 100%;
+
     overflow-x: auto;
 }
 
 table {
     width: 100%;
+
     border-collapse: collapse;
 }
 
@@ -309,18 +366,23 @@ thead {
 
 th {
     padding: 13px 14px;
+
     text-align: center;
 
     color: var(--muted);
 
     font-size: 11px;
+
     font-weight: 700;
+
     text-transform: uppercase;
+
     letter-spacing: .5px;
 }
 
 td {
     padding: 15px 14px;
+
     text-align: center;
 
     border-bottom: 1px solid #eef0f2;
@@ -338,12 +400,15 @@ tbody tr:hover {
 
 .parceira {
     display: inline-block;
+
     background: #f0f2f4;
+
     border-radius: 20px;
 
     padding: 5px 12px;
 
     font-weight: 600;
+
     font-size: 12px;
 }
 
@@ -354,8 +419,11 @@ tbody tr:hover {
 
 .footer {
     color: var(--muted);
+
     font-size: 11px;
+
     text-align: center;
+
     padding-bottom: 15px;
 }
 
@@ -394,6 +462,7 @@ tbody tr:hover {
 }
 
 </style>
+
 </head>
 
 
@@ -416,7 +485,9 @@ tbody tr:hover {
 
         <div>
 
-            <h1>Dia C</h1>
+            <h1>
+                Dia C
+            </h1>
 
             <p>
                 Acompanhamento das Execuções
@@ -485,7 +556,9 @@ tbody tr:hover {
             <div
                 class="card-value"
                 id="totalEquipes">
+
                 -
+
             </div>
 
             <div class="card-description">
@@ -493,6 +566,7 @@ tbody tr:hover {
             </div>
 
         </div>
+
 
         <div class="card-icon">
             👥
@@ -512,7 +586,9 @@ tbody tr:hover {
             <div
                 class="card-value"
                 id="totalProgramacoes">
+
                 -
+
             </div>
 
             <div class="card-description">
@@ -520,6 +596,7 @@ tbody tr:hover {
             </div>
 
         </div>
+
 
         <div class="card-icon">
             ✓
@@ -539,7 +616,9 @@ tbody tr:hover {
             <div
                 class="card-value"
                 id="totalLigacoes">
+
                 -
+
             </div>
 
             <div class="card-description">
@@ -547,6 +626,7 @@ tbody tr:hover {
             </div>
 
         </div>
+
 
         <div class="card-icon">
             ⚡
@@ -580,11 +660,12 @@ tbody tr:hover {
 
         </div>
 
-        <div class="chart-container">
 
-            <canvas
-                id="graficoEvolucao">
-            </canvas>
+        <div
+            class="chart-container"
+            id="containerGraficoEvolucao">
+
+            <canvas id="graficoEvolucao"></canvas>
 
         </div>
 
@@ -607,11 +688,12 @@ tbody tr:hover {
 
         </div>
 
-        <div class="chart-container">
 
-            <canvas
-                id="graficoParceiras">
-            </canvas>
+        <div
+            class="chart-container"
+            id="containerGraficoParceiras">
+
+            <canvas id="graficoParceiras"></canvas>
 
         </div>
 
@@ -638,6 +720,7 @@ tbody tr:hover {
 
     </div>
 
+
     <div class="table-container">
 
         <table>
@@ -646,9 +729,13 @@ tbody tr:hover {
 
                 <tr>
 
-                    <th>Data</th>
+                    <th>
+                        Data
+                    </th>
 
-                    <th>Parceira</th>
+                    <th>
+                        Parceira
+                    </th>
 
                     <th>
                         Equipes Mobilizadas
@@ -665,6 +752,7 @@ tbody tr:hover {
                 </tr>
 
             </thead>
+
 
             <tbody id="tabelaDados">
             </tbody>
@@ -690,18 +778,14 @@ tbody tr:hover {
 
 
 /* =========================================================
-   REGISTRAR PLUGIN DE RÓTULOS
+   VARIÁVEIS
 ========================================================= */
 
-Chart.register(ChartDataLabels);
+let grafico = null;
 
+let graficoParceiras = null;
 
-/* =========================================================
-   GRÁFICOS
-========================================================= */
-
-let grafico;
-let graficoParceiras;
+let pluginDataLabelsDisponivel = false;
 
 
 /* =========================================================
@@ -719,7 +803,81 @@ const corLigacoes =
 
 
 /* =========================================================
-   CONVERTER VALORES NUMÉRICOS
+   VERIFICAR CHART.JS
+========================================================= */
+
+/*
+O dashboard NÃO depende desta etapa
+para carregar cards e tabela.
+
+Se Chart.js apresentar qualquer problema,
+os demais componentes continuam funcionando.
+*/
+
+if (typeof Chart !== "undefined") {
+
+    console.log(
+        "Chart.js carregado com sucesso."
+    );
+
+
+    /*
+    Registra DataLabels somente
+    se o plugin também estiver disponível.
+    */
+
+    if (
+        typeof ChartDataLabels !==
+        "undefined"
+    ) {
+
+        try {
+
+            Chart.register(
+                ChartDataLabels
+            );
+
+            pluginDataLabelsDisponivel =
+                true;
+
+            console.log(
+                "ChartDataLabels carregado com sucesso."
+            );
+
+        }
+
+        catch (erro) {
+
+            console.warn(
+                "Não foi possível registrar ChartDataLabels:",
+                erro
+            );
+
+        }
+
+    }
+
+    else {
+
+        console.warn(
+            "ChartDataLabels não está disponível."
+        );
+
+    }
+
+}
+
+else {
+
+    console.error(
+        "Chart.js não foi carregado."
+    );
+
+}
+
+
+/* =========================================================
+   CONVERTER NÚMEROS
 ========================================================= */
 
 function numero(valor) {
@@ -734,10 +892,13 @@ function numero(valor) {
 
     }
 
+
     return Number(
 
         String(valor)
+
             .replace(/\./g, "")
+
             .replace(",", ".")
 
     ) || 0;
@@ -749,63 +910,73 @@ function numero(valor) {
    CONVERTER DATA
 ========================================================= */
 
-/*
-Aceita diferentes formatos vindos do Excel/JSON:
-
-20/06/2026
-20/06/2026 00:00:00
-2026-06-20
-2026-06-20T00:00:00
-número serial do Excel
-
-A função sempre retorna um objeto Date.
-*/
-
 function converterData(valor) {
+
 
     if (
         valor === null ||
         valor === undefined ||
         valor === ""
     ) {
+
         return null;
+
     }
 
 
-    /* -----------------------------------------
-       DATA SERIAL DO EXCEL
-    ----------------------------------------- */
+    /*
+    ==========================================
+    SERIAL DO EXCEL
+    ==========================================
+    */
 
     if (
+
         typeof valor === "number" ||
-        /^\d+(\.\d+)?$/.test(String(valor).trim())
+
+        /^\d+(\.\d+)?$/
+            .test(
+                String(valor).trim()
+            )
+
     ) {
 
-        const serial = Number(valor);
 
-        /*
-        Datas modernas do Excel normalmente
-        possuem serial superior a 20.000.
-        */
+        const serial =
+            Number(valor);
+
 
         if (serial > 20000) {
+
 
             const dias =
                 Math.floor(serial);
 
+
             const dataUTC =
                 new Date(
+
                     Date.UTC(
+
                         1899,
+
                         11,
+
                         30 + dias
+
                     )
+
                 );
 
+
             return new Date(
+
                 dataUTC.getUTCFullYear(),
+
                 dataUTC.getUTCMonth(),
+
                 dataUTC.getUTCDate()
+
             );
 
         }
@@ -817,59 +988,83 @@ function converterData(valor) {
         String(valor).trim();
 
 
-    /* -----------------------------------------
-       FORMATO DD/MM/YYYY
-    ----------------------------------------- */
+    /*
+    ==========================================
+    DD/MM/YYYY
+    ==========================================
+    */
 
     const brasileiro =
         texto.match(
+
             /^(\d{1,2})\/(\d{1,2})\/(\d{4})/
+
         );
 
 
     if (brasileiro) {
 
+
         return new Date(
 
-            Number(brasileiro[3]),
+            Number(
+                brasileiro[3]
+            ),
 
-            Number(brasileiro[2]) - 1,
+            Number(
+                brasileiro[2]
+            ) - 1,
 
-            Number(brasileiro[1])
+            Number(
+                brasileiro[1]
+            )
 
         );
 
     }
 
 
-    /* -----------------------------------------
-       FORMATO YYYY-MM-DD
-    ----------------------------------------- */
+    /*
+    ==========================================
+    YYYY-MM-DD
+    ==========================================
+    */
 
     const iso =
         texto.match(
+
             /^(\d{4})-(\d{1,2})-(\d{1,2})/
+
         );
 
 
     if (iso) {
 
+
         return new Date(
 
-            Number(iso[1]),
+            Number(
+                iso[1]
+            ),
 
-            Number(iso[2]) - 1,
+            Number(
+                iso[2]
+            ) - 1,
 
-            Number(iso[3])
+            Number(
+                iso[3]
+            )
 
         );
 
     }
 
 
-    /* -----------------------------------------
-       ÚLTIMA TENTATIVA
-    ----------------------------------------- */
+    /*
+    ==========================================
+    ÚLTIMA TENTATIVA
+    ==========================================
+    */
 
     const data =
         new Date(texto);
@@ -892,15 +1087,27 @@ function converterData(valor) {
 
 
 /* =========================================================
-   FORMATAR DATA DD/MMM/YYYY
+   FORMATAR DATA
 ========================================================= */
+
+/*
+Resultado:
+
+20/jun/2026
+27/jun/2026
+19/set/2026
+*/
 
 function formatarData(valor) {
 
+
     const data =
+
         valor instanceof Date
-            ? valor
-            : converterData(valor);
+
+        ? valor
+
+        : converterData(valor);
 
 
     if (!data) {
@@ -929,67 +1136,97 @@ function formatarData(valor) {
 
 
     const dia =
+
         String(
             data.getDate()
-        ).padStart(
+        )
+
+        .padStart(
             2,
             "0"
         );
 
 
     const mes =
+
         meses[
             data.getMonth()
         ];
 
 
     const ano =
+
         data.getFullYear();
 
 
-    return `${dia}/${mes}/${ano}`;
+    return (
+
+        dia +
+        "/" +
+        mes +
+        "/" +
+        ano
+
+    );
 
 }
 
 
 /* =========================================================
-   ORDENAR DADOS POR DATA
+   ORDENAR CRONOLOGICAMENTE
 ========================================================= */
 
 function ordenarPorData(dados) {
 
+
     return [...dados].sort(
 
-        (a, b) => {
+        function(a, b) {
+
 
             const dataA =
-                converterData(a.DATA);
+                converterData(
+                    a.DATA
+                );
+
 
             const dataB =
-                converterData(b.DATA);
+                converterData(
+                    b.DATA
+                );
 
 
             /*
-            Caso alguma linha possua uma data inválida,
-            ela será enviada para o final.
+            Datas inválidas ficam
+            no final.
             */
 
             if (!dataA && !dataB) {
+
                 return 0;
+
             }
+
 
             if (!dataA) {
+
                 return 1;
+
             }
 
+
             if (!dataB) {
+
                 return -1;
+
             }
 
 
             return (
+
                 dataA.getTime() -
                 dataB.getTime()
+
             );
 
         }
@@ -1000,22 +1237,26 @@ function ordenarPorData(dados) {
 
 
 /* =========================================================
-   CARREGAR JSON
+   CARREGAR DADOS
 ========================================================= */
 
 async function carregarDados() {
 
+
     try {
 
+
         /*
-        Timestamp para evitar utilização
-        de dados.json antigo em cache.
+        Timestamp evita cache
+        do dados.json.
         */
 
         const response =
+
             await fetch(
 
                 "./dados.json?t=" +
+
                 new Date().getTime()
 
             );
@@ -1023,45 +1264,136 @@ async function carregarDados() {
 
         if (!response.ok) {
 
+
             throw new Error(
-                "Erro ao carregar dados.json"
+
+                "Erro HTTP " +
+                response.status +
+                " ao carregar dados.json"
+
             );
 
         }
 
 
         const dadosOriginais =
+
             await response.json();
 
 
         /*
-        Ordenação cronológica aplicada
-        antes de atualizar os elementos.
+        Segurança adicional:
+        verifica se o JSON realmente
+        contém um array.
+        */
+
+        if (
+            !Array.isArray(
+                dadosOriginais
+            )
+        ) {
+
+
+            throw new Error(
+
+                "dados.json não contém um array válido."
+
+            );
+
+        }
+
+
+        /*
+        Ordenação cronológica.
         */
 
         const dados =
+
             ordenarPorData(
                 dadosOriginais
             );
 
 
-        atualizarCards(dados);
+        /*
+        =================================================
+        ESTES COMPONENTES NÃO DEPENDEM DO CHART.JS
+        =================================================
+        */
 
-        atualizarTabela(dados);
-
-        atualizarGrafico(dados);
-
-        atualizarGraficoParceiras(dados);
+        atualizarCards(
+            dados
+        );
 
 
-        /* HORÁRIO DA CONSULTA */
+        atualizarTabela(
+            dados
+        );
+
+
+        /*
+        =================================================
+        GRÁFICOS
+        =================================================
+        */
+
+        if (
+            typeof Chart !==
+            "undefined"
+        ) {
+
+
+            try {
+
+                atualizarGrafico(
+                    dados
+                );
+
+            }
+
+            catch (erroGrafico) {
+
+                console.error(
+                    "Erro no gráfico de evolução:",
+                    erroGrafico
+                );
+
+            }
+
+
+            try {
+
+                atualizarGraficoParceiras(
+                    dados
+                );
+
+            }
+
+            catch (erroGraficoParceiras) {
+
+                console.error(
+                    "Erro no gráfico por parceira:",
+                    erroGraficoParceiras
+                );
+
+            }
+
+        }
+
+
+        /*
+        =================================================
+        HORÁRIO DA ÚLTIMA CONSULTA
+        =================================================
+        */
 
         const agora =
             new Date();
 
 
         document
-            .getElementById("status")
+            .getElementById(
+                "status"
+            )
             .textContent =
 
             "Última atualização: " +
@@ -1075,11 +1407,17 @@ async function carregarDados() {
 
     catch (erro) {
 
-        console.error(erro);
+
+        console.error(
+            "Erro ao carregar dados:",
+            erro
+        );
 
 
         document
-            .getElementById("status")
+            .getElementById(
+                "status"
+            )
             .textContent =
 
             "Erro ao carregar os dados";
@@ -1095,51 +1433,78 @@ async function carregarDados() {
 
 function atualizarCards(dados) {
 
-    let equipes = 0;
 
-    let programacoes = 0;
+    let equipes =
+        0;
 
-    let ligacoes = 0;
+    let programacoes =
+        0;
 
-
-    dados.forEach(item => {
-
-        equipes +=
-            numero(
-                item.EQUIPES_MOBILIZADAS
-            );
+    let ligacoes =
+        0;
 
 
-        programacoes +=
-            numero(
-                item.PROGRAMACOES_EXECUTADAS
-            );
+    dados.forEach(
+
+        function(item) {
 
 
-        ligacoes +=
-            numero(
-                item.LIGACOES_EXECUTADAS
-            );
+            equipes +=
 
-    });
+                numero(
+                    item.EQUIPES_MOBILIZADAS
+                );
+
+
+            programacoes +=
+
+                numero(
+                    item.PROGRAMACOES_EXECUTADAS
+                );
+
+
+            ligacoes +=
+
+                numero(
+                    item.LIGACOES_EXECUTADAS
+                );
+
+        }
+
+    );
 
 
     document
-        .getElementById("totalEquipes")
+        .getElementById(
+            "totalEquipes"
+        )
         .textContent =
-        equipes.toLocaleString("pt-BR");
+
+        equipes.toLocaleString(
+            "pt-BR"
+        );
 
 
     document
-        .getElementById("totalProgramacoes")
+        .getElementById(
+            "totalProgramacoes"
+        )
         .textContent =
-        programacoes.toLocaleString("pt-BR");
+
+        programacoes.toLocaleString(
+            "pt-BR"
+        );
 
 
     document
-        .getElementById("totalLigacoes")
+        .getElementById(
+            "totalLigacoes"
+        )
         .textContent =
-        ligacoes.toLocaleString("pt-BR");
+
+        ligacoes.toLocaleString(
+            "pt-BR"
+        );
 
 }
 
@@ -1150,69 +1515,88 @@ function atualizarCards(dados) {
 
 function atualizarTabela(dados) {
 
+
     const tabela =
+
         document.getElementById(
             "tabelaDados"
         );
 
 
-    tabela.innerHTML = "";
+    tabela.innerHTML =
+        "";
 
 
-    dados.forEach(item => {
+    dados.forEach(
 
-        const linha =
-            document.createElement("tr");
-
-
-        linha.innerHTML = `
-
-            <td>
-                ${formatarData(item.DATA)}
-            </td>
-
-            <td>
-
-                <span class="parceira">
-
-                    ${item.PARCEIRA ?? ""}
-
-                </span>
-
-            </td>
-
-            <td>
-
-                ${numero(
-                    item.EQUIPES_MOBILIZADAS
-                ).toLocaleString("pt-BR")}
-
-            </td>
-
-            <td>
-
-                ${numero(
-                    item.PROGRAMACOES_EXECUTADAS
-                ).toLocaleString("pt-BR")}
-
-            </td>
-
-            <td>
-
-                ${numero(
-                    item.LIGACOES_EXECUTADAS
-                ).toLocaleString("pt-BR")}
-
-            </td>
-
-        `;
+        function(item) {
 
 
-        tabela.appendChild(
-            linha
-        );
+            const linha =
 
-    });
+                document.createElement(
+                    "tr"
+                );
+
+
+            linha.innerHTML = `
+
+                <td>
+
+                    ${formatarData(
+                        item.DATA
+                    )}
+
+                </td>
+
+
+                <td>
+
+                    <span class="parceira">
+
+                        ${item.PARCEIRA ?? ""}
+
+                    </span>
+
+                </td>
+
+
+                <td>
+
+                    ${numero(
+                        item.EQUIPES_MOBILIZADAS
+                    ).toLocaleString("pt-BR")}
+
+                </td>
+
+
+                <td>
+
+                    ${numero(
+                        item.PROGRAMACOES_EXECUTADAS
+                    ).toLocaleString("pt-BR")}
+
+                </td>
+
+
+                <td>
+
+                    ${numero(
+                        item.LIGACOES_EXECUTADAS
+                    ).toLocaleString("pt-BR")}
+
+                </td>
+
+            `;
+
+
+            tabela.appendChild(
+                linha
+            );
+
+        }
+
+    );
 
 }
 
@@ -1221,99 +1605,158 @@ function atualizarTabela(dados) {
    CONFIGURAÇÃO DOS RÓTULOS
 ========================================================= */
 
-const configuracaoRotulos = {
+function configuracaoDataLabelsVertical() {
 
-    color: "#333",
 
-    anchor: "end",
+    if (
+        !pluginDataLabelsDisponivel
+    ) {
 
-    align: "end",
-
-    offset: 2,
-
-    clamp: true,
-
-    font: {
-
-        size: 11,
-
-        weight: "bold"
-
-    },
-
-    formatter: function(valor) {
-
-        if (
-            valor === null ||
-            valor === undefined
-        ) {
-
-            return "";
-
-        }
-
-        return Number(valor)
-            .toLocaleString("pt-BR");
+        return false;
 
     }
 
-};
+
+    return {
+
+        color:
+            "#333",
+
+        anchor:
+            "end",
+
+        align:
+            "end",
+
+        offset:
+            2,
+
+        clamp:
+            true,
+
+        font: {
+
+            size:
+                11,
+
+            weight:
+                "bold"
+
+        },
+
+        formatter:
+            function(valor) {
+
+
+                return Number(
+                    valor
+                ).toLocaleString(
+                    "pt-BR"
+                );
+
+            }
+
+    };
+
+}
 
 
 /* =========================================================
-   GRÁFICO EVOLUÇÃO
+   GRÁFICO DE EVOLUÇÃO
 ========================================================= */
 
 function atualizarGrafico(dados) {
 
-    /*
-    Como os dados já chegam ordenados,
-    o eixo X também fica cronológico.
-    */
+
+    if (
+        typeof Chart ===
+        "undefined"
+    ) {
+
+        return;
+
+    }
+
 
     const labels =
+
         dados.map(
-            item =>
-                formatarData(
+
+            function(item) {
+
+                return formatarData(
                     item.DATA
-                )
+                );
+
+            }
+
         );
 
 
     const equipes =
+
         dados.map(
-            item =>
-                numero(
+
+            function(item) {
+
+                return numero(
                     item.EQUIPES_MOBILIZADAS
-                )
+                );
+
+            }
+
         );
 
 
     const programacoes =
+
         dados.map(
-            item =>
-                numero(
+
+            function(item) {
+
+                return numero(
                     item.PROGRAMACOES_EXECUTADAS
-                )
+                );
+
+            }
+
         );
 
 
     const ligacoes =
+
         dados.map(
-            item =>
-                numero(
+
+            function(item) {
+
+                return numero(
                     item.LIGACOES_EXECUTADAS
-                )
+                );
+
+            }
+
         );
+
+
+    const canvas =
+
+        document.getElementById(
+            "graficoEvolucao"
+        );
+
+
+    if (!canvas) {
+
+        return;
+
+    }
 
 
     const contexto =
 
-        document
-            .getElementById(
-                "graficoEvolucao"
-            )
-            .getContext("2d");
+        canvas.getContext(
+            "2d"
+        );
 
 
     if (grafico) {
@@ -1324,18 +1767,21 @@ function atualizarGrafico(dados) {
 
 
     grafico =
+
         new Chart(
 
             contexto,
 
             {
 
-                type: "bar",
+                type:
+                    "bar",
 
 
                 data: {
 
-                    labels: labels,
+                    labels:
+                        labels,
 
 
                     datasets: [
@@ -1402,17 +1848,12 @@ function atualizarGrafico(dados) {
                         false,
 
 
-                    /*
-                    Espaço adicional para que os
-                    valores acima das barras não
-                    sejam cortados.
-                    */
-
                     layout: {
 
                         padding: {
 
-                            top: 25
+                            top:
+                                25
 
                         }
 
@@ -1454,7 +1895,8 @@ function atualizarGrafico(dados) {
 
 
                         datalabels:
-                            configuracaoRotulos
+
+                            configuracaoDataLabelsVertical()
 
                     },
 
@@ -1509,98 +1951,157 @@ function atualizarGrafico(dados) {
 
 
 /* =========================================================
-   GRÁFICO PARCEIRAS
+   GRÁFICO POR PARCEIRA
 ========================================================= */
 
 function atualizarGraficoParceiras(dados) {
 
-    const parceiras = {};
+
+    if (
+        typeof Chart ===
+        "undefined"
+    ) {
+
+        return;
+
+    }
 
 
-    dados.forEach(item => {
-
-        const nome =
-
-            item.PARCEIRA ||
-            "Não informado";
+    const parceiras =
+        {};
 
 
-        if (!parceiras[nome]) {
+    dados.forEach(
 
-            parceiras[nome] = {
+        function(item) {
 
-                equipes: 0,
 
-                programacoes: 0,
+            const nome =
 
-                ligacoes: 0
+                item.PARCEIRA ||
 
-            };
+                "Não informado";
+
+
+            if (
+                !parceiras[nome]
+            ) {
+
+
+                parceiras[nome] = {
+
+                    equipes:
+                        0,
+
+                    programacoes:
+                        0,
+
+                    ligacoes:
+                        0
+
+                };
+
+            }
+
+
+            parceiras[nome].equipes +=
+
+                numero(
+                    item.EQUIPES_MOBILIZADAS
+                );
+
+
+            parceiras[nome].programacoes +=
+
+                numero(
+                    item.PROGRAMACOES_EXECUTADAS
+                );
+
+
+            parceiras[nome].ligacoes +=
+
+                numero(
+                    item.LIGACOES_EXECUTADAS
+                );
 
         }
 
-
-        parceiras[nome].equipes +=
-
-            numero(
-                item.EQUIPES_MOBILIZADAS
-            );
-
-
-        parceiras[nome].programacoes +=
-
-            numero(
-                item.PROGRAMACOES_EXECUTADAS
-            );
-
-
-        parceiras[nome].ligacoes +=
-
-            numero(
-                item.LIGACOES_EXECUTADAS
-            );
-
-    });
+    );
 
 
     const nomes =
-        Object.keys(parceiras);
+
+        Object.keys(
+            parceiras
+        );
 
 
     const equipes =
 
         nomes.map(
-            nome =>
-                parceiras[nome].equipes
+
+            function(nome) {
+
+                return parceiras[nome]
+                    .equipes;
+
+            }
+
         );
 
 
     const programacoes =
 
         nomes.map(
-            nome =>
-                parceiras[nome].programacoes
+
+            function(nome) {
+
+                return parceiras[nome]
+                    .programacoes;
+
+            }
+
         );
 
 
     const ligacoes =
 
         nomes.map(
-            nome =>
-                parceiras[nome].ligacoes
+
+            function(nome) {
+
+                return parceiras[nome]
+                    .ligacoes;
+
+            }
+
         );
+
+
+    const canvas =
+
+        document.getElementById(
+            "graficoParceiras"
+        );
+
+
+    if (!canvas) {
+
+        return;
+
+    }
 
 
     const contexto =
 
-        document
-            .getElementById(
-                "graficoParceiras"
-            )
-            .getContext("2d");
+        canvas.getContext(
+            "2d"
+        );
 
 
-    if (graficoParceiras) {
+    if (
+        graficoParceiras
+    ) {
 
         graficoParceiras.destroy();
 
@@ -1608,6 +2109,7 @@ function atualizarGraficoParceiras(dados) {
 
 
     graficoParceiras =
+
         new Chart(
 
             contexto,
@@ -1691,16 +2193,12 @@ function atualizarGraficoParceiras(dados) {
                         false,
 
 
-                    /*
-                    Espaço à direita para
-                    os rótulos das barras.
-                    */
-
                     layout: {
 
                         padding: {
 
-                            right: 35
+                            right:
+                                35
 
                         }
 
@@ -1741,44 +2239,52 @@ function atualizarGraficoParceiras(dados) {
                         },
 
 
-                        datalabels: {
+                        datalabels:
 
-                            color:
-                                "#333",
+                            pluginDataLabelsDisponivel
 
-                            anchor:
-                                "end",
+                            ? {
 
-                            align:
-                                "right",
+                                color:
+                                    "#333",
 
-                            offset:
-                                3,
+                                anchor:
+                                    "end",
 
-                            clamp:
-                                true,
+                                align:
+                                    "right",
 
-                            font: {
+                                offset:
+                                    3,
 
-                                size:
-                                    11,
+                                clamp:
+                                    true,
 
-                                weight:
-                                    "bold"
+                                font: {
 
-                            },
+                                    size:
+                                        11,
 
-                            formatter:
-                                function(valor) {
+                                    weight:
+                                        "bold"
 
-                                    return Number(valor)
-                                        .toLocaleString(
+                                },
+
+                                formatter:
+
+                                    function(valor) {
+
+                                        return Number(
+                                            valor
+                                        ).toLocaleString(
                                             "pt-BR"
                                         );
 
-                                }
+                                    }
 
-                        }
+                            }
+
+                            : false
 
                     },
 
@@ -1838,15 +2344,15 @@ function atualizarGraficoParceiras(dados) {
 
 
 /*
-Consulta imediatamente ao abrir.
+Primeira leitura imediatamente
+ao abrir o dashboard.
 */
 
 carregarDados();
 
 
 /*
-Consulta novamente o dados.json
-a cada 60 segundos.
+Atualização automática.
 
 60.000 ms = 60 segundos.
 */
