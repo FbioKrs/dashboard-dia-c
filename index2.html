@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Painel de Acompanhamento</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #000;
+        }
+
+        #painel {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <iframe
+        id="painel"
+        src=""
+    ></iframe>
+
+
+    <script>
+
+        const visoes = [
+
+            {
+                arquivo: "./visoes/dia-c.html",
+                tempo: 60000
+            },
+
+            {
+                arquivo: "./visoes/obras-ageis.html",
+                tempo: 30000
+            },
+
+            {
+                arquivo: "./visoes/produtividade.html",
+                tempo: 45000
+            },
+
+            {
+                arquivo: "./visoes/indicadores.html",
+                tempo: 60000
+            },
+
+            {
+                arquivo: "./visoes/carteira.html",
+                tempo: 30000
+            }
+
+        ];
+
+
+        let indiceAtual = 0;
+
+
+        function exibirVisao() {
+
+            const painel =
+                document.getElementById("painel");
+
+            const visao =
+                visoes[indiceAtual];
+
+
+            painel.src =
+                visao.arquivo;
+
+
+            setTimeout(() => {
+
+                indiceAtual++;
+
+                if (
+                    indiceAtual >= visoes.length
+                ) {
+                    indiceAtual = 0;
+                }
+
+                exibirVisao();
+
+            }, visao.tempo);
+
+        }
+
+
+        exibirVisao();
+
+    </script>
+
+</body>
+
+</html>
