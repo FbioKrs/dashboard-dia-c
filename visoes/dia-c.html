@@ -10,8 +10,8 @@
         IMPORTANTE:
         Mantém as bibliotecas hospedadas no próprio repositório.
     -->
-    <script src="./js/chart.umd.min.js"></script>
-    <script src="./js/chartjs-plugin-datalabels.min.js"></script>
+    <script src="../js/chart.umd.min.js"></script>
+    <script src="../js/chartjs-plugin-datalabels.min.js"></script>
 
     <style>
         :root {
@@ -2833,10 +2833,10 @@
 
             const resposta =
                 await fetch(
-                    "./dados.json?t="
-                    +
-                    new Date().getTime()
-                );
+                        "../dados.json?t="
+                        +
+                        new Date().getTime()
+                    );
 
 
             if (
