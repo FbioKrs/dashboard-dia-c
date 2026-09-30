@@ -2,294 +2,725 @@
 <html lang="pt-BR">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Dashboard Dia C</title>
+<title>Dia C | Dashboard</title>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+<!-- Plugin para exibir os valores nas barras -->
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
 
-        body {
-            font-family: Arial, Helvetica, sans-serif;
-            background: #f4f7fb;
-            color: #1f2d3d;
-        }
+<style>
 
-        .container {
-            width: 96%;
-            max-width: 1600px;
-            margin: auto;
-            padding: 25px;
-        }
+:root {
+    --bg: #f3f5f7;
+    --surface: #ffffff;
+    --text: #20252b;
+    --muted: #7a828b;
+    --border: #e7eaee;
 
-        h1 {
-            color: #063f7c;
-            margin-bottom: 5px;
-        }
+    --equipes: #4f6b82;
+    --programacoes: #d59a35;
+    --ligacoes: #3c8c74;
 
-        .subtitulo {
-            color: #6b7785;
-            margin-bottom: 25px;
-        }
+    --dark: #252b31;
+}
 
-        .cards {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-            margin-bottom: 25px;
-        }
+* {
+    box-sizing: border-box;
+}
 
-        .card {
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, .08);
-        }
+body {
+    margin: 0;
+    font-family: "Segoe UI", Arial, Helvetica, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+}
 
-        .card h3 {
-            font-size: 14px;
-            color: #667085;
-            margin-bottom: 10px;
-        }
+.container {
+    max-width: 1500px;
+    margin: auto;
+    padding: 32px;
+}
 
-        .card .valor {
-            font-size: 34px;
-            font-weight: bold;
-        }
 
-        .verde {
-            color: #16a34a;
-        }
+/* =====================================================
+   CABEÇALHO
+===================================================== */
 
-        .laranja {
-            color: #ea7c17;
-        }
+.header {
+    background: var(--dark);
+    color: white;
+    border-radius: 18px;
+    padding: 28px 32px;
+    margin-bottom: 24px;
 
-        .azul {
-            color: #1261a0;
-        }
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 30px;
+}
 
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 20px;
-            margin-bottom: 25px;
-        }
+.header-title {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
 
-        .painel {
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, .08);
-        }
+.logo-mark {
+    width: 54px;
+    height: 54px;
+    border-radius: 14px;
 
-        .painel h2 {
-            color: #063f7c;
-            font-size: 18px;
-            margin-bottom: 20px;
-        }
+    background: rgba(255,255,255,.10);
 
-        .grafico-container {
-            position: relative;
-            height: 360px;
-        }
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-        .tabela-container {
-            overflow-x: auto;
-        }
+    font-size: 26px;
+}
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
+.header h1 {
+    margin: 0;
+    font-size: 30px;
+    font-weight: 700;
+}
 
-        th {
-            background: #063f7c;
-            color: white;
-            padding: 12px;
-            font-size: 13px;
-        }
+.header p {
+    margin: 5px 0 0;
+    color: #c5cbd0;
+    font-size: 14px;
+}
 
-        td {
-            padding: 11px;
-            text-align: center;
-            border-bottom: 1px solid #e5e7eb;
-        }
 
-        tbody tr:nth-child(even) {
-            background: #f7f9fc;
-        }
+/* =====================================================
+   STATUS
+===================================================== */
 
-        tbody tr:hover {
-            background: #edf4fb;
-        }
+.status-box {
+    text-align: right;
+}
 
-        .num-equipes {
-            color: #16a34a;
-            font-weight: bold;
-        }
+.status-online {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
 
-        .num-programacoes {
-            color: #ea7c17;
-            font-weight: bold;
-        }
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .5px;
+}
 
-        .num-ligacoes {
-            color: #1261a0;
-            font-weight: bold;
-        }
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #68d391;
+}
 
-        .status {
-            margin-top: 15px;
-            font-size: 12px;
-            color: #667085;
-            text-align: right;
-        }
+.status-time {
+    margin-top: 7px;
+    color: #b9c0c6;
+    font-size: 12px;
+}
 
-        .erro {
-            background: #fee2e2;
-            color: #991b1b;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            display: none;
-        }
 
-        @media(max-width:900px) {
+/* =====================================================
+   INTRODUÇÃO
+===================================================== */
 
-            .cards,
-            .dashboard-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
+.section-intro {
+    margin-bottom: 18px;
+}
+
+.section-intro h2 {
+    margin: 0;
+    font-size: 19px;
+}
+
+.section-intro p {
+    margin: 5px 0 0;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+
+/* =====================================================
+   CARDS
+===================================================== */
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin-bottom: 24px;
+}
+
+.card {
+    background: var(--surface);
+    border-radius: 16px;
+    padding: 22px 24px;
+
+    border: 1px solid var(--border);
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    min-height: 135px;
+}
+
+.card-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.card-title {
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .6px;
+}
+
+.card-value {
+    font-size: 42px;
+    font-weight: 700;
+    line-height: 1;
+    margin-top: 14px;
+}
+
+.card-description {
+    margin-top: 8px;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+
+/* =====================================================
+   ÍCONES DOS CARDS
+===================================================== */
+
+.card-icon {
+    width: 58px;
+    height: 58px;
+    border-radius: 16px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 25px;
+}
+
+.card-equipes {
+    border-top: 4px solid var(--equipes);
+}
+
+.card-equipes .card-icon {
+    background: rgba(79,107,130,.12);
+    color: var(--equipes);
+}
+
+.card-programacoes {
+    border-top: 4px solid var(--programacoes);
+}
+
+.card-programacoes .card-icon {
+    background: rgba(213,154,53,.12);
+    color: var(--programacoes);
+}
+
+.card-ligacoes {
+    border-top: 4px solid var(--ligacoes);
+}
+
+.card-ligacoes .card-icon {
+    background: rgba(60,140,116,.12);
+    color: var(--ligacoes);
+}
+
+
+/* =====================================================
+   GRÁFICOS
+===================================================== */
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 18px;
+    margin-bottom: 24px;
+}
+
+.panel {
+    background: var(--surface);
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    padding: 22px 24px;
+}
+
+.panel-header {
+    margin-bottom: 20px;
+}
+
+.panel-title {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.panel-subtitle {
+    margin: 5px 0 0;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.chart-container {
+    position: relative;
+    height: 360px;
+}
+
+
+/* =====================================================
+   TABELA
+===================================================== */
+
+.table-panel {
+    margin-bottom: 30px;
+}
+
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead {
+    border-bottom: 2px solid var(--border);
+}
+
+th {
+    padding: 13px 14px;
+    text-align: center;
+
+    color: var(--muted);
+
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+}
+
+td {
+    padding: 15px 14px;
+    text-align: center;
+
+    border-bottom: 1px solid #eef0f2;
+
+    font-size: 13px;
+}
+
+tbody tr {
+    transition: background .15s ease;
+}
+
+tbody tr:hover {
+    background: #f7f9fa;
+}
+
+.parceira {
+    display: inline-block;
+    background: #f0f2f4;
+    border-radius: 20px;
+
+    padding: 5px 12px;
+
+    font-weight: 600;
+    font-size: 12px;
+}
+
+
+/* =====================================================
+   RODAPÉ
+===================================================== */
+
+.footer {
+    color: var(--muted);
+    font-size: 11px;
+    text-align: center;
+    padding-bottom: 15px;
+}
+
+
+/* =====================================================
+   RESPONSIVIDADE
+===================================================== */
+
+@media (max-width: 950px) {
+
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+@media (max-width: 800px) {
+
+    .container {
+        padding: 15px;
+    }
+
+    .cards {
+        grid-template-columns: 1fr;
+    }
+
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .status-box {
+        text-align: left;
+    }
+
+}
+
+</style>
 </head>
+
 
 <body>
 
 <div class="container">
 
-    <h1>Dashboard Dia C</h1>
 
-    <div class="subtitulo">
-        Acompanhamento do desempenho das atividades
-    </div>
+<!-- =====================================================
+     CABEÇALHO
+===================================================== -->
 
-    <div id="erro" class="erro"></div>
+<header class="header">
 
-    <!-- CARDS -->
+    <div class="header-title">
 
-    <div class="cards">
-
-        <div class="card">
-            <h3>TOTAL DE EQUIPES MOBILIZADAS</h3>
-            <div id="totalEquipes" class="valor verde">0</div>
+        <div class="logo-mark">
+            ⚡
         </div>
 
-        <div class="card">
-            <h3>TOTAL DE PROGRAMAÇÕES EXECUTADAS</h3>
-            <div id="totalProgramacoes" class="valor laranja">0</div>
-        </div>
+        <div>
 
-        <div class="card">
-            <h3>TOTAL DE LIGAÇÕES EXECUTADAS</h3>
-            <div id="totalLigacoes" class="valor azul">0</div>
+            <h1>Dia C</h1>
+
+            <p>
+                Acompanhamento das Execuções
+            </p>
+
         </div>
 
     </div>
 
-    <!-- GRÁFICOS -->
 
-    <div class="dashboard-grid">
+    <div class="status-box">
 
-        <div class="painel">
+        <div class="status-online">
 
-            <h2>Evolução dos Dias de Atividade</h2>
+            <span class="status-dot"></span>
 
-            <div class="grafico-container">
-                <canvas id="graficoEvolucao"></canvas>
+            DADOS ATUALIZADOS
+
+        </div>
+
+        <div
+            class="status-time"
+            id="status">
+
+            Carregando dados...
+
+        </div>
+
+    </div>
+
+</header>
+
+
+<!-- =====================================================
+     VISÃO CONSOLIDADA
+===================================================== -->
+
+<div class="section-intro">
+
+    <h2>
+        Visão consolidada
+    </h2>
+
+    <p>
+        Acompanhamento geral das mobilizações e execuções realizadas.
+    </p>
+
+</div>
+
+
+<!-- =====================================================
+     CARDS
+===================================================== -->
+
+<section class="cards">
+
+
+    <div class="card card-equipes">
+
+        <div class="card-content">
+
+            <div class="card-title">
+                Equipes Mobilizadas
+            </div>
+
+            <div
+                class="card-value"
+                id="totalEquipes">
+                -
+            </div>
+
+            <div class="card-description">
+                Total acumulado
             </div>
 
         </div>
 
-        <div class="painel">
+        <div class="card-icon">
+            👥
+        </div>
 
-            <h2>Desempenho por Parceira</h2>
+    </div>
 
-            <div class="grafico-container">
-                <canvas id="graficoParceira"></canvas>
+
+    <div class="card card-programacoes">
+
+        <div class="card-content">
+
+            <div class="card-title">
+                Programações Executadas
+            </div>
+
+            <div
+                class="card-value"
+                id="totalProgramacoes">
+                -
+            </div>
+
+            <div class="card-description">
+                Total acumulado
             </div>
 
         </div>
 
+        <div class="card-icon">
+            ✓
+        </div>
+
     </div>
 
-    <!-- TABELA -->
 
-    <div class="painel">
+    <div class="card card-ligacoes">
 
-        <h2>Desempenho dos Dias de Atividade</h2>
+        <div class="card-content">
 
-        <div class="tabela-container">
+            <div class="card-title">
+                Ligações Executadas
+            </div>
 
-            <table>
+            <div
+                class="card-value"
+                id="totalLigacoes">
+                -
+            </div>
 
-                <thead>
-                    <tr>
-                        <th>DATA</th>
-                        <th>PARCEIRA</th>
-                        <th>REGIONAL</th>
-                        <th>EQUIPES MOBILIZADAS</th>
-                        <th>PROGRAMAÇÕES EXECUTADAS</th>
-                        <th>LIGAÇÕES EXECUTADAS</th>
-                    </tr>
-                </thead>
-
-                <tbody id="tabelaDados"></tbody>
-
-            </table>
+            <div class="card-description">
+                Total acumulado
+            </div>
 
         </div>
 
-        <div id="ultimaAtualizacao" class="status"></div>
+        <div class="card-icon">
+            ⚡
+        </div>
 
     </div>
+
+</section>
+
+
+<!-- =====================================================
+     GRÁFICOS
+===================================================== -->
+
+<section class="dashboard-grid">
+
+
+    <!-- EVOLUÇÃO -->
+
+    <div class="panel">
+
+        <div class="panel-header">
+
+            <h3 class="panel-title">
+                Evolução das Execuções
+            </h3>
+
+            <p class="panel-subtitle">
+                Acompanhamento por data
+            </p>
+
+        </div>
+
+        <div class="chart-container">
+
+            <canvas
+                id="graficoEvolucao">
+            </canvas>
+
+        </div>
+
+    </div>
+
+
+    <!-- PARCEIRAS -->
+
+    <div class="panel">
+
+        <div class="panel-header">
+
+            <h3 class="panel-title">
+                Execuções por Parceira
+            </h3>
+
+            <p class="panel-subtitle">
+                Visão consolidada por empresa
+            </p>
+
+        </div>
+
+        <div class="chart-container">
+
+            <canvas
+                id="graficoParceiras">
+            </canvas>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     TABELA
+===================================================== -->
+
+<section class="panel table-panel">
+
+    <div class="panel-header">
+
+        <h3 class="panel-title">
+            Detalhamento
+        </h3>
+
+        <p class="panel-subtitle">
+            Histórico das execuções em ordem cronológica
+        </p>
+
+    </div>
+
+    <div class="table-container">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>Data</th>
+
+                    <th>Parceira</th>
+
+                    <th>
+                        Equipes Mobilizadas
+                    </th>
+
+                    <th>
+                        Programações Executadas
+                    </th>
+
+                    <th>
+                        Ligações Executadas
+                    </th>
+
+                </tr>
+
+            </thead>
+
+            <tbody id="tabelaDados">
+            </tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+
+<div class="footer">
+
+    Dashboard Dia C • Atualização automática
+
+</div>
+
 
 </div>
 
 
 <script>
 
-/* ============================================================
-   CONFIGURAÇÃO DO CHART.JS
-============================================================ */
+
+/* =========================================================
+   REGISTRAR PLUGIN DE RÓTULOS
+========================================================= */
 
 Chart.register(ChartDataLabels);
 
-Chart.defaults.font.family =
-    "Arial, Helvetica, sans-serif";
+
+/* =========================================================
+   GRÁFICOS
+========================================================= */
+
+let grafico;
+let graficoParceiras;
 
 
-/* ============================================================
-   VARIÁVEIS DOS GRÁFICOS
-============================================================ */
+/* =========================================================
+   CORES
+========================================================= */
 
-let graficoEvolucao = null;
-let graficoParceira = null;
+const corEquipes =
+    "#4f6b82";
+
+const corProgramacoes =
+    "#d59a35";
+
+const corLigacoes =
+    "#3c8c74";
 
 
-/* ============================================================
-   CONVERTER VALORES PARA NÚMERO
-============================================================ */
+/* =========================================================
+   CONVERTER VALORES NUMÉRICOS
+========================================================= */
 
 function numero(valor) {
 
@@ -298,36 +729,37 @@ function numero(valor) {
         valor === undefined ||
         valor === ""
     ) {
+
         return 0;
+
     }
 
-    if (typeof valor === "number") {
-        return valor;
-    }
+    return Number(
 
-    const convertido = Number(
         String(valor)
             .replace(/\./g, "")
             .replace(",", ".")
-    );
 
-    return isNaN(convertido)
-        ? 0
-        : convertido;
+    ) || 0;
+
 }
 
 
-/* ============================================================
-   CONVERTER DATA DO EXCEL / JSON PARA JAVASCRIPT
+/* =========================================================
+   CONVERTER DATA
+========================================================= */
 
-   Aceita:
+/*
+Aceita diferentes formatos vindos do Excel/JSON:
 
-   20/06/2026
-   2026-06-20
-   2026-06-20T00:00:00
-   número serial do Excel
-   número serial enviado como texto
-============================================================ */
+20/06/2026
+20/06/2026 00:00:00
+2026-06-20
+2026-06-20T00:00:00
+número serial do Excel
+
+A função sempre retorna um objeto Date.
+*/
 
 function converterData(valor) {
 
@@ -340,11 +772,9 @@ function converterData(valor) {
     }
 
 
-    /* --------------------------------------------------------
+    /* -----------------------------------------
        DATA SERIAL DO EXCEL
-       Exemplo:
-       46200
-    -------------------------------------------------------- */
+    ----------------------------------------- */
 
     if (
         typeof valor === "number" ||
@@ -354,105 +784,134 @@ function converterData(valor) {
         const serial = Number(valor);
 
         /*
-            Evita interpretar um ano simples ou outro número
-            pequeno como data Excel.
+        Datas modernas do Excel normalmente
+        possuem serial superior a 20.000.
         */
 
         if (serial > 20000) {
 
-            const dias = Math.floor(serial - 25569);
+            const dias =
+                Math.floor(serial);
 
-            const segundos = dias * 86400;
-
-            const data = new Date(
-                segundos * 1000
-            );
+            const dataUTC =
+                new Date(
+                    Date.UTC(
+                        1899,
+                        11,
+                        30 + dias
+                    )
+                );
 
             return new Date(
-                data.getUTCFullYear(),
-                data.getUTCMonth(),
-                data.getUTCDate()
+                dataUTC.getUTCFullYear(),
+                dataUTC.getUTCMonth(),
+                dataUTC.getUTCDate()
             );
+
         }
+
     }
 
 
-    const texto = String(valor).trim();
+    const texto =
+        String(valor).trim();
 
 
-    /* --------------------------------------------------------
-       FORMATO DD/MM/AAAA
-    -------------------------------------------------------- */
+    /* -----------------------------------------
+       FORMATO DD/MM/YYYY
+    ----------------------------------------- */
 
-    let resultado =
+    const brasileiro =
         texto.match(
             /^(\d{1,2})\/(\d{1,2})\/(\d{4})/
         );
 
-    if (resultado) {
+
+    if (brasileiro) {
 
         return new Date(
-            Number(resultado[3]),
-            Number(resultado[2]) - 1,
-            Number(resultado[1])
+
+            Number(brasileiro[3]),
+
+            Number(brasileiro[2]) - 1,
+
+            Number(brasileiro[1])
+
         );
+
     }
 
 
-    /* --------------------------------------------------------
-       FORMATO AAAA-MM-DD
-    -------------------------------------------------------- */
+    /* -----------------------------------------
+       FORMATO YYYY-MM-DD
+    ----------------------------------------- */
 
-    resultado =
+    const iso =
         texto.match(
             /^(\d{4})-(\d{1,2})-(\d{1,2})/
         );
 
-    if (resultado) {
+
+    if (iso) {
 
         return new Date(
-            Number(resultado[1]),
-            Number(resultado[2]) - 1,
-            Number(resultado[3])
+
+            Number(iso[1]),
+
+            Number(iso[2]) - 1,
+
+            Number(iso[3])
+
         );
+
     }
 
 
-    /* --------------------------------------------------------
+    /* -----------------------------------------
        ÚLTIMA TENTATIVA
-    -------------------------------------------------------- */
+    ----------------------------------------- */
 
-    const data = new Date(texto);
+    const data =
+        new Date(texto);
 
-    if (!isNaN(data.getTime())) {
+
+    if (
+        !isNaN(
+            data.getTime()
+        )
+    ) {
+
         return data;
+
     }
 
 
     return null;
+
 }
 
 
-/* ============================================================
-   FORMATAR DATA
-
-   Resultado:
-
-   20/jun/2026
-   25/jul/2026
-   22/ago/2026
-   19/set/2026
-============================================================ */
+/* =========================================================
+   FORMATAR DATA DD/MMM/YYYY
+========================================================= */
 
 function formatarData(valor) {
 
-    const data = converterData(valor);
+    const data =
+        valor instanceof Date
+            ? valor
+            : converterData(valor);
+
 
     if (!data) {
+
         return "";
+
     }
 
+
     const meses = [
+
         "jan",
         "fev",
         "mar",
@@ -465,346 +924,239 @@ function formatarData(valor) {
         "out",
         "nov",
         "dez"
+
     ];
 
+
     const dia =
-        String(data.getDate())
-            .padStart(2, "0");
+        String(
+            data.getDate()
+        ).padStart(
+            2,
+            "0"
+        );
+
 
     const mes =
-        meses[data.getMonth()];
+        meses[
+            data.getMonth()
+        ];
+
 
     const ano =
         data.getFullYear();
 
+
     return `${dia}/${mes}/${ano}`;
+
 }
 
 
-/* ============================================================
-   OBTER TIMESTAMP DA DATA
+/* =========================================================
+   ORDENAR DADOS POR DATA
+========================================================= */
 
-   Utilizado exclusivamente para ordenação cronológica.
-============================================================ */
+function ordenarPorData(dados) {
 
-function timestampData(valor) {
+    return [...dados].sort(
 
-    const data =
-        converterData(valor);
+        (a, b) => {
 
-    return data
-        ? data.getTime()
-        : Number.MAX_SAFE_INTEGER;
-}
+            const dataA =
+                converterData(a.DATA);
+
+            const dataB =
+                converterData(b.DATA);
 
 
-/* ============================================================
-   OBTER CAMPO
+            /*
+            Caso alguma linha possua uma data inválida,
+            ela será enviada para o final.
+            */
 
-   Torna o HTML mais tolerante caso os nomes das propriedades
-   tenham pequenas diferenças de capitalização.
-============================================================ */
+            if (!dataA && !dataB) {
+                return 0;
+            }
 
-function obterCampo(objeto, nome) {
+            if (!dataA) {
+                return 1;
+            }
 
-    if (!objeto) {
-        return undefined;
-    }
+            if (!dataB) {
+                return -1;
+            }
 
-    if (
-        Object.prototype.hasOwnProperty.call(
-            objeto,
-            nome
-        )
-    ) {
-        return objeto[nome];
-    }
 
-    const chave =
-        Object.keys(objeto)
-            .find(
-                k =>
-                    k.trim().toUpperCase() ===
-                    nome.trim().toUpperCase()
+            return (
+                dataA.getTime() -
+                dataB.getTime()
             );
 
-    return chave
-        ? objeto[chave]
-        : undefined;
+        }
+
+    );
+
 }
 
 
-/* ============================================================
-   NORMALIZAR REGISTRO
-============================================================ */
-
-function normalizarRegistro(item) {
-
-    return {
-
-        DATA:
-            obterCampo(item, "DATA"),
-
-        PARCEIRA:
-            obterCampo(item, "PARCEIRA") || "",
-
-        REGIONAL:
-            obterCampo(item, "REGIONAL") || "",
-
-        EQUIPES_MOBILIZADAS:
-            numero(
-                obterCampo(
-                    item,
-                    "EQUIPES MOBILIZADAS"
-                ) ??
-                obterCampo(
-                    item,
-                    "EQUIPES_MOBILIZADAS"
-                )
-            ),
-
-        PROGRAMACOES_EXECUTADAS:
-            numero(
-                obterCampo(
-                    item,
-                    "PROGRAMAÇÕES EXECUTADAS"
-                ) ??
-                obterCampo(
-                    item,
-                    "PROGRAMACOES EXECUTADAS"
-                ) ??
-                obterCampo(
-                    item,
-                    "PROGRAMACOES_EXECUTADAS"
-                )
-            ),
-
-        LIGACOES_EXECUTADAS:
-            numero(
-                obterCampo(
-                    item,
-                    "LIGAÇÕES EXECUTADAS"
-                ) ??
-                obterCampo(
-                    item,
-                    "LIGACOES EXECUTADAS"
-                ) ??
-                obterCampo(
-                    item,
-                    "LIGACOES_EXECUTADAS"
-                )
-            )
-
-    };
-}
-
-
-/* ============================================================
-   CARREGAR DADOS.JSON
-============================================================ */
+/* =========================================================
+   CARREGAR JSON
+========================================================= */
 
 async function carregarDados() {
 
     try {
 
-        document.getElementById("erro")
-            .style.display = "none";
-
-
         /*
-            Timestamp evita cache do navegador/GitHub Pages.
+        Timestamp para evitar utilização
+        de dados.json antigo em cache.
         */
 
-        const resposta =
+        const response =
             await fetch(
+
                 "./dados.json?t=" +
                 new Date().getTime()
+
             );
 
 
-        if (!resposta.ok) {
+        if (!response.ok) {
 
             throw new Error(
-                "Não foi possível carregar dados.json."
+                "Erro ao carregar dados.json"
             );
+
         }
 
 
-        const json =
-            await resposta.json();
+        const dadosOriginais =
+            await response.json();
 
 
         /*
-            Permite trabalhar tanto com:
-
-            [
-                {...},
-                {...}
-            ]
-
-            quanto com:
-
-            {
-                "dados":[...]
-            }
+        Ordenação cronológica aplicada
+        antes de atualizar os elementos.
         */
 
-        let dados;
-
-        if (Array.isArray(json)) {
-
-            dados = json;
-
-        } else if (
-            json &&
-            Array.isArray(json.dados)
-        ) {
-
-            dados = json.dados;
-
-        } else {
-
-            throw new Error(
-                "Estrutura do dados.json não reconhecida."
-            );
-        }
-
-
-        /* ====================================================
-           NORMALIZAÇÃO
-        ==================================================== */
-
-        dados =
-            dados.map(
-                normalizarRegistro
+        const dados =
+            ordenarPorData(
+                dadosOriginais
             );
 
-
-        /* ====================================================
-           ORDENAÇÃO CRONOLÓGICA
-
-           MAIS ANTIGA
-                 ↓
-           MAIS RECENTE
-        ==================================================== */
-
-        dados.sort(
-            (a, b) =>
-                timestampData(a.DATA) -
-                timestampData(b.DATA)
-        );
-
-
-        /* ====================================================
-           ATUALIZAÇÃO DOS COMPONENTES
-        ==================================================== */
 
         atualizarCards(dados);
 
         atualizarTabela(dados);
 
-        atualizarGraficoEvolucao(dados);
+        atualizarGrafico(dados);
 
-        atualizarGraficoParceira(dados);
+        atualizarGraficoParceiras(dados);
 
 
-        document.getElementById(
-            "ultimaAtualizacao"
-        ).textContent =
-            "Última atualização da página: " +
-            new Date().toLocaleString(
+        /* HORÁRIO DA CONSULTA */
+
+        const agora =
+            new Date();
+
+
+        document
+            .getElementById("status")
+            .textContent =
+
+            "Última atualização: " +
+
+            agora.toLocaleTimeString(
                 "pt-BR"
             );
 
 
-    } catch (erro) {
+    }
+
+    catch (erro) {
 
         console.error(erro);
 
-        const elementoErro =
-            document.getElementById("erro");
 
-        elementoErro.textContent =
-            "Erro ao carregar os dados: " +
-            erro.message;
+        document
+            .getElementById("status")
+            .textContent =
 
-        elementoErro.style.display =
-            "block";
+            "Erro ao carregar os dados";
+
     }
+
 }
 
 
-/* ============================================================
+/* =========================================================
    CARDS
-============================================================ */
+========================================================= */
 
 function atualizarCards(dados) {
 
-    const totalEquipes =
-        dados.reduce(
-            (total, item) =>
-                total +
-                item.EQUIPES_MOBILIZADAS,
-            0
-        );
+    let equipes = 0;
+
+    let programacoes = 0;
+
+    let ligacoes = 0;
 
 
-    const totalProgramacoes =
-        dados.reduce(
-            (total, item) =>
-                total +
-                item.PROGRAMACOES_EXECUTADAS,
-            0
-        );
+    dados.forEach(item => {
+
+        equipes +=
+            numero(
+                item.EQUIPES_MOBILIZADAS
+            );
 
 
-    const totalLigacoes =
-        dados.reduce(
-            (total, item) =>
-                total +
-                item.LIGACOES_EXECUTADAS,
-            0
-        );
+        programacoes +=
+            numero(
+                item.PROGRAMACOES_EXECUTADAS
+            );
 
 
-    document.getElementById(
-        "totalEquipes"
-    ).textContent =
-        totalEquipes.toLocaleString(
-            "pt-BR"
-        );
+        ligacoes +=
+            numero(
+                item.LIGACOES_EXECUTADAS
+            );
+
+    });
 
 
-    document.getElementById(
-        "totalProgramacoes"
-    ).textContent =
-        totalProgramacoes.toLocaleString(
-            "pt-BR"
-        );
+    document
+        .getElementById("totalEquipes")
+        .textContent =
+        equipes.toLocaleString("pt-BR");
 
 
-    document.getElementById(
-        "totalLigacoes"
-    ).textContent =
-        totalLigacoes.toLocaleString(
-            "pt-BR"
-        );
+    document
+        .getElementById("totalProgramacoes")
+        .textContent =
+        programacoes.toLocaleString("pt-BR");
+
+
+    document
+        .getElementById("totalLigacoes")
+        .textContent =
+        ligacoes.toLocaleString("pt-BR");
+
 }
 
 
-/* ============================================================
+/* =========================================================
    TABELA
-============================================================ */
+========================================================= */
 
 function atualizarTabela(dados) {
 
-    const tbody =
+    const tabela =
         document.getElementById(
             "tabelaDados"
         );
 
 
-    tbody.innerHTML = "";
+    tabela.innerHTML = "";
 
 
     dados.forEach(item => {
@@ -820,138 +1172,143 @@ function atualizarTabela(dados) {
             </td>
 
             <td>
-                ${item.PARCEIRA}
+
+                <span class="parceira">
+
+                    ${item.PARCEIRA ?? ""}
+
+                </span>
+
             </td>
 
             <td>
-                ${item.REGIONAL}
+
+                ${numero(
+                    item.EQUIPES_MOBILIZADAS
+                ).toLocaleString("pt-BR")}
+
             </td>
 
-            <td class="num-equipes">
-                ${item.EQUIPES_MOBILIZADAS}
+            <td>
+
+                ${numero(
+                    item.PROGRAMACOES_EXECUTADAS
+                ).toLocaleString("pt-BR")}
+
             </td>
 
-            <td class="num-programacoes">
-                ${item.PROGRAMACOES_EXECUTADAS}
-            </td>
+            <td>
 
-            <td class="num-ligacoes">
-                ${item.LIGACOES_EXECUTADAS}
+                ${numero(
+                    item.LIGACOES_EXECUTADAS
+                ).toLocaleString("pt-BR")}
+
             </td>
 
         `;
 
 
-        tbody.appendChild(linha);
-
-    });
-
-}
-
-
-/* ============================================================
-   AGRUPAMENTO POR DATA
-
-   Caso existam duas ou mais linhas para o mesmo Dia C,
-   os valores são somados.
-============================================================ */
-
-function agruparPorData(dados) {
-
-    const agrupado = {};
-
-
-    dados.forEach(item => {
-
-        const data =
-            formatarData(item.DATA);
-
-
-        if (!agrupado[data]) {
-
-            agrupado[data] = {
-
-                timestamp:
-                    timestampData(
-                        item.DATA
-                    ),
-
-                equipes: 0,
-
-                programacoes: 0,
-
-                ligacoes: 0
-            };
-        }
-
-
-        agrupado[data].equipes +=
-            item.EQUIPES_MOBILIZADAS;
-
-
-        agrupado[data].programacoes +=
-            item.PROGRAMACOES_EXECUTADAS;
-
-
-        agrupado[data].ligacoes +=
-            item.LIGACOES_EXECUTADAS;
-
-    });
-
-
-    return Object.entries(agrupado)
-
-        .sort(
-            (a, b) =>
-                a[1].timestamp -
-                b[1].timestamp
+        tabela.appendChild(
+            linha
         );
 
+    });
+
 }
 
 
-/* ============================================================
-   GRÁFICO DE EVOLUÇÃO
-============================================================ */
+/* =========================================================
+   CONFIGURAÇÃO DOS RÓTULOS
+========================================================= */
 
-function atualizarGraficoEvolucao(dados) {
+const configuracaoRotulos = {
 
-    const agrupado =
-        agruparPorData(dados);
+    color: "#333",
 
+    anchor: "end",
+
+    align: "end",
+
+    offset: 2,
+
+    clamp: true,
+
+    font: {
+
+        size: 11,
+
+        weight: "bold"
+
+    },
+
+    formatter: function(valor) {
+
+        if (
+            valor === null ||
+            valor === undefined
+        ) {
+
+            return "";
+
+        }
+
+        return Number(valor)
+            .toLocaleString("pt-BR");
+
+    }
+
+};
+
+
+/* =========================================================
+   GRÁFICO EVOLUÇÃO
+========================================================= */
+
+function atualizarGrafico(dados) {
+
+    /*
+    Como os dados já chegam ordenados,
+    o eixo X também fica cronológico.
+    */
 
     const labels =
-        agrupado.map(
-            item => item[0]
+        dados.map(
+            item =>
+                formatarData(
+                    item.DATA
+                )
         );
 
 
     const equipes =
-        agrupado.map(
-            item => item[1].equipes
+        dados.map(
+            item =>
+                numero(
+                    item.EQUIPES_MOBILIZADAS
+                )
         );
 
 
     const programacoes =
-        agrupado.map(
-            item => item[1].programacoes
+        dados.map(
+            item =>
+                numero(
+                    item.PROGRAMACOES_EXECUTADAS
+                )
         );
 
 
     const ligacoes =
-        agrupado.map(
-            item => item[1].ligacoes
+        dados.map(
+            item =>
+                numero(
+                    item.LIGACOES_EXECUTADAS
+                )
         );
 
 
-    if (graficoEvolucao) {
-
-        graficoEvolucao.destroy();
-
-    }
-
-
     const contexto =
+
         document
             .getElementById(
                 "graficoEvolucao"
@@ -959,20 +1316,32 @@ function atualizarGraficoEvolucao(dados) {
             .getContext("2d");
 
 
-    graficoEvolucao =
+    if (grafico) {
+
+        grafico.destroy();
+
+    }
+
+
+    grafico =
         new Chart(
+
             contexto,
+
             {
 
                 type: "bar",
+
 
                 data: {
 
                     labels: labels,
 
+
                     datasets: [
 
                         {
+
                             label:
                                 "Equipes Mobilizadas",
 
@@ -980,10 +1349,15 @@ function atualizarGraficoEvolucao(dados) {
                                 equipes,
 
                             backgroundColor:
-                                "#20a464"
+                                corEquipes,
+
+                            borderRadius:
+                                5
+
                         },
 
                         {
+
                             label:
                                 "Programações Executadas",
 
@@ -991,10 +1365,15 @@ function atualizarGraficoEvolucao(dados) {
                                 programacoes,
 
                             backgroundColor:
-                                "#ed8a19"
+                                corProgramacoes,
+
+                            borderRadius:
+                                5
+
                         },
 
                         {
+
                             label:
                                 "Ligações Executadas",
 
@@ -1002,276 +1381,11 @@ function atualizarGraficoEvolucao(dados) {
                                 ligacoes,
 
                             backgroundColor:
-                                "#1467a8"
-                        }
+                                corLigacoes,
 
-                    ]
+                            borderRadius:
+                                5
 
-                },
-
-
-                options: {
-
-                    responsive: true,
-
-                    maintainAspectRatio: false,
-
-                    layout: {
-
-                        /*
-                            Espaço superior para os
-                            rótulos das barras.
-                        */
-
-                        padding: {
-                            top: 25
-                        }
-
-                    },
-
-
-                    plugins: {
-
-                        legend: {
-
-                            position:
-                                "bottom"
-
-                        },
-
-
-                        datalabels: {
-
-                            anchor:
-                                "end",
-
-                            align:
-                                "top",
-
-                            offset:
-                                2,
-
-                            color:
-                                "#344054",
-
-                            font: {
-
-                                weight:
-                                    "bold",
-
-                                size:
-                                    11
-
-                            },
-
-                            formatter:
-                                function(valor) {
-
-                                    /*
-                                        Não exibe rótulo
-                                        para valor zero.
-                                    */
-
-                                    return valor === 0
-                                        ? ""
-                                        : valor;
-                                }
-
-                        }
-
-                    },
-
-
-                    scales: {
-
-                        x: {
-
-                            grid: {
-
-                                display:
-                                    false
-
-                            }
-
-                        },
-
-
-                        y: {
-
-                            beginAtZero:
-                                true,
-
-                            grace:
-                                "15%",
-
-                            ticks: {
-
-                                precision:
-                                    0
-
-                            }
-
-                        }
-
-                    }
-
-                }
-
-            }
-        );
-
-}
-
-
-/* ============================================================
-   AGRUPAR POR PARCEIRA
-============================================================ */
-
-function agruparPorParceira(dados) {
-
-    const agrupado = {};
-
-
-    dados.forEach(item => {
-
-        const parceira =
-            item.PARCEIRA ||
-            "Não informado";
-
-
-        if (!agrupado[parceira]) {
-
-            agrupado[parceira] = {
-
-                equipes: 0,
-
-                programacoes: 0,
-
-                ligacoes: 0
-
-            };
-        }
-
-
-        agrupado[parceira].equipes +=
-            item.EQUIPES_MOBILIZADAS;
-
-
-        agrupado[parceira].programacoes +=
-            item.PROGRAMACOES_EXECUTADAS;
-
-
-        agrupado[parceira].ligacoes +=
-            item.LIGACOES_EXECUTADAS;
-
-    });
-
-
-    return agrupado;
-}
-
-
-/* ============================================================
-   GRÁFICO POR PARCEIRA
-============================================================ */
-
-function atualizarGraficoParceira(dados) {
-
-    const agrupado =
-        agruparPorParceira(dados);
-
-
-    const parceiras =
-        Object.keys(agrupado);
-
-
-    const equipes =
-        parceiras.map(
-            parceira =>
-                agrupado[parceira]
-                    .equipes
-        );
-
-
-    const programacoes =
-        parceiras.map(
-            parceira =>
-                agrupado[parceira]
-                    .programacoes
-        );
-
-
-    const ligacoes =
-        parceiras.map(
-            parceira =>
-                agrupado[parceira]
-                    .ligacoes
-        );
-
-
-    if (graficoParceira) {
-
-        graficoParceira.destroy();
-
-    }
-
-
-    const contexto =
-        document
-            .getElementById(
-                "graficoParceira"
-            )
-            .getContext("2d");
-
-
-    graficoParceira =
-        new Chart(
-            contexto,
-            {
-
-                type:
-                    "bar",
-
-
-                data: {
-
-                    labels:
-                        parceiras,
-
-
-                    datasets: [
-
-                        {
-                            label:
-                                "Equipes",
-
-                            data:
-                                equipes,
-
-                            backgroundColor:
-                                "#20a464"
-                        },
-
-                        {
-                            label:
-                                "Programações",
-
-                            data:
-                                programacoes,
-
-                            backgroundColor:
-                                "#ed8a19"
-                        },
-
-                        {
-                            label:
-                                "Ligações",
-
-                            data:
-                                ligacoes,
-
-                            backgroundColor:
-                                "#1467a8"
                         }
 
                     ]
@@ -1288,14 +1402,30 @@ function atualizarGraficoParceira(dados) {
                         false,
 
 
+                    /*
+                    Espaço adicional para que os
+                    valores acima das barras não
+                    sejam cortados.
+                    */
+
                     layout: {
 
                         padding: {
 
-                            top:
-                                25
+                            top: 25
 
                         }
+
+                    },
+
+
+                    interaction: {
+
+                        mode:
+                            "index",
+
+                        intersect:
+                            false
 
                     },
 
@@ -1305,49 +1435,26 @@ function atualizarGraficoParceira(dados) {
                         legend: {
 
                             position:
-                                "bottom"
+                                "top",
+
+                            labels: {
+
+                                usePointStyle:
+                                    true,
+
+                                boxWidth:
+                                    8,
+
+                                padding:
+                                    20
+
+                            }
 
                         },
 
 
-                        /* ====================================
-                           RÓTULOS QUANTITATIVOS DAS BARRAS
-                        ==================================== */
-
-                        datalabels: {
-
-                            anchor:
-                                "end",
-
-                            align:
-                                "top",
-
-                            offset:
-                                2,
-
-                            color:
-                                "#344054",
-
-                            font: {
-
-                                weight:
-                                    "bold",
-
-                                size:
-                                    11
-
-                            },
-
-                            formatter:
-                                function(valor) {
-
-                                    return valor === 0
-                                        ? ""
-                                        : valor;
-
-                                }
-
-                        }
+                        datalabels:
+                            configuracaoRotulos
 
                     },
 
@@ -1379,6 +1486,13 @@ function atualizarGraficoParceira(dados) {
                                 precision:
                                     0
 
+                            },
+
+                            grid: {
+
+                                color:
+                                    "#eef0f2"
+
                             }
 
                         }
@@ -1388,31 +1502,365 @@ function atualizarGraficoParceira(dados) {
                 }
 
             }
+
         );
 
 }
 
 
-/* ============================================================
-   PRIMEIRA CARGA
-============================================================ */
+/* =========================================================
+   GRÁFICO PARCEIRAS
+========================================================= */
+
+function atualizarGraficoParceiras(dados) {
+
+    const parceiras = {};
+
+
+    dados.forEach(item => {
+
+        const nome =
+
+            item.PARCEIRA ||
+            "Não informado";
+
+
+        if (!parceiras[nome]) {
+
+            parceiras[nome] = {
+
+                equipes: 0,
+
+                programacoes: 0,
+
+                ligacoes: 0
+
+            };
+
+        }
+
+
+        parceiras[nome].equipes +=
+
+            numero(
+                item.EQUIPES_MOBILIZADAS
+            );
+
+
+        parceiras[nome].programacoes +=
+
+            numero(
+                item.PROGRAMACOES_EXECUTADAS
+            );
+
+
+        parceiras[nome].ligacoes +=
+
+            numero(
+                item.LIGACOES_EXECUTADAS
+            );
+
+    });
+
+
+    const nomes =
+        Object.keys(parceiras);
+
+
+    const equipes =
+
+        nomes.map(
+            nome =>
+                parceiras[nome].equipes
+        );
+
+
+    const programacoes =
+
+        nomes.map(
+            nome =>
+                parceiras[nome].programacoes
+        );
+
+
+    const ligacoes =
+
+        nomes.map(
+            nome =>
+                parceiras[nome].ligacoes
+        );
+
+
+    const contexto =
+
+        document
+            .getElementById(
+                "graficoParceiras"
+            )
+            .getContext("2d");
+
+
+    if (graficoParceiras) {
+
+        graficoParceiras.destroy();
+
+    }
+
+
+    graficoParceiras =
+        new Chart(
+
+            contexto,
+
+            {
+
+                type:
+                    "bar",
+
+
+                data: {
+
+                    labels:
+                        nomes,
+
+
+                    datasets: [
+
+                        {
+
+                            label:
+                                "Equipes",
+
+                            data:
+                                equipes,
+
+                            backgroundColor:
+                                corEquipes,
+
+                            borderRadius:
+                                5
+
+                        },
+
+                        {
+
+                            label:
+                                "Programações",
+
+                            data:
+                                programacoes,
+
+                            backgroundColor:
+                                corProgramacoes,
+
+                            borderRadius:
+                                5
+
+                        },
+
+                        {
+
+                            label:
+                                "Ligações",
+
+                            data:
+                                ligacoes,
+
+                            backgroundColor:
+                                corLigacoes,
+
+                            borderRadius:
+                                5
+
+                        }
+
+                    ]
+
+                },
+
+
+                options: {
+
+                    indexAxis:
+                        "y",
+
+                    responsive:
+                        true,
+
+                    maintainAspectRatio:
+                        false,
+
+
+                    /*
+                    Espaço à direita para
+                    os rótulos das barras.
+                    */
+
+                    layout: {
+
+                        padding: {
+
+                            right: 35
+
+                        }
+
+                    },
+
+
+                    interaction: {
+
+                        mode:
+                            "index",
+
+                        intersect:
+                            false
+
+                    },
+
+
+                    plugins: {
+
+                        legend: {
+
+                            position:
+                                "top",
+
+                            labels: {
+
+                                usePointStyle:
+                                    true,
+
+                                boxWidth:
+                                    8,
+
+                                padding:
+                                    15
+
+                            }
+
+                        },
+
+
+                        datalabels: {
+
+                            color:
+                                "#333",
+
+                            anchor:
+                                "end",
+
+                            align:
+                                "right",
+
+                            offset:
+                                3,
+
+                            clamp:
+                                true,
+
+                            font: {
+
+                                size:
+                                    11,
+
+                                weight:
+                                    "bold"
+
+                            },
+
+                            formatter:
+                                function(valor) {
+
+                                    return Number(valor)
+                                        .toLocaleString(
+                                            "pt-BR"
+                                        );
+
+                                }
+
+                        }
+
+                    },
+
+
+                    scales: {
+
+                        y: {
+
+                            grid: {
+
+                                display:
+                                    false
+
+                            }
+
+                        },
+
+
+                        x: {
+
+                            beginAtZero:
+                                true,
+
+                            grace:
+                                "15%",
+
+                            ticks: {
+
+                                precision:
+                                    0
+
+                            },
+
+                            grid: {
+
+                                color:
+                                    "#eef0f2"
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        );
+
+}
+
+
+/* =========================================================
+   INICIALIZAÇÃO
+========================================================= */
+
+
+/*
+Consulta imediatamente ao abrir.
+*/
 
 carregarDados();
 
 
-/* ============================================================
-   ATUALIZAÇÃO AUTOMÁTICA
+/*
+Consulta novamente o dados.json
+a cada 60 segundos.
 
-   Verifica o dados.json a cada 60 segundos.
-============================================================ */
+60.000 ms = 60 segundos.
+*/
 
 setInterval(
+
     carregarDados,
+
     60000
+
 );
+
 
 </script>
 
 </body>
-
 </html>
