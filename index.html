@@ -1,519 +1,566 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dia C - Dashboard</title>
+
+    <!--
+        IMPORTANTE:
+        Mantém as bibliotecas hospedadas no próprio repositório.
+    -->
+    <script src="./js/chart.umd.min.js"></script>
+    <script src="./js/chartjs-plugin-datalabels.min.js"></script>
+
+    <style>
+        :root {
+            --cor-fundo: #f3f5f7;
+            --cor-card: #ffffff;
+            --cor-header: #172331;
+            --cor-header-secundaria: #253748;
+
+            --cor-equipes: #4f6b82;
+            --cor-programacoes: #d59a35;
+            --cor-ligacoes: #3c8c74;
+
+            --cor-texto: #26323d;
+            --cor-texto-secundario: #6f7b85;
+            --cor-borda: #e1e6ea;
+
+            --sombra:
+                0 4px 14px rgba(25, 40, 55, 0.07);
+
+            --raio: 12px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background: var(--cor-fundo);
+            color: var(--cor-texto);
+        }
+
+        .header {
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--cor-header),
+                    var(--cor-header-secundaria)
+                );
+
+            color: white;
+
+            padding:
+                22px
+                34px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            gap: 25px;
+
+            box-shadow:
+                0 3px 12px
+                rgba(0, 0, 0, 0.12);
+        }
+
+        .header-esquerda {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .titulo {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: 0.4px;
+        }
+
+        .subtitulo {
+            font-size: 13px;
+            opacity: 0.72;
+        }
+
+        .header-direita {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .visao-atual {
+            background:
+                rgba(255, 255, 255, 0.12);
 
-<title>Dia C | Dashboard</title>
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.16);
 
-<!-- =====================================================
-     BIBLIOTECAS LOCAIS
-===================================================== -->
+            border-radius: 9px;
 
-<script src="./js/chart.umd.min.js"></script>
-<script src="./js/chartjs-plugin-datalabels.min.js"></script>
+            padding:
+                9px
+                14px;
 
+            min-width: 165px;
+            text-align: center;
+        }
 
-<style>
-
-:root {
-    --bg: #f3f5f7;
-    --surface: #ffffff;
-    --text: #20252b;
-    --muted: #7a828b;
-    --border: #e7eaee;
-
-    --equipes: #4f6b82;
-    --programacoes: #d59a35;
-    --ligacoes: #3c8c74;
+        .visao-atual .rotulo {
+            display: block;
 
-    --dark: #252b31;
-}
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
 
-* {
-    box-sizing: border-box;
-}
+            opacity: 0.65;
 
-body {
-    margin: 0;
-    font-family: "Segoe UI", Arial, Helvetica, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-}
+            margin-bottom: 3px;
+        }
 
-.container {
-    max-width: 1500px;
-    margin: auto;
-    padding: 32px;
-}
+        .visao-atual .nome {
+            display: block;
+            font-size: 14px;
+            font-weight: 700;
+        }
 
+        .contador {
+            font-size: 12px;
+            opacity: 0.8;
 
-/* =====================================================
-   CABEÇALHO
-===================================================== */
-
-.header {
-    background: var(--dark);
-    color: white;
-    border-radius: 18px;
-    padding: 28px 32px;
-    margin-bottom: 24px;
+            white-space: nowrap;
+        }
 
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 30px;
-}
+        .container {
+            max-width: 1600px;
 
-.header-title {
-    display: flex;
-    align-items: center;
-    gap: 18px;
-}
+            margin: 0 auto;
 
-.logo-mark {
-    width: 54px;
-    height: 54px;
+            padding:
+                24px
+                28px
+                30px;
+        }
 
-    border-radius: 14px;
+        /*
+            Todo o conteúdo que muda durante
+            a rotação fica dentro desta área.
+        */
+        .painel-conteudo {
+            opacity: 1;
+            transform: translateY(0);
 
-    background: rgba(255,255,255,.10);
+            transition:
+                opacity 0.22s ease,
+                transform 0.22s ease;
+        }
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+        .painel-conteudo.trocando {
+            opacity: 0.15;
+            transform: translateY(4px);
+        }
 
-    font-size: 26px;
-}
+        .titulo-visao {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
 
-.header h1 {
-    margin: 0;
-    font-size: 30px;
-    font-weight: 700;
-}
+            gap: 15px;
 
-.header p {
-    margin: 5px 0 0;
-    color: #c5cbd0;
-    font-size: 14px;
-}
+            margin-bottom: 16px;
+        }
 
+        .titulo-visao h2 {
+            margin: 0;
 
-/* =====================================================
-   STATUS
-===================================================== */
+            font-size: 19px;
+            font-weight: 700;
+        }
 
-.status-box {
-    text-align: right;
-}
+        .titulo-visao p {
+            margin:
+                4px
+                0
+                0;
 
-.status-online {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
+            font-size: 12px;
+            color: var(--cor-texto-secundario);
+        }
 
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: .5px;
-}
+        .cards {
+            display: grid;
 
-.status-dot {
-    width: 8px;
-    height: 8px;
+            grid-template-columns:
+                repeat(3, 1fr);
 
-    border-radius: 50%;
+            gap: 18px;
 
-    background: #68d391;
-}
+            margin-bottom: 20px;
+        }
 
-.status-time {
-    margin-top: 7px;
-    color: #b9c0c6;
-    font-size: 12px;
-}
+        .card {
+            background: var(--cor-card);
 
+            border-radius: var(--raio);
 
-/* =====================================================
-   INTRODUÇÃO
-===================================================== */
+            padding:
+                18px
+                20px;
 
-.section-intro {
-    margin-bottom: 18px;
-}
+            box-shadow: var(--sombra);
 
-.section-intro h2 {
-    margin: 0;
-    font-size: 19px;
-}
+            border:
+                1px solid
+                rgba(0, 0, 0, 0.025);
 
-.section-intro p {
-    margin: 5px 0 0;
-    color: var(--muted);
-    font-size: 13px;
-}
+            position: relative;
 
+            overflow: hidden;
+        }
 
-/* =====================================================
-   CARDS
-===================================================== */
+        .card::before {
+            content: "";
 
-.cards {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
+            position: absolute;
 
-    gap: 18px;
+            left: 0;
+            top: 0;
+            bottom: 0;
 
-    margin-bottom: 24px;
-}
+            width: 5px;
+        }
 
-.card {
-    background: var(--surface);
+        .card.equipes::before {
+            background: var(--cor-equipes);
+        }
 
-    border-radius: 16px;
+        .card.programacoes::before {
+            background: var(--cor-programacoes);
+        }
 
-    padding: 22px 24px;
+        .card.ligacoes::before {
+            background: var(--cor-ligacoes);
+        }
 
-    border: 1px solid var(--border);
+        .card-titulo {
+            font-size: 12px;
 
-    display: flex;
+            text-transform: uppercase;
 
-    justify-content: space-between;
+            letter-spacing: 0.5px;
 
-    align-items: center;
+            color: var(--cor-texto-secundario);
 
-    min-height: 135px;
-}
+            margin-bottom: 8px;
+        }
 
-.card-content {
-    display: flex;
-    flex-direction: column;
-}
+        .card-valor {
+            font-size: 34px;
 
-.card-title {
-    color: var(--muted);
+            font-weight: 700;
 
-    font-size: 12px;
+            line-height: 1;
 
-    font-weight: 700;
+            color: var(--cor-texto);
+        }
 
-    text-transform: uppercase;
+        .card-descricao {
+            font-size: 11px;
 
-    letter-spacing: .6px;
-}
+            color: #97a1aa;
 
-.card-value {
-    font-size: 42px;
+            margin-top: 8px;
+        }
 
-    font-weight: 700;
+        .graficos {
+            display: grid;
 
-    line-height: 1;
+            grid-template-columns:
+                minmax(0, 1.6fr)
+                minmax(350px, 1fr);
 
-    margin-top: 14px;
-}
+            gap: 18px;
 
-.card-description {
-    margin-top: 8px;
+            margin-bottom: 20px;
+        }
 
-    color: var(--muted);
+        .painel {
+            background: var(--cor-card);
 
-    font-size: 12px;
-}
+            border-radius: var(--raio);
 
+            padding:
+                18px
+                20px;
 
-/* =====================================================
-   ÍCONES DOS CARDS
-===================================================== */
+            box-shadow: var(--sombra);
 
-.card-icon {
-    width: 58px;
-    height: 58px;
+            border:
+                1px solid
+                rgba(0, 0, 0, 0.025);
 
-    border-radius: 16px;
+            min-width: 0;
+        }
 
-    display: flex;
+        .painel-cabecalho {
+            margin-bottom: 15px;
+        }
 
-    align-items: center;
+        .painel-titulo {
+            font-size: 15px;
 
-    justify-content: center;
+            font-weight: 700;
 
-    font-size: 25px;
-}
+            margin-bottom: 4px;
+        }
 
-.card-equipes {
-    border-top: 4px solid var(--equipes);
-}
+        .painel-subtitulo {
+            font-size: 11px;
 
-.card-equipes .card-icon {
-    background: rgba(79,107,130,.12);
-    color: var(--equipes);
-}
+            color: var(--cor-texto-secundario);
+        }
 
-.card-programacoes {
-    border-top: 4px solid var(--programacoes);
-}
+        .grafico-container {
+            position: relative;
 
-.card-programacoes .card-icon {
-    background: rgba(213,154,53,.12);
-    color: var(--programacoes);
-}
+            height: 320px;
 
-.card-ligacoes {
-    border-top: 4px solid var(--ligacoes);
-}
+            width: 100%;
+        }
 
-.card-ligacoes .card-icon {
-    background: rgba(60,140,116,.12);
-    color: var(--ligacoes);
-}
+        .mensagem-grafico {
+            height: 100%;
 
+            display: flex;
+            justify-content: center;
+            align-items: center;
 
-/* =====================================================
-   GRÁFICOS
-===================================================== */
+            color: var(--cor-texto-secundario);
 
-.dashboard-grid {
-    display: grid;
+            font-size: 13px;
 
-    grid-template-columns: 2fr 1fr;
+            text-align: center;
+        }
 
-    gap: 18px;
+        .tabela-wrapper {
+            width: 100%;
+            overflow-x: auto;
+        }
 
-    margin-bottom: 24px;
-}
+        table {
+            width: 100%;
 
-.panel {
-    background: var(--surface);
+            border-collapse: collapse;
 
-    border-radius: 16px;
+            font-size: 12px;
+        }
 
-    border: 1px solid var(--border);
+        thead {
+            background: #f6f8f9;
+        }
 
-    padding: 22px 24px;
-}
+        th {
+            padding:
+                11px
+                12px;
 
-.panel-header {
-    margin-bottom: 20px;
-}
+            text-align: left;
 
-.panel-title {
-    margin: 0;
+            color: #697781;
 
-    font-size: 16px;
+            font-size: 10px;
 
-    font-weight: 700;
-}
+            text-transform: uppercase;
 
-.panel-subtitle {
-    margin: 5px 0 0;
+            letter-spacing: 0.45px;
 
-    color: var(--muted);
+            border-bottom:
+                1px solid
+                var(--cor-borda);
+        }
 
-    font-size: 12px;
-}
+        td {
+            padding:
+                11px
+                12px;
 
-.chart-container {
-    position: relative;
+            border-bottom:
+                1px solid
+                #edf0f2;
 
-    height: 360px;
-}
+            white-space: nowrap;
+        }
 
+        tbody tr:hover {
+            background: #fafbfc;
+        }
 
-/* MENSAGEM DE ERRO DO GRÁFICO */
+        .numero {
+            text-align: right;
+        }
 
-.chart-error {
-    height: 100%;
+        .parceira-tag {
+            display: inline-block;
 
-    display: flex;
+            padding:
+                4px
+                9px;
 
-    align-items: center;
+            border-radius: 12px;
 
-    justify-content: center;
+            background: #edf1f4;
 
-    text-align: center;
+            font-size: 11px;
 
-    color: var(--muted);
+            font-weight: 600;
 
-    font-size: 13px;
+            color: #4d5a64;
+        }
 
-    padding: 30px;
-}
+        .rodape {
+            display: flex;
 
+            justify-content: space-between;
+            align-items: center;
 
-/* =====================================================
-   TABELA
-===================================================== */
+            gap: 16px;
 
-.table-panel {
-    margin-bottom: 30px;
-}
+            margin-top: 14px;
 
-.table-container {
-    width: 100%;
+            padding:
+                0
+                3px;
 
-    overflow-x: auto;
-}
+            font-size: 10px;
 
-table {
-    width: 100%;
+            color: #8b969e;
+        }
 
-    border-collapse: collapse;
-}
+        #erro {
+            display: none;
 
-thead {
-    border-bottom: 2px solid var(--border);
-}
+            background: #fff4f4;
 
-th {
-    padding: 13px 14px;
+            border:
+                1px solid
+                #f1cccc;
 
-    text-align: center;
+            border-radius: 8px;
 
-    color: var(--muted);
+            padding:
+                10px
+                14px;
 
-    font-size: 11px;
+            margin-bottom: 18px;
 
-    font-weight: 700;
+            color: #a04444;
 
-    text-transform: uppercase;
+            font-size: 12px;
+        }
 
-    letter-spacing: .5px;
-}
+        .sem-dados {
+            padding: 30px;
 
-td {
-    padding: 15px 14px;
+            text-align: center;
 
-    text-align: center;
+            color: var(--cor-texto-secundario);
 
-    border-bottom: 1px solid #eef0f2;
+            font-size: 13px;
+        }
 
-    font-size: 13px;
-}
+        @media (max-width: 1100px) {
+            .graficos {
+                grid-template-columns: 1fr;
+            }
+        }
 
-tbody tr {
-    transition: background .15s ease;
-}
+        @media (max-width: 760px) {
 
-tbody tr:hover {
-    background: #f7f9fa;
-}
+            .header {
+                padding:
+                    18px
+                    20px;
 
-.parceira {
-    display: inline-block;
+                flex-direction: column;
+                align-items: flex-start;
+            }
 
-    background: #f0f2f4;
+            .header-direita {
+                width: 100%;
 
-    border-radius: 20px;
+                justify-content: space-between;
+            }
 
-    padding: 5px 12px;
+            .container {
+                padding:
+                    18px
+                    14px
+                    24px;
+            }
 
-    font-weight: 600;
+            .cards {
+                grid-template-columns: 1fr;
+            }
 
-    font-size: 12px;
-}
+            .grafico-container {
+                height: 280px;
+            }
 
+            .titulo {
+                font-size: 23px;
+            }
 
-/* =====================================================
-   RODAPÉ
-===================================================== */
-
-.footer {
-    color: var(--muted);
-
-    font-size: 11px;
-
-    text-align: center;
-
-    padding-bottom: 15px;
-}
-
-
-/* =====================================================
-   RESPONSIVIDADE
-===================================================== */
-
-@media (max-width: 950px) {
-
-    .dashboard-grid {
-        grid-template-columns: 1fr;
-    }
-
-}
-
-@media (max-width: 800px) {
-
-    .container {
-        padding: 15px;
-    }
-
-    .cards {
-        grid-template-columns: 1fr;
-    }
-
-    .header {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .status-box {
-        text-align: left;
-    }
-
-}
-
-</style>
-
+            .rodape {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
 </head>
-
 
 <body>
 
-<div class="container">
-
-
-<!-- =====================================================
-     CABEÇALHO
-===================================================== -->
-
 <header class="header">
 
-    <div class="header-title">
-
-        <div class="logo-mark">
-            ⚡
+    <div class="header-esquerda">
+        <div class="titulo">Dia C</div>
+        <div class="subtitulo">
+            Acompanhamento de mobilização e execução
         </div>
-
-        <div>
-
-            <h1>
-                Dia C
-            </h1>
-
-            <p>
-                Acompanhamento das Execuções
-            </p>
-
-        </div>
-
     </div>
 
+    <div class="header-direita">
 
-    <div class="status-box">
+        <div class="visao-atual">
+            <span class="rotulo">
+                Visão atual
+            </span>
 
-        <div class="status-online">
-
-            <span class="status-dot"></span>
-
-            DADOS ATUALIZADOS
-
+            <span
+                class="nome"
+                id="nomeVisaoHeader"
+            >
+                VISÃO GERAL
+            </span>
         </div>
 
         <div
-            class="status-time"
-            id="status">
-
-            Carregando dados...
-
+            class="contador"
+            id="contador"
+        >
+            Próxima visão em 15 s
         </div>
 
     </div>
@@ -521,1419 +568,1506 @@ tbody tr:hover {
 </header>
 
 
-<!-- =====================================================
-     VISÃO CONSOLIDADA
-===================================================== -->
+<main class="container">
 
-<div class="section-intro">
+    <div id="erro"></div>
 
-    <h2>
-        Visão consolidada
-    </h2>
+    <div
+        id="painelConteudo"
+        class="painel-conteudo"
+    >
 
-    <p>
-        Acompanhamento geral das mobilizações e execuções realizadas.
-    </p>
+        <div class="titulo-visao">
 
-</div>
+            <div>
 
+                <h2 id="tituloVisao">
+                    Visão Geral
+                </h2>
 
-<!-- =====================================================
-     CARDS
-===================================================== -->
+                <p id="descricaoVisao">
+                    Consolidado de todas as parceiras
+                </p>
 
-<section class="cards">
-
-
-    <div class="card card-equipes">
-
-        <div class="card-content">
-
-            <div class="card-title">
-                Equipes Mobilizadas
-            </div>
-
-            <div
-                class="card-value"
-                id="totalEquipes">
-
-                -
-
-            </div>
-
-            <div class="card-description">
-                Total acumulado
             </div>
 
         </div>
 
 
-        <div class="card-icon">
-            👥
-        </div>
+        <!-- CARDS -->
+
+        <section class="cards">
+
+            <div class="card equipes">
+
+                <div class="card-titulo">
+                    Equipes Mobilizadas
+                </div>
+
+                <div
+                    class="card-valor"
+                    id="totalEquipes"
+                >
+                    0
+                </div>
+
+                <div
+                    class="card-descricao"
+                    id="descricaoEquipes"
+                >
+                    Total acumulado
+                </div>
+
+            </div>
+
+
+            <div class="card programacoes">
+
+                <div class="card-titulo">
+                    Programações Executadas
+                </div>
+
+                <div
+                    class="card-valor"
+                    id="totalProgramacoes"
+                >
+                    0
+                </div>
+
+                <div
+                    class="card-descricao"
+                    id="descricaoProgramacoes"
+                >
+                    Total acumulado
+                </div>
+
+            </div>
+
+
+            <div class="card ligacoes">
+
+                <div class="card-titulo">
+                    Ligações Executadas
+                </div>
+
+                <div
+                    class="card-valor"
+                    id="totalLigacoes"
+                >
+                    0
+                </div>
+
+                <div
+                    class="card-descricao"
+                    id="descricaoLigacoes"
+                >
+                    Total acumulado
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- GRÁFICOS -->
+
+        <section class="graficos">
+
+            <div class="painel">
+
+                <div class="painel-cabecalho">
+
+                    <div class="painel-titulo">
+                        Evolução das Execuções
+                    </div>
+
+                    <div
+                        class="painel-subtitulo"
+                        id="subtituloEvolucao"
+                    >
+                        Evolução cronológica consolidada
+                    </div>
+
+                </div>
+
+                <div
+                    class="grafico-container"
+                    id="containerGraficoEvolucao"
+                >
+
+                    <canvas
+                        id="graficoEvolucao"
+                    ></canvas>
+
+                </div>
+
+            </div>
+
+
+            <div class="painel">
+
+                <div class="painel-cabecalho">
+
+                    <div
+                        class="painel-titulo"
+                        id="tituloGraficoSecundario"
+                    >
+                        Execuções por Parceira
+                    </div>
+
+                    <div
+                        class="painel-subtitulo"
+                        id="subtituloGraficoSecundario"
+                    >
+                        Comparativo acumulado
+                    </div>
+
+                </div>
+
+                <div
+                    class="grafico-container"
+                    id="containerGraficoParceira"
+                >
+
+                    <canvas
+                        id="graficoParceira"
+                    ></canvas>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- TABELA -->
+
+        <section class="painel">
+
+            <div class="painel-cabecalho">
+
+                <div class="painel-titulo">
+                    Detalhamento
+                </div>
+
+                <div
+                    class="painel-subtitulo"
+                    id="subtituloTabela"
+                >
+                    Registros de todas as parceiras
+                </div>
+
+            </div>
+
+            <div class="tabela-wrapper">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Data</th>
+
+                            <th>Parceira</th>
+
+                            <th class="numero">
+                                Equipes Mobilizadas
+                            </th>
+
+                            <th class="numero">
+                                Programações Executadas
+                            </th>
+
+                            <th class="numero">
+                                Ligações Executadas
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="corpoTabela"></tbody>
+
+                </table>
+
+            </div>
+
+        </section>
 
     </div>
 
 
-    <div class="card card-programacoes">
+    <div class="rodape">
 
-        <div class="card-content">
+        <span>
+            Atualização automática dos dados a cada 60 segundos
+        </span>
 
-            <div class="card-title">
-                Programações Executadas
-            </div>
-
-            <div
-                class="card-value"
-                id="totalProgramacoes">
-
-                -
-
-            </div>
-
-            <div class="card-description">
-                Total acumulado
-            </div>
-
-        </div>
-
-
-        <div class="card-icon">
-            ✓
-        </div>
+        <span id="statusAtualizacao">
+            Última atualização: --
+        </span>
 
     </div>
 
-
-    <div class="card card-ligacoes">
-
-        <div class="card-content">
-
-            <div class="card-title">
-                Ligações Executadas
-            </div>
-
-            <div
-                class="card-value"
-                id="totalLigacoes">
-
-                -
-
-            </div>
-
-            <div class="card-description">
-                Total acumulado
-            </div>
-
-        </div>
-
-
-        <div class="card-icon">
-            ⚡
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- =====================================================
-     GRÁFICOS
-===================================================== -->
-
-<section class="dashboard-grid">
-
-
-    <!-- EVOLUÇÃO -->
-
-    <div class="panel">
-
-        <div class="panel-header">
-
-            <h3 class="panel-title">
-                Evolução das Execuções
-            </h3>
-
-            <p class="panel-subtitle">
-                Acompanhamento por data
-            </p>
-
-        </div>
-
-
-        <div
-            class="chart-container"
-            id="containerGraficoEvolucao">
-
-            <canvas id="graficoEvolucao"></canvas>
-
-        </div>
-
-    </div>
-
-
-    <!-- PARCEIRAS -->
-
-    <div class="panel">
-
-        <div class="panel-header">
-
-            <h3 class="panel-title">
-                Execuções por Parceira
-            </h3>
-
-            <p class="panel-subtitle">
-                Visão consolidada por empresa
-            </p>
-
-        </div>
-
-
-        <div
-            class="chart-container"
-            id="containerGraficoParceiras">
-
-            <canvas id="graficoParceiras"></canvas>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- =====================================================
-     TABELA
-===================================================== -->
-
-<section class="panel table-panel">
-
-    <div class="panel-header">
-
-        <h3 class="panel-title">
-            Detalhamento
-        </h3>
-
-        <p class="panel-subtitle">
-            Histórico das execuções em ordem cronológica
-        </p>
-
-    </div>
-
-
-    <div class="table-container">
-
-        <table>
-
-            <thead>
-
-                <tr>
-
-                    <th>
-                        Data
-                    </th>
-
-                    <th>
-                        Parceira
-                    </th>
-
-                    <th>
-                        Equipes Mobilizadas
-                    </th>
-
-                    <th>
-                        Programações Executadas
-                    </th>
-
-                    <th>
-                        Ligações Executadas
-                    </th>
-
-                </tr>
-
-            </thead>
-
-
-            <tbody id="tabelaDados">
-            </tbody>
-
-        </table>
-
-    </div>
-
-</section>
-
-
-<div class="footer">
-
-    Dashboard Dia C • Atualização automática
-
-</div>
-
-
-</div>
+</main>
 
 
 <script>
 
+    /* ============================================================
+       CONFIGURAÇÕES
+       ============================================================ */
 
-/* =========================================================
-   VARIÁVEIS
-========================================================= */
+    const TEMPO_VISAO = 15;
+    const TEMPO_ATUALIZACAO_DADOS = 60000;
 
-let grafico = null;
+    const COR_EQUIPES = "#4f6b82";
+    const COR_PROGRAMACOES = "#d59a35";
+    const COR_LIGACOES = "#3c8c74";
 
-let graficoParceiras = null;
-
-let pluginDataLabelsDisponivel = false;
-
-
-/* =========================================================
-   CORES
-========================================================= */
-
-const corEquipes =
-    "#4f6b82";
-
-const corProgramacoes =
-    "#d59a35";
-
-const corLigacoes =
-    "#3c8c74";
-
-
-/* =========================================================
-   VERIFICAR CHART.JS
-========================================================= */
-
-/*
-O dashboard NÃO depende desta etapa
-para carregar cards e tabela.
-
-Se Chart.js apresentar qualquer problema,
-os demais componentes continuam funcionando.
-*/
-
-if (typeof Chart !== "undefined") {
-
-    console.log(
-        "Chart.js carregado com sucesso."
-    );
-
+    let dadosGlobais = [];
 
     /*
-    Registra DataLabels somente
-    se o plugin também estiver disponível.
+        views[0] sempre será a visão geral.
+
+        As demais são criadas automaticamente
+        a partir das parceiras existentes no JSON.
     */
-
-    if (
-        typeof ChartDataLabels !==
-        "undefined"
-    ) {
-
-        try {
-
-            Chart.register(
-                ChartDataLabels
-            );
-
-            pluginDataLabelsDisponivel =
-                true;
-
-            console.log(
-                "ChartDataLabels carregado com sucesso."
-            );
-
+    let visoes = [
+        {
+            tipo: "geral",
+            nome: "VISÃO GERAL"
         }
-
-        catch (erro) {
-
-            console.warn(
-                "Não foi possível registrar ChartDataLabels:",
-                erro
-            );
-
-        }
-
-    }
-
-    else {
-
-        console.warn(
-            "ChartDataLabels não está disponível."
-        );
-
-    }
-
-}
-
-else {
-
-    console.error(
-        "Chart.js não foi carregado."
-    );
-
-}
-
-
-/* =========================================================
-   CONVERTER NÚMEROS
-========================================================= */
-
-function numero(valor) {
-
-    if (
-        valor === null ||
-        valor === undefined ||
-        valor === ""
-    ) {
-
-        return 0;
-
-    }
-
-
-    return Number(
-
-        String(valor)
-
-            .replace(/\./g, "")
-
-            .replace(",", ".")
-
-    ) || 0;
-
-}
-
-
-/* =========================================================
-   CONVERTER DATA
-========================================================= */
-
-function converterData(valor) {
-
-
-    if (
-        valor === null ||
-        valor === undefined ||
-        valor === ""
-    ) {
-
-        return null;
-
-    }
-
-
-    /*
-    ==========================================
-    SERIAL DO EXCEL
-    ==========================================
-    */
-
-    if (
-
-        typeof valor === "number" ||
-
-        /^\d+(\.\d+)?$/
-            .test(
-                String(valor).trim()
-            )
-
-    ) {
-
-
-        const serial =
-            Number(valor);
-
-
-        if (serial > 20000) {
-
-
-            const dias =
-                Math.floor(serial);
-
-
-            const dataUTC =
-                new Date(
-
-                    Date.UTC(
-
-                        1899,
-
-                        11,
-
-                        30 + dias
-
-                    )
-
-                );
-
-
-            return new Date(
-
-                dataUTC.getUTCFullYear(),
-
-                dataUTC.getUTCMonth(),
-
-                dataUTC.getUTCDate()
-
-            );
-
-        }
-
-    }
-
-
-    const texto =
-        String(valor).trim();
-
-
-    /*
-    ==========================================
-    DD/MM/YYYY
-    ==========================================
-    */
-
-    const brasileiro =
-        texto.match(
-
-            /^(\d{1,2})\/(\d{1,2})\/(\d{4})/
-
-        );
-
-
-    if (brasileiro) {
-
-
-        return new Date(
-
-            Number(
-                brasileiro[3]
-            ),
-
-            Number(
-                brasileiro[2]
-            ) - 1,
-
-            Number(
-                brasileiro[1]
-            )
-
-        );
-
-    }
-
-
-    /*
-    ==========================================
-    YYYY-MM-DD
-    ==========================================
-    */
-
-    const iso =
-        texto.match(
-
-            /^(\d{4})-(\d{1,2})-(\d{1,2})/
-
-        );
-
-
-    if (iso) {
-
-
-        return new Date(
-
-            Number(
-                iso[1]
-            ),
-
-            Number(
-                iso[2]
-            ) - 1,
-
-            Number(
-                iso[3]
-            )
-
-        );
-
-    }
-
-
-    /*
-    ==========================================
-    ÚLTIMA TENTATIVA
-    ==========================================
-    */
-
-    const data =
-        new Date(texto);
-
-
-    if (
-        !isNaN(
-            data.getTime()
-        )
-    ) {
-
-        return data;
-
-    }
-
-
-    return null;
-
-}
-
-
-/* =========================================================
-   FORMATAR DATA
-========================================================= */
-
-/*
-Resultado:
-
-20/jun/2026
-27/jun/2026
-19/set/2026
-*/
-
-function formatarData(valor) {
-
-
-    const data =
-
-        valor instanceof Date
-
-        ? valor
-
-        : converterData(valor);
-
-
-    if (!data) {
-
-        return "";
-
-    }
-
-
-    const meses = [
-
-        "jan",
-        "fev",
-        "mar",
-        "abr",
-        "mai",
-        "jun",
-        "jul",
-        "ago",
-        "set",
-        "out",
-        "nov",
-        "dez"
-
     ];
 
+    let indiceVisaoAtual = 0;
 
-    const dia =
+    let segundosRestantes = TEMPO_VISAO;
 
-        String(
-            data.getDate()
-        )
+    let temporizadorRotacao = null;
 
-        .padStart(
-            2,
-            "0"
+    let graficoEvolucao = null;
+    let graficoParceira = null;
+
+    let pluginDataLabelsDisponivel = false;
+
+
+    /* ============================================================
+       CHART.JS
+       ============================================================ */
+
+    if (typeof Chart !== "undefined") {
+
+        console.log(
+            "Chart.js carregado com sucesso."
         );
 
+        if (
+            typeof ChartDataLabels !== "undefined"
+        ) {
 
-    const mes =
+            try {
 
-        meses[
-            data.getMonth()
+                Chart.register(
+                    ChartDataLabels
+                );
+
+                pluginDataLabelsDisponivel = true;
+
+                console.log(
+                    "ChartDataLabels carregado com sucesso."
+                );
+
+            } catch (erro) {
+
+                console.warn(
+                    "Não foi possível registrar ChartDataLabels:",
+                    erro
+                );
+
+            }
+
+        } else {
+
+            console.warn(
+                "ChartDataLabels não foi carregado."
+            );
+
+        }
+
+    } else {
+
+        console.warn(
+            "Chart.js não foi carregado. " +
+            "Cards e tabela continuarão funcionando."
+        );
+
+    }
+
+
+    /* ============================================================
+       FUNÇÕES AUXILIARES
+       ============================================================ */
+
+    function numero(valor) {
+
+        if (
+            valor === null ||
+            valor === undefined ||
+            valor === ""
+        ) {
+            return 0;
+        }
+
+        if (
+            typeof valor === "number"
+        ) {
+
+            return Number.isFinite(valor)
+                ? valor
+                : 0;
+
+        }
+
+        let texto = String(valor).trim();
+
+        /*
+            Caso venha no padrão brasileiro:
+            1.234,56
+        */
+        if (
+            texto.includes(",")
+        ) {
+
+            texto = texto
+                .replace(/\./g, "")
+                .replace(",", ".");
+
+        }
+
+        const resultado = Number(texto);
+
+        return Number.isFinite(resultado)
+            ? resultado
+            : 0;
+    }
+
+
+    function formatarNumero(valor) {
+
+        return numero(valor)
+            .toLocaleString(
+                "pt-BR",
+                {
+                    maximumFractionDigits: 2
+                }
+            );
+
+    }
+
+
+    function converterData(valor) {
+
+        if (
+            valor === null ||
+            valor === undefined ||
+            valor === ""
+        ) {
+            return null;
+        }
+
+
+        /*
+            DATA DO EXCEL COMO NÚMERO SERIAL
+        */
+
+        if (
+            typeof valor === "number" &&
+            valor > 20000
+        ) {
+
+            const milissegundos =
+                Date.UTC(
+                    1899,
+                    11,
+                    30
+                )
+                +
+                (
+                    valor *
+                    86400000
+                );
+
+            const data = new Date(
+                milissegundos
+            );
+
+            if (
+                !isNaN(data.getTime())
+            ) {
+                return data;
+            }
+
+        }
+
+
+        const texto =
+            String(valor).trim();
+
+
+        /*
+            Caso o serial do Excel
+            venha como texto.
+        */
+
+        if (
+            /^\d+(\.\d+)?$/.test(texto)
+        ) {
+
+            const serial =
+                Number(texto);
+
+            if (
+                serial > 20000
+            ) {
+
+                const data = new Date(
+                    Date.UTC(
+                        1899,
+                        11,
+                        30
+                    )
+                    +
+                    (
+                        serial *
+                        86400000
+                    )
+                );
+
+                if (
+                    !isNaN(data.getTime())
+                ) {
+                    return data;
+                }
+
+            }
+
+        }
+
+
+        /*
+            DD/MM/AAAA
+        */
+
+        let correspondencia =
+            texto.match(
+                /^(\d{1,2})\/(\d{1,2})\/(\d{4})/
+            );
+
+        if (correspondencia) {
+
+            const dia =
+                Number(
+                    correspondencia[1]
+                );
+
+            const mes =
+                Number(
+                    correspondencia[2]
+                ) - 1;
+
+            const ano =
+                Number(
+                    correspondencia[3]
+                );
+
+            return new Date(
+                Date.UTC(
+                    ano,
+                    mes,
+                    dia
+                )
+            );
+
+        }
+
+
+        /*
+            AAAA-MM-DD
+        */
+
+        correspondencia =
+            texto.match(
+                /^(\d{4})-(\d{1,2})-(\d{1,2})/
+            );
+
+        if (correspondencia) {
+
+            const ano =
+                Number(
+                    correspondencia[1]
+                );
+
+            const mes =
+                Number(
+                    correspondencia[2]
+                ) - 1;
+
+            const dia =
+                Number(
+                    correspondencia[3]
+                );
+
+            return new Date(
+                Date.UTC(
+                    ano,
+                    mes,
+                    dia
+                )
+            );
+
+        }
+
+
+        /*
+            Tentativa genérica.
+        */
+
+        const data =
+            new Date(texto);
+
+        if (
+            !isNaN(data.getTime())
+        ) {
+            return data;
+        }
+
+
+        return null;
+    }
+
+
+    function formatarData(valor) {
+
+        const data =
+            converterData(valor);
+
+        if (!data) {
+            return String(valor ?? "");
+        }
+
+
+        const meses = [
+            "jan",
+            "fev",
+            "mar",
+            "abr",
+            "mai",
+            "jun",
+            "jul",
+            "ago",
+            "set",
+            "out",
+            "nov",
+            "dez"
         ];
 
 
-    const ano =
-
-        data.getFullYear();
-
-
-    return (
-
-        dia +
-        "/" +
-        mes +
-        "/" +
-        ano
-
-    );
-
-}
+        const dia =
+            String(
+                data.getUTCDate()
+            )
+            .padStart(
+                2,
+                "0"
+            );
 
 
-/* =========================================================
-   ORDENAR CRONOLOGICAMENTE
-========================================================= */
-
-function ordenarPorData(dados) {
-
-
-    return [...dados].sort(
-
-        function(a, b) {
+        const mes =
+            meses[
+                data.getUTCMonth()
+            ];
 
 
-            const dataA =
-                converterData(
-                    a.DATA
-                );
+        const ano =
+            data.getUTCFullYear();
 
 
-            const dataB =
-                converterData(
-                    b.DATA
-                );
+        return `${dia}/${mes}/${ano}`;
+    }
 
+
+    function ordenarPorData(dados) {
+
+        return [...dados]
+            .sort(
+                (a, b) => {
+
+                    const dataA =
+                        converterData(
+                            a.DATA
+                        );
+
+                    const dataB =
+                        converterData(
+                            b.DATA
+                        );
+
+
+                    if (
+                        !dataA &&
+                        !dataB
+                    ) {
+                        return 0;
+                    }
+
+                    if (!dataA) {
+                        return 1;
+                    }
+
+                    if (!dataB) {
+                        return -1;
+                    }
+
+
+                    return (
+                        dataA.getTime()
+                        -
+                        dataB.getTime()
+                    );
+
+                }
+            );
+
+    }
+
+
+    function nomeParceira(registro) {
+
+        const nome =
+            registro?.PARCEIRA;
+
+        if (
+            nome === null ||
+            nome === undefined
+        ) {
+            return "";
+        }
+
+        return String(nome).trim();
+
+    }
+
+
+    function somarCampo(
+        dados,
+        campo
+    ) {
+
+        return dados.reduce(
+            (total, item) =>
+                total +
+                numero(
+                    item[campo]
+                ),
+            0
+        );
+
+    }
+
+
+    /* ============================================================
+       VISÕES
+       ============================================================ */
+
+    function atualizarListaVisoes() {
+
+        const nomeVisaoAtual =
+            visoes[
+                indiceVisaoAtual
+            ]?.nome;
+
+
+        const parceiras =
+            [
+                ...new Set(
+                    dadosGlobais
+                        .map(
+                            item =>
+                                nomeParceira(
+                                    item
+                                )
+                        )
+                        .filter(Boolean)
+                )
+            ]
+            .sort(
+                (a, b) =>
+                    a.localeCompare(
+                        b,
+                        "pt-BR",
+                        {
+                            sensitivity: "base"
+                        }
+                    )
+            );
+
+
+        visoes = [
+            {
+                tipo: "geral",
+                nome: "VISÃO GERAL"
+            },
+
+            ...parceiras.map(
+                parceira => ({
+                    tipo: "parceira",
+                    nome: parceira,
+                    parceira: parceira
+                })
+            )
+        ];
+
+
+        /*
+            Durante a atualização do JSON,
+            preserva a visão que já estava
+            sendo exibida.
+        */
+
+        const novoIndice =
+            visoes.findIndex(
+                visao =>
+                    visao.nome ===
+                    nomeVisaoAtual
+            );
+
+
+        if (
+            novoIndice >= 0
+        ) {
+
+            indiceVisaoAtual =
+                novoIndice;
+
+        } else {
 
             /*
-            Datas inválidas ficam
-            no final.
+                Caso a parceira deixe
+                de existir na base,
+                volta para Geral.
             */
 
-            if (!dataA && !dataB) {
-
-                return 0;
-
-            }
-
-
-            if (!dataA) {
-
-                return 1;
-
-            }
-
-
-            if (!dataB) {
-
-                return -1;
-
-            }
-
-
-            return (
-
-                dataA.getTime() -
-                dataB.getTime()
-
-            );
+            indiceVisaoAtual = 0;
 
         }
 
-    );
-
-}
+    }
 
 
-/* =========================================================
-   CARREGAR DADOS
-========================================================= */
+    function obterVisaoAtual() {
 
-async function carregarDados() {
+        return (
+            visoes[
+                indiceVisaoAtual
+            ]
+            ||
+            visoes[0]
+        );
 
-
-    try {
-
-
-        /*
-        Timestamp evita cache
-        do dados.json.
-        */
-
-        const response =
-
-            await fetch(
-
-                "./dados.json?t=" +
-
-                new Date().getTime()
-
-            );
+    }
 
 
-        if (!response.ok) {
+    function obterDadosVisaoAtual() {
 
+        const visao =
+            obterVisaoAtual();
 
-            throw new Error(
-
-                "Erro HTTP " +
-                response.status +
-                " ao carregar dados.json"
-
-            );
-
-        }
-
-
-        const dadosOriginais =
-
-            await response.json();
-
-
-        /*
-        Segurança adicional:
-        verifica se o JSON realmente
-        contém um array.
-        */
 
         if (
-            !Array.isArray(
-                dadosOriginais
-            )
+            visao.tipo === "geral"
         ) {
 
-
-            throw new Error(
-
-                "dados.json não contém um array válido."
-
-            );
+            return dadosGlobais;
 
         }
 
 
-        /*
-        Ordenação cronológica.
-        */
-
-        const dados =
-
-            ordenarPorData(
-                dadosOriginais
-            );
-
-
-        /*
-        =================================================
-        ESTES COMPONENTES NÃO DEPENDEM DO CHART.JS
-        =================================================
-        */
-
-        atualizarCards(
-            dados
+        return dadosGlobais.filter(
+            item =>
+                nomeParceira(item) ===
+                visao.parceira
         );
 
-
-        atualizarTabela(
-            dados
-        );
+    }
 
 
-        /*
-        =================================================
-        GRÁFICOS
-        =================================================
-        */
+    function avancarVisao() {
 
         if (
-            typeof Chart !==
-            "undefined"
+            visoes.length <= 1
         ) {
 
+            segundosRestantes =
+                TEMPO_VISAO;
 
-            try {
+            atualizarContador();
 
-                atualizarGrafico(
-                    dados
-                );
-
-            }
-
-            catch (erroGrafico) {
-
-                console.error(
-                    "Erro no gráfico de evolução:",
-                    erroGrafico
-                );
-
-            }
-
-
-            try {
-
-                atualizarGraficoParceiras(
-                    dados
-                );
-
-            }
-
-            catch (erroGraficoParceiras) {
-
-                console.error(
-                    "Erro no gráfico por parceira:",
-                    erroGraficoParceiras
-                );
-
-            }
+            return;
 
         }
 
 
-        /*
-        =================================================
-        HORÁRIO DA ÚLTIMA CONSULTA
-        =================================================
-        */
-
-        const agora =
-            new Date();
-
-
-        document
-            .getElementById(
-                "status"
+        indiceVisaoAtual =
+            (
+                indiceVisaoAtual + 1
             )
-            .textContent =
+            %
+            visoes.length;
 
-            "Última atualização: " +
 
-            agora.toLocaleTimeString(
-                "pt-BR"
+        segundosRestantes =
+            TEMPO_VISAO;
+
+
+        trocarVisaoComTransicao();
+
+    }
+
+
+    function trocarVisaoComTransicao() {
+
+        const painel =
+            document.getElementById(
+                "painelConteudo"
             );
 
 
+        painel.classList.add(
+            "trocando"
+        );
+
+
+        setTimeout(
+            () => {
+
+                renderizarVisao();
+
+                painel.classList.remove(
+                    "trocando"
+                );
+
+            },
+            220
+        );
+
     }
 
-    catch (erro) {
 
+    function iniciarRotacao() {
 
-        console.error(
-            "Erro ao carregar dados:",
-            erro
-        );
+        if (
+            temporizadorRotacao
+        ) {
 
-
-        document
-            .getElementById(
-                "status"
-            )
-            .textContent =
-
-            "Erro ao carregar os dados";
-
-    }
-
-}
-
-
-/* =========================================================
-   CARDS
-========================================================= */
-
-function atualizarCards(dados) {
-
-
-    let equipes =
-        0;
-
-    let programacoes =
-        0;
-
-    let ligacoes =
-        0;
-
-
-    dados.forEach(
-
-        function(item) {
-
-
-            equipes +=
-
-                numero(
-                    item.EQUIPES_MOBILIZADAS
-                );
-
-
-            programacoes +=
-
-                numero(
-                    item.PROGRAMACOES_EXECUTADAS
-                );
-
-
-            ligacoes +=
-
-                numero(
-                    item.LIGACOES_EXECUTADAS
-                );
-
-        }
-
-    );
-
-
-    document
-        .getElementById(
-            "totalEquipes"
-        )
-        .textContent =
-
-        equipes.toLocaleString(
-            "pt-BR"
-        );
-
-
-    document
-        .getElementById(
-            "totalProgramacoes"
-        )
-        .textContent =
-
-        programacoes.toLocaleString(
-            "pt-BR"
-        );
-
-
-    document
-        .getElementById(
-            "totalLigacoes"
-        )
-        .textContent =
-
-        ligacoes.toLocaleString(
-            "pt-BR"
-        );
-
-}
-
-
-/* =========================================================
-   TABELA
-========================================================= */
-
-function atualizarTabela(dados) {
-
-
-    const tabela =
-
-        document.getElementById(
-            "tabelaDados"
-        );
-
-
-    tabela.innerHTML =
-        "";
-
-
-    dados.forEach(
-
-        function(item) {
-
-
-            const linha =
-
-                document.createElement(
-                    "tr"
-                );
-
-
-            linha.innerHTML = `
-
-                <td>
-
-                    ${formatarData(
-                        item.DATA
-                    )}
-
-                </td>
-
-
-                <td>
-
-                    <span class="parceira">
-
-                        ${item.PARCEIRA ?? ""}
-
-                    </span>
-
-                </td>
-
-
-                <td>
-
-                    ${numero(
-                        item.EQUIPES_MOBILIZADAS
-                    ).toLocaleString("pt-BR")}
-
-                </td>
-
-
-                <td>
-
-                    ${numero(
-                        item.PROGRAMACOES_EXECUTADAS
-                    ).toLocaleString("pt-BR")}
-
-                </td>
-
-
-                <td>
-
-                    ${numero(
-                        item.LIGACOES_EXECUTADAS
-                    ).toLocaleString("pt-BR")}
-
-                </td>
-
-            `;
-
-
-            tabela.appendChild(
-                linha
+            clearInterval(
+                temporizadorRotacao
             );
 
         }
 
-    );
 
-}
+        temporizadorRotacao =
+            setInterval(
+                () => {
 
+                    segundosRestantes--;
 
-/* =========================================================
-   CONFIGURAÇÃO DOS RÓTULOS
-========================================================= */
+                    if (
+                        segundosRestantes <= 0
+                    ) {
 
-function configuracaoDataLabelsVertical() {
+                        avancarVisao();
 
+                    }
 
-    if (
-        !pluginDataLabelsDisponivel
-    ) {
-
-        return false;
-
-    }
-
-
-    return {
-
-        color:
-            "#333",
-
-        anchor:
-            "end",
-
-        align:
-            "end",
-
-        offset:
-            2,
-
-        clamp:
-            true,
-
-        font: {
-
-            size:
-                11,
-
-            weight:
-                "bold"
-
-        },
-
-        formatter:
-            function(valor) {
-
-
-                return Number(
-                    valor
-                ).toLocaleString(
-                    "pt-BR"
-                );
-
-            }
-
-    };
-
-}
-
-
-/* =========================================================
-   GRÁFICO DE EVOLUÇÃO
-========================================================= */
-
-function atualizarGrafico(dados) {
-
-
-    if (
-        typeof Chart ===
-        "undefined"
-    ) {
-
-        return;
-
-    }
-
-
-    const labels =
-
-        dados.map(
-
-            function(item) {
-
-                return formatarData(
-                    item.DATA
-                );
-
-            }
-
-        );
-
-
-    const equipes =
-
-        dados.map(
-
-            function(item) {
-
-                return numero(
-                    item.EQUIPES_MOBILIZADAS
-                );
-
-            }
-
-        );
-
-
-    const programacoes =
-
-        dados.map(
-
-            function(item) {
-
-                return numero(
-                    item.PROGRAMACOES_EXECUTADAS
-                );
-
-            }
-
-        );
-
-
-    const ligacoes =
-
-        dados.map(
-
-            function(item) {
-
-                return numero(
-                    item.LIGACOES_EXECUTADAS
-                );
-
-            }
-
-        );
-
-
-    const canvas =
-
-        document.getElementById(
-            "graficoEvolucao"
-        );
-
-
-    if (!canvas) {
-
-        return;
-
-    }
-
-
-    const contexto =
-
-        canvas.getContext(
-            "2d"
-        );
-
-
-    if (grafico) {
-
-        grafico.destroy();
-
-    }
-
-
-    grafico =
-
-        new Chart(
-
-            contexto,
-
-            {
-
-                type:
-                    "bar",
-
-
-                data: {
-
-                    labels:
-                        labels,
-
-
-                    datasets: [
-
-                        {
-
-                            label:
-                                "Equipes Mobilizadas",
-
-                            data:
-                                equipes,
-
-                            backgroundColor:
-                                corEquipes,
-
-                            borderRadius:
-                                5
-
-                        },
-
-                        {
-
-                            label:
-                                "Programações Executadas",
-
-                            data:
-                                programacoes,
-
-                            backgroundColor:
-                                corProgramacoes,
-
-                            borderRadius:
-                                5
-
-                        },
-
-                        {
-
-                            label:
-                                "Ligações Executadas",
-
-                            data:
-                                ligacoes,
-
-                            backgroundColor:
-                                corLigacoes,
-
-                            borderRadius:
-                                5
-
-                        }
-
-                    ]
+                    atualizarContador();
 
                 },
+                1000
+            );
+
+    }
 
 
-                options: {
+    function atualizarContador() {
 
-                    responsive:
-                        true,
+        const elemento =
+            document.getElementById(
+                "contador"
+            );
 
-                    maintainAspectRatio:
-                        false,
+
+        if (
+            visoes.length <= 1
+        ) {
+
+            elemento.textContent =
+                "Aguardando outras parceiras";
+
+            return;
+
+        }
 
 
-                    layout: {
+        elemento.textContent =
+            `Próxima visão em ${segundosRestantes} s`;
 
-                        padding: {
+    }
 
-                            top:
-                                25
 
+    /* ============================================================
+       CARDS
+       ============================================================ */
+
+    function renderizarCards(
+        dados
+    ) {
+
+        const totalEquipes =
+            somarCampo(
+                dados,
+                "EQUIPES_MOBILIZADAS"
+            );
+
+
+        const totalProgramacoes =
+            somarCampo(
+                dados,
+                "PROGRAMACOES_EXECUTADAS"
+            );
+
+
+        const totalLigacoes =
+            somarCampo(
+                dados,
+                "LIGACOES_EXECUTADAS"
+            );
+
+
+        document.getElementById(
+            "totalEquipes"
+        ).textContent =
+            formatarNumero(
+                totalEquipes
+            );
+
+
+        document.getElementById(
+            "totalProgramacoes"
+        ).textContent =
+            formatarNumero(
+                totalProgramacoes
+            );
+
+
+        document.getElementById(
+            "totalLigacoes"
+        ).textContent =
+            formatarNumero(
+                totalLigacoes
+            );
+
+    }
+
+
+    /* ============================================================
+       TABELA
+       ============================================================ */
+
+    function renderizarTabela(
+        dados
+    ) {
+
+        const corpoTabela =
+            document.getElementById(
+                "corpoTabela"
+            );
+
+
+        corpoTabela.innerHTML = "";
+
+
+        if (
+            dados.length === 0
+        ) {
+
+            corpoTabela.innerHTML = `
+                <tr>
+                    <td
+                        colspan="5"
+                        class="sem-dados"
+                    >
+                        Nenhum registro disponível.
+                    </td>
+                </tr>
+            `;
+
+            return;
+
+        }
+
+
+        ordenarPorData(
+            dados
+        ).forEach(
+            item => {
+
+                const linha =
+                    document.createElement(
+                        "tr"
+                    );
+
+
+                linha.innerHTML = `
+
+                    <td>
+                        ${formatarData(item.DATA)}
+                    </td>
+
+                    <td>
+                        <span class="parceira-tag">
+                            ${escaparHTML(
+                                nomeParceira(item)
+                            )}
+                        </span>
+                    </td>
+
+                    <td class="numero">
+                        ${formatarNumero(
+                            item.EQUIPES_MOBILIZADAS
+                        )}
+                    </td>
+
+                    <td class="numero">
+                        ${formatarNumero(
+                            item.PROGRAMACOES_EXECUTADAS
+                        )}
+                    </td>
+
+                    <td class="numero">
+                        ${formatarNumero(
+                            item.LIGACOES_EXECUTADAS
+                        )}
+                    </td>
+
+                `;
+
+
+                corpoTabela.appendChild(
+                    linha
+                );
+
+            }
+        );
+
+    }
+
+
+    function escaparHTML(texto) {
+
+        const div =
+            document.createElement(
+                "div"
+            );
+
+        div.textContent =
+            texto ?? "";
+
+        return div.innerHTML;
+
+    }
+
+
+    /* ============================================================
+       AGREGAÇÃO POR DATA
+       ============================================================ */
+
+    function agruparPorData(
+        dados
+    ) {
+
+        const mapa =
+            new Map();
+
+
+        ordenarPorData(
+            dados
+        ).forEach(
+            item => {
+
+                const data =
+                    converterData(
+                        item.DATA
+                    );
+
+
+                if (!data) {
+                    return;
+                }
+
+
+                const chave =
+                    data.getTime();
+
+
+                if (
+                    !mapa.has(chave)
+                ) {
+
+                    mapa.set(
+                        chave,
+                        {
+                            DATA: item.DATA,
+
+                            EQUIPES_MOBILIZADAS: 0,
+
+                            PROGRAMACOES_EXECUTADAS: 0,
+
+                            LIGACOES_EXECUTADAS: 0
                         }
+                    );
 
-                    },
-
-
-                    interaction: {
-
-                        mode:
-                            "index",
-
-                        intersect:
-                            false
-
-                    },
+                }
 
 
-                    plugins: {
+                const registro =
+                    mapa.get(chave);
 
-                        legend: {
 
-                            position:
-                                "top",
+                registro.EQUIPES_MOBILIZADAS +=
+                    numero(
+                        item.EQUIPES_MOBILIZADAS
+                    );
 
-                            labels: {
 
-                                usePointStyle:
-                                    true,
+                registro.PROGRAMACOES_EXECUTADAS +=
+                    numero(
+                        item.PROGRAMACOES_EXECUTADAS
+                    );
 
-                                boxWidth:
-                                    8,
 
-                                padding:
-                                    20
+                registro.LIGACOES_EXECUTADAS +=
+                    numero(
+                        item.LIGACOES_EXECUTADAS
+                    );
 
+            }
+        );
+
+
+        return [
+            ...mapa.entries()
+        ]
+        .sort(
+            (a, b) =>
+                a[0] - b[0]
+        )
+        .map(
+            item => item[1]
+        );
+
+    }
+
+
+    /* ============================================================
+       GRÁFICO DE EVOLUÇÃO
+       ============================================================ */
+
+    function renderizarGraficoEvolucao(
+        dados
+    ) {
+
+        if (
+            typeof Chart === "undefined"
+        ) {
+            return;
+        }
+
+
+        if (
+            graficoEvolucao
+        ) {
+
+            graficoEvolucao.destroy();
+
+            graficoEvolucao = null;
+
+        }
+
+
+        const dadosAgrupados =
+            agruparPorData(
+                dados
+            );
+
+
+        const labels =
+            dadosAgrupados.map(
+                item =>
+                    formatarData(
+                        item.DATA
+                    )
+            );
+
+
+        const equipes =
+            dadosAgrupados.map(
+                item =>
+                    numero(
+                        item.EQUIPES_MOBILIZADAS
+                    )
+            );
+
+
+        const programacoes =
+            dadosAgrupados.map(
+                item =>
+                    numero(
+                        item.PROGRAMACOES_EXECUTADAS
+                    )
+            );
+
+
+        const ligacoes =
+            dadosAgrupados.map(
+                item =>
+                    numero(
+                        item.LIGACOES_EXECUTADAS
+                    )
+            );
+
+
+        const canvas =
+            document.getElementById(
+                "graficoEvolucao"
+            );
+
+
+        graficoEvolucao =
+            new Chart(
+                canvas,
+                {
+
+                    type: "bar",
+
+                    data: {
+
+                        labels: labels,
+
+                        datasets: [
+
+                            {
+                                label:
+                                    "Equipes Mobilizadas",
+
+                                data:
+                                    equipes,
+
+                                backgroundColor:
+                                    COR_EQUIPES,
+
+                                borderRadius:
+                                    4,
+
+                                maxBarThickness:
+                                    34
+                            },
+
+                            {
+                                label:
+                                    "Programações Executadas",
+
+                                data:
+                                    programacoes,
+
+                                backgroundColor:
+                                    COR_PROGRAMACOES,
+
+                                borderRadius:
+                                    4,
+
+                                maxBarThickness:
+                                    34
+                            },
+
+                            {
+                                label:
+                                    "Ligações Executadas",
+
+                                data:
+                                    ligacoes,
+
+                                backgroundColor:
+                                    COR_LIGACOES,
+
+                                borderRadius:
+                                    4,
+
+                                maxBarThickness:
+                                    34
                             }
 
-                        },
-
-
-                        datalabels:
-
-                            configuracaoDataLabelsVertical()
+                        ]
 
                     },
 
+                    options: {
 
-                    scales: {
+                        responsive: true,
 
-                        x: {
+                        maintainAspectRatio:
+                            false,
 
-                            grid: {
-
-                                display:
-                                    false
-
-                            }
-
+                        animation: {
+                            duration: 500
                         },
 
+                        interaction: {
+                            mode: "index",
+                            intersect: false
+                        },
 
-                        y: {
+                        layout: {
+                            padding: {
+                                top: 22
+                            }
+                        },
 
-                            beginAtZero:
-                                true,
+                        plugins: {
 
-                            grace:
-                                "15%",
+                            legend: {
 
-                            ticks: {
+                                position:
+                                    "bottom",
 
-                                precision:
-                                    0
+                                labels: {
+
+                                    usePointStyle:
+                                        true,
+
+                                    boxWidth:
+                                        8,
+
+                                    padding:
+                                        18,
+
+                                    font: {
+                                        size: 10
+                                    }
+
+                                }
 
                             },
 
-                            grid: {
+                            tooltip: {
+                                enabled: true
+                            },
+
+                            datalabels: {
+
+                                display:
+                                    pluginDataLabelsDisponivel,
+
+                                anchor:
+                                    "end",
+
+                                align:
+                                    "end",
+
+                                offset:
+                                    2,
 
                                 color:
-                                    "#eef0f2"
+                                    "#59656e",
+
+                                font: {
+                                    size: 9,
+                                    weight: "600"
+                                },
+
+                                formatter:
+                                    function(valor) {
+
+                                        return (
+                                            valor === 0
+                                            ?
+                                            ""
+                                            :
+                                            formatarNumero(
+                                                valor
+                                            )
+                                        );
+
+                                    }
+
+                            }
+
+                        },
+
+                        scales: {
+
+                            x: {
+
+                                grid: {
+                                    display: false
+                                },
+
+                                ticks: {
+
+                                    color:
+                                        "#6f7b85",
+
+                                    font: {
+                                        size: 9
+                                    },
+
+                                    maxRotation:
+                                        0,
+
+                                    autoSkip:
+                                        true
+
+                                }
+
+                            },
+
+                            y: {
+
+                                beginAtZero:
+                                    true,
+
+                                grid: {
+
+                                    color:
+                                        "rgba(120,130,140,0.10)"
+
+                                },
+
+                                ticks: {
+
+                                    precision:
+                                        0,
+
+                                    color:
+                                        "#7d8992",
+
+                                    font: {
+                                        size: 9
+                                    }
+
+                                }
 
                             }
 
@@ -1942,311 +2076,244 @@ function atualizarGrafico(dados) {
                     }
 
                 }
-
-            }
-
-        );
-
-}
-
-
-/* =========================================================
-   GRÁFICO POR PARCEIRA
-========================================================= */
-
-function atualizarGraficoParceiras(dados) {
-
-
-    if (
-        typeof Chart ===
-        "undefined"
-    ) {
-
-        return;
+            );
 
     }
 
 
-    const parceiras =
-        {};
+    /* ============================================================
+       GRÁFICO GERAL POR PARCEIRA
+       ============================================================ */
+
+    function renderizarGraficoGeralParceiras() {
+
+        if (
+            typeof Chart === "undefined"
+        ) {
+            return;
+        }
 
 
-    dados.forEach(
+        if (
+            graficoParceira
+        ) {
 
-        function(item) {
+            graficoParceira.destroy();
 
-
-            const nome =
-
-                item.PARCEIRA ||
-
-                "Não informado";
-
-
-            if (
-                !parceiras[nome]
-            ) {
-
-
-                parceiras[nome] = {
-
-                    equipes:
-                        0,
-
-                    programacoes:
-                        0,
-
-                    ligacoes:
-                        0
-
-                };
-
-            }
-
-
-            parceiras[nome].equipes +=
-
-                numero(
-                    item.EQUIPES_MOBILIZADAS
-                );
-
-
-            parceiras[nome].programacoes +=
-
-                numero(
-                    item.PROGRAMACOES_EXECUTADAS
-                );
-
-
-            parceiras[nome].ligacoes +=
-
-                numero(
-                    item.LIGACOES_EXECUTADAS
-                );
+            graficoParceira = null;
 
         }
 
-    );
+
+        const mapa =
+            new Map();
 
 
-    const nomes =
+        dadosGlobais.forEach(
+            item => {
 
-        Object.keys(
-            parceiras
-        );
+                const parceira =
+                    nomeParceira(item);
 
-
-    const equipes =
-
-        nomes.map(
-
-            function(nome) {
-
-                return parceiras[nome]
-                    .equipes;
-
-            }
-
-        );
+                if (!parceira) {
+                    return;
+                }
 
 
-    const programacoes =
+                if (
+                    !mapa.has(parceira)
+                ) {
 
-        nomes.map(
-
-            function(nome) {
-
-                return parceiras[nome]
-                    .programacoes;
-
-            }
-
-        );
-
-
-    const ligacoes =
-
-        nomes.map(
-
-            function(nome) {
-
-                return parceiras[nome]
-                    .ligacoes;
-
-            }
-
-        );
-
-
-    const canvas =
-
-        document.getElementById(
-            "graficoParceiras"
-        );
-
-
-    if (!canvas) {
-
-        return;
-
-    }
-
-
-    const contexto =
-
-        canvas.getContext(
-            "2d"
-        );
-
-
-    if (
-        graficoParceiras
-    ) {
-
-        graficoParceiras.destroy();
-
-    }
-
-
-    graficoParceiras =
-
-        new Chart(
-
-            contexto,
-
-            {
-
-                type:
-                    "bar",
-
-
-                data: {
-
-                    labels:
-                        nomes,
-
-
-                    datasets: [
-
+                    mapa.set(
+                        parceira,
                         {
-
-                            label:
-                                "Equipes",
-
-                            data:
-                                equipes,
-
-                            backgroundColor:
-                                corEquipes,
-
-                            borderRadius:
-                                5
-
-                        },
-
-                        {
-
-                            label:
-                                "Programações",
-
-                            data:
-                                programacoes,
-
-                            backgroundColor:
-                                corProgramacoes,
-
-                            borderRadius:
-                                5
-
-                        },
-
-                        {
-
-                            label:
-                                "Ligações",
-
-                            data:
-                                ligacoes,
-
-                            backgroundColor:
-                                corLigacoes,
-
-                            borderRadius:
-                                5
-
+                            equipes: 0,
+                            programacoes: 0,
+                            ligacoes: 0
                         }
+                    );
 
-                    ]
-
-                },
-
-
-                options: {
-
-                    indexAxis:
-                        "y",
-
-                    responsive:
-                        true,
-
-                    maintainAspectRatio:
-                        false,
+                }
 
 
-                    layout: {
+                const acumulado =
+                    mapa.get(parceira);
 
-                        padding: {
 
-                            right:
-                                35
+                acumulado.equipes +=
+                    numero(
+                        item.EQUIPES_MOBILIZADAS
+                    );
 
+
+                acumulado.programacoes +=
+                    numero(
+                        item.PROGRAMACOES_EXECUTADAS
+                    );
+
+
+                acumulado.ligacoes +=
+                    numero(
+                        item.LIGACOES_EXECUTADAS
+                    );
+
+            }
+        );
+
+
+        const registros =
+            [...mapa.entries()]
+            .sort(
+                (a, b) =>
+                    a[0].localeCompare(
+                        b[0],
+                        "pt-BR",
+                        {
+                            sensitivity: "base"
                         }
+                    )
+            );
+
+
+        const labels =
+            registros.map(
+                item => item[0]
+            );
+
+
+        const equipes =
+            registros.map(
+                item => item[1].equipes
+            );
+
+
+        const programacoes =
+            registros.map(
+                item =>
+                    item[1].programacoes
+            );
+
+
+        const ligacoes =
+            registros.map(
+                item => item[1].ligacoes
+            );
+
+
+        graficoParceira =
+            new Chart(
+                document.getElementById(
+                    "graficoParceira"
+                ),
+                {
+
+                    type: "bar",
+
+                    data: {
+
+                        labels: labels,
+
+                        datasets: [
+
+                            {
+                                label:
+                                    "Equipes",
+
+                                data:
+                                    equipes,
+
+                                backgroundColor:
+                                    COR_EQUIPES,
+
+                                borderRadius:
+                                    4
+                            },
+
+                            {
+                                label:
+                                    "Programações",
+
+                                data:
+                                    programacoes,
+
+                                backgroundColor:
+                                    COR_PROGRAMACOES,
+
+                                borderRadius:
+                                    4
+                            },
+
+                            {
+                                label:
+                                    "Ligações",
+
+                                data:
+                                    ligacoes,
+
+                                backgroundColor:
+                                    COR_LIGACOES,
+
+                                borderRadius:
+                                    4
+                            }
+
+                        ]
 
                     },
 
+                    options: {
 
-                    interaction: {
+                        indexAxis:
+                            "y",
 
-                        mode:
-                            "index",
+                        responsive:
+                            true,
 
-                        intersect:
-                            false
+                        maintainAspectRatio:
+                            false,
 
-                    },
+                        animation: {
+                            duration: 500
+                        },
 
+                        layout: {
 
-                    plugins: {
-
-                        legend: {
-
-                            position:
-                                "top",
-
-                            labels: {
-
-                                usePointStyle:
-                                    true,
-
-                                boxWidth:
-                                    8,
-
-                                padding:
-                                    15
-
+                            padding: {
+                                right: 30
                             }
 
                         },
 
+                        plugins: {
 
-                        datalabels:
+                            legend: {
 
-                            pluginDataLabelsDisponivel
+                                position:
+                                    "bottom",
 
-                            ? {
+                                labels: {
 
-                                color:
-                                    "#333",
+                                    usePointStyle:
+                                        true,
+
+                                    boxWidth:
+                                        8,
+
+                                    padding:
+                                        14,
+
+                                    font: {
+                                        size: 9
+                                    }
+
+                                }
+
+                            },
+
+                            datalabels: {
+
+                                display:
+                                    pluginDataLabelsDisponivel,
 
                                 anchor:
                                     "end",
@@ -2254,74 +2321,73 @@ function atualizarGraficoParceiras(dados) {
                                 align:
                                     "right",
 
-                                offset:
-                                    3,
-
-                                clamp:
-                                    true,
+                                color:
+                                    "#59656e",
 
                                 font: {
-
-                                    size:
-                                        11,
-
-                                    weight:
-                                        "bold"
-
+                                    size: 9,
+                                    weight: "600"
                                 },
 
                                 formatter:
-
                                     function(valor) {
 
-                                        return Number(
-                                            valor
-                                        ).toLocaleString(
-                                            "pt-BR"
+                                        return (
+                                            valor === 0
+                                            ?
+                                            ""
+                                            :
+                                            formatarNumero(
+                                                valor
+                                            )
                                         );
 
                                     }
 
                             }
 
-                            : false
-
-                    },
-
-
-                    scales: {
-
-                        y: {
-
-                            grid: {
-
-                                display:
-                                    false
-
-                            }
-
                         },
 
+                        scales: {
 
-                        x: {
+                            x: {
 
-                            beginAtZero:
-                                true,
+                                beginAtZero:
+                                    true,
 
-                            grace:
-                                "15%",
+                                grid: {
 
-                            ticks: {
+                                    color:
+                                        "rgba(120,130,140,0.10)"
 
-                                precision:
-                                    0
+                                },
+
+                                ticks: {
+
+                                    precision:
+                                        0,
+
+                                    font: {
+                                        size: 9
+                                    }
+
+                                }
 
                             },
 
-                            grid: {
+                            y: {
 
-                                color:
-                                    "#eef0f2"
+                                grid: {
+                                    display: false
+                                },
+
+                                ticks: {
+
+                                    font: {
+                                        size: 10
+                                    }
+
+                                }
 
                             }
 
@@ -2330,41 +2396,601 @@ function atualizarGraficoParceiras(dados) {
                     }
 
                 }
+            );
+
+    }
+
+
+    /* ============================================================
+       GRÁFICO INDIVIDUAL DA PARCEIRA
+       ============================================================ */
+
+    function renderizarGraficoComposicaoParceira(
+        dados
+    ) {
+
+        if (
+            typeof Chart === "undefined"
+        ) {
+            return;
+        }
+
+
+        if (
+            graficoParceira
+        ) {
+
+            graficoParceira.destroy();
+
+            graficoParceira = null;
+
+        }
+
+
+        const totalEquipes =
+            somarCampo(
+                dados,
+                "EQUIPES_MOBILIZADAS"
+            );
+
+
+        const totalProgramacoes =
+            somarCampo(
+                dados,
+                "PROGRAMACOES_EXECUTADAS"
+            );
+
+
+        const totalLigacoes =
+            somarCampo(
+                dados,
+                "LIGACOES_EXECUTADAS"
+            );
+
+
+        graficoParceira =
+            new Chart(
+                document.getElementById(
+                    "graficoParceira"
+                ),
+                {
+
+                    type: "bar",
+
+                    data: {
+
+                        labels: [
+                            "Equipes",
+                            "Programações",
+                            "Ligações"
+                        ],
+
+                        datasets: [
+
+                            {
+                                label:
+                                    "Total",
+
+                                data: [
+                                    totalEquipes,
+                                    totalProgramacoes,
+                                    totalLigacoes
+                                ],
+
+                                backgroundColor: [
+                                    COR_EQUIPES,
+                                    COR_PROGRAMACOES,
+                                    COR_LIGACOES
+                                ],
+
+                                borderRadius:
+                                    6,
+
+                                maxBarThickness:
+                                    55
+
+                            }
+
+                        ]
+
+                    },
+
+                    options: {
+
+                        indexAxis:
+                            "y",
+
+                        responsive:
+                            true,
+
+                        maintainAspectRatio:
+                            false,
+
+                        animation: {
+                            duration: 500
+                        },
+
+                        layout: {
+
+                            padding: {
+                                right: 35
+                            }
+
+                        },
+
+                        plugins: {
+
+                            legend: {
+                                display: false
+                            },
+
+                            datalabels: {
+
+                                display:
+                                    pluginDataLabelsDisponivel,
+
+                                anchor:
+                                    "end",
+
+                                align:
+                                    "right",
+
+                                color:
+                                    "#59656e",
+
+                                font: {
+                                    size: 11,
+                                    weight: "700"
+                                },
+
+                                formatter:
+                                    function(valor) {
+
+                                        return formatarNumero(
+                                            valor
+                                        );
+
+                                    }
+
+                            }
+
+                        },
+
+                        scales: {
+
+                            x: {
+
+                                beginAtZero:
+                                    true,
+
+                                grid: {
+
+                                    color:
+                                        "rgba(120,130,140,0.10)"
+
+                                },
+
+                                ticks: {
+
+                                    precision:
+                                        0,
+
+                                    font: {
+                                        size: 9
+                                    }
+
+                                }
+
+                            },
+
+                            y: {
+
+                                grid: {
+                                    display: false
+                                },
+
+                                ticks: {
+
+                                    font: {
+                                        size: 11
+                                    }
+
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                }
+            );
+
+    }
+
+
+    /* ============================================================
+       TEXTO DA VISÃO
+       ============================================================ */
+
+    function atualizarTextosVisao() {
+
+        const visao =
+            obterVisaoAtual();
+
+
+        const nomeHeader =
+            document.getElementById(
+                "nomeVisaoHeader"
+            );
+
+
+        const titulo =
+            document.getElementById(
+                "tituloVisao"
+            );
+
+
+        const descricao =
+            document.getElementById(
+                "descricaoVisao"
+            );
+
+
+        const subtituloEvolucao =
+            document.getElementById(
+                "subtituloEvolucao"
+            );
+
+
+        const tituloSecundario =
+            document.getElementById(
+                "tituloGraficoSecundario"
+            );
+
+
+        const subtituloSecundario =
+            document.getElementById(
+                "subtituloGraficoSecundario"
+            );
+
+
+        const subtituloTabela =
+            document.getElementById(
+                "subtituloTabela"
+            );
+
+
+        if (
+            visao.tipo === "geral"
+        ) {
+
+            nomeHeader.textContent =
+                "VISÃO GERAL";
+
+
+            titulo.textContent =
+                "Visão Geral";
+
+
+            descricao.textContent =
+                "Consolidado de todas as parceiras";
+
+
+            subtituloEvolucao.textContent =
+                "Evolução cronológica consolidada";
+
+
+            tituloSecundario.textContent =
+                "Execuções por Parceira";
+
+
+            subtituloSecundario.textContent =
+                "Comparativo acumulado";
+
+
+            subtituloTabela.textContent =
+                "Registros de todas as parceiras";
+
+        } else {
+
+            nomeHeader.textContent =
+                visao.parceira
+                    .toUpperCase();
+
+
+            titulo.textContent =
+                visao.parceira;
+
+
+            descricao.textContent =
+                "Desempenho individual da parceira";
+
+
+            subtituloEvolucao.textContent =
+                `Evolução cronológica — ${visao.parceira}`;
+
+
+            tituloSecundario.textContent =
+                "Composição dos Resultados";
+
+
+            subtituloSecundario.textContent =
+                `Totais acumulados — ${visao.parceira}`;
+
+
+            subtituloTabela.textContent =
+                `Registros da parceira ${visao.parceira}`;
+
+        }
+
+    }
+
+
+    /* ============================================================
+       RENDERIZAÇÃO DA VISÃO
+       ============================================================ */
+
+    function renderizarVisao() {
+
+        const dados =
+            obterDadosVisaoAtual();
+
+
+        atualizarTextosVisao();
+
+        renderizarCards(
+            dados
+        );
+
+        renderizarTabela(
+            dados
+        );
+
+
+        /*
+            Gráficos são independentes.
+
+            Qualquer falha aqui não interrompe
+            cards, tabela ou ciclo de visões.
+        */
+
+        if (
+            typeof Chart !== "undefined"
+        ) {
+
+            try {
+
+                renderizarGraficoEvolucao(
+                    dados
+                );
+
+            } catch (erro) {
+
+                console.error(
+                    "Erro no gráfico de evolução:",
+                    erro
+                );
 
             }
 
-        );
 
-}
+            try {
 
-
-/* =========================================================
-   INICIALIZAÇÃO
-========================================================= */
+                const visao =
+                    obterVisaoAtual();
 
 
-/*
-Primeira leitura imediatamente
-ao abrir o dashboard.
-*/
+                if (
+                    visao.tipo === "geral"
+                ) {
 
-carregarDados();
+                    renderizarGraficoGeralParceiras();
+
+                } else {
+
+                    renderizarGraficoComposicaoParceira(
+                        dados
+                    );
+
+                }
+
+            } catch (erro) {
+
+                console.error(
+                    "Erro no gráfico secundário:",
+                    erro
+                );
+
+            }
+
+        }
 
 
-/*
-Atualização automática.
+        atualizarContador();
 
-60.000 ms = 60 segundos.
-*/
+    }
 
-setInterval(
 
-    carregarDados,
+    /* ============================================================
+       DADOS JSON
+       ============================================================ */
 
-    60000
+    async function carregarDados() {
 
-);
+        const erro =
+            document.getElementById(
+                "erro"
+            );
 
+
+        try {
+
+            /*
+                Timestamp impede o navegador
+                de reutilizar o dados.json em cache.
+            */
+
+            const resposta =
+                await fetch(
+                    "./dados.json?t="
+                    +
+                    new Date().getTime()
+                );
+
+
+            if (
+                !resposta.ok
+            ) {
+
+                throw new Error(
+                    `Erro HTTP ${resposta.status}`
+                );
+
+            }
+
+
+            const json =
+                await resposta.json();
+
+
+            /*
+                Estrutura principal esperada:
+                [ {...}, {...} ]
+
+                Mantemos também compatibilidade
+                com:
+                { "dados": [...] }
+            */
+
+            let dados =
+                Array.isArray(json)
+                ?
+                json
+                :
+                (
+                    Array.isArray(
+                        json?.dados
+                    )
+                    ?
+                    json.dados
+                    :
+                    null
+                );
+
+
+            if (
+                !Array.isArray(dados)
+            ) {
+
+                throw new Error(
+                    "O conteúdo de dados.json não é uma lista válida."
+                );
+
+            }
+
+
+            dadosGlobais =
+                ordenarPorData(
+                    dados
+                );
+
+
+            atualizarListaVisoes();
+
+
+            /*
+                Atualiza a visão que já está
+                sendo apresentada sem reiniciar
+                o ciclo de 15 segundos.
+            */
+
+            renderizarVisao();
+
+
+            erro.style.display =
+                "none";
+
+            erro.textContent = "";
+
+
+            const agora =
+                new Date();
+
+
+            document.getElementById(
+                "statusAtualizacao"
+            ).textContent =
+                "Última atualização: "
+                +
+                agora.toLocaleTimeString(
+                    "pt-BR",
+                    {
+                        hour:
+                            "2-digit",
+
+                        minute:
+                            "2-digit",
+
+                        second:
+                            "2-digit"
+                    }
+                );
+
+
+        } catch (falha) {
+
+            console.error(
+                "Erro ao carregar dados:",
+                falha
+            );
+
+
+            erro.style.display =
+                "block";
+
+
+            erro.textContent =
+                "Não foi possível atualizar os dados. "
+                +
+                "A última informação carregada continuará sendo exibida.";
+
+
+            /*
+                Se já existem dados na memória,
+                mantém o dashboard funcionando.
+            */
+
+            if (
+                dadosGlobais.length > 0
+            ) {
+
+                renderizarVisao();
+
+            }
+
+        }
+
+    }
+
+
+    /* ============================================================
+       INICIALIZAÇÃO
+       ============================================================ */
+
+    carregarDados();
+
+    iniciarRotacao();
+
+
+    /*
+        Atualização independente do JSON.
+    */
+
+    setInterval(
+        carregarDados,
+        TEMPO_ATUALIZACAO_DADOS
+    );
 
 </script>
 
