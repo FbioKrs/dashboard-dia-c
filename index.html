@@ -25,94 +25,488 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
-            background: #000;
+            background: #101820;
         }
 
-        #painel {
+        body {
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+        }
+
+        #containerApresentacao {
+            position: relative;
+
             width: 100%;
             height: 100%;
+
+            overflow: hidden;
+        }
+
+        .visao {
+            position: absolute;
+
+            top: 0;
+            left: 0;
+
+            width: 100%;
+            height: 100%;
+
             border: none;
-            display: block;
+
+            opacity: 0;
+
+            transition:
+                opacity 0.7s ease;
+
+            background: white;
+        }
+
+        .visao.ativa {
+            opacity: 1;
+            z-index: 2;
+        }
+
+        .visao.preparada {
+            opacity: 0;
+            z-index: 1;
+        }
+
+        /*
+            Indicador discreto opcional.
+
+            Ele pode ser removido futuramente
+            caso a apresentação fique em TV
+            e você queira a tela totalmente limpa.
+        */
+
+        #indicadorVisao {
+            position: fixed;
+
+            right: 14px;
+            bottom: 10px;
+
+            z-index: 10;
+
+            padding:
+                5px
+                9px;
+
+            border-radius: 6px;
+
+            background:
+                rgba(20, 30, 40, 0.55);
+
+            color:
+                rgba(255, 255, 255, 0.8);
+
+            font-size: 10px;
+
+            pointer-events: none;
+
+            transition:
+                opacity 0.3s ease;
         }
 
     </style>
 
 </head>
 
+
 <body>
 
-    <iframe
-        id="painel"
-        src=""
-    ></iframe>
+    <div id="containerApresentacao">
+
+        <!--
+            Dois frames são utilizados.
+
+            Enquanto um está sendo exibido,
+            o outro já pode carregar a próxima visão.
+        -->
+
+        <iframe
+            id="frameA"
+            class="visao ativa"
+        ></iframe>
+
+        <iframe
+            id="frameB"
+            class="visao preparada"
+        ></iframe>
+
+    </div>
+
+
+    <div id="indicadorVisao">
+        Carregando apresentação...
+    </div>
 
 
     <script>
 
+        /* ======================================================
+           CONFIGURAÇÃO DAS VISÕES
+           ====================================================== */
+
+        /*
+            Para adicionar uma nova página no futuro,
+            basta acrescentar outro objeto neste array.
+
+            tempo é informado em MILISSEGUNDOS.
+
+            Exemplos:
+
+            15000  = 15 segundos
+            30000  = 30 segundos
+            60000  = 1 minuto
+            90000  = 1 minuto e 30 segundos
+        */
+
         const visoes = [
 
             {
-                arquivo: "./visoes/dia-c.html",
+                nome: "Dia C",
+
+                arquivo:
+                    "./visoes/dia-c.html",
+
+                /*
+                    O Dia C possui rotação interna
+                    das parceiras.
+
+                    Por enquanto deixaremos
+                    90 segundos disponíveis
+                    para esta visão.
+                */
+
+                tempo: 90000
+            }
+
+
+            /*
+            FUTURAMENTE:
+
+            ,
+            {
+                nome: "Obras Ágeis",
+                arquivo: "./visoes/obras-ageis.html",
                 tempo: 60000
             },
 
             {
-                arquivo: "./visoes/obras-ageis.html",
-                tempo: 30000
-            },
-
-            {
-                arquivo: "./visoes/produtividade.html",
+                nome: "Indicadores",
+                arquivo: "./visoes/indicadores.html",
                 tempo: 45000
             },
 
             {
-                arquivo: "./visoes/indicadores.html",
+                nome: "Produtividade",
+                arquivo: "./visoes/produtividade.html",
                 tempo: 60000
-            },
-
-            {
-                arquivo: "./visoes/carteira.html",
-                tempo: 30000
             }
+            */
 
         ];
 
 
+        /* ======================================================
+           ESTADO DO PLAYER
+           ====================================================== */
+
         let indiceAtual = 0;
 
+        let frameAtual =
+            document.getElementById(
+                "frameA"
+            );
 
-        function exibirVisao() {
+        let proximoFrame =
+            document.getElementById(
+                "frameB"
+            );
 
-            const painel =
-                document.getElementById("painel");
+        let temporizadorTroca = null;
+
+        const indicador =
+            document.getElementById(
+                "indicadorVisao"
+            );
+
+
+        /* ======================================================
+           CARREGAMENTO INICIAL
+           ====================================================== */
+
+        function iniciarApresentacao() {
+
+            if (
+                visoes.length === 0
+            ) {
+
+                indicador.textContent =
+                    "Nenhuma visão configurada.";
+
+                return;
+            }
+
+
+            indiceAtual = 0;
+
+            const primeiraVisao =
+                visoes[indiceAtual];
+
+
+            frameAtual.src =
+                primeiraVisao.arquivo;
+
+
+            atualizarIndicador();
+
+
+            /*
+                Somente inicia a rotação
+                caso exista mais de uma visão.
+            */
+
+            if (
+                visoes.length > 1
+            ) {
+
+                prepararProximaVisao();
+
+                agendarTroca();
+
+            }
+
+        }
+
+
+        /* ======================================================
+           PRÉ-CARREGAMENTO
+           ====================================================== */
+
+        function obterProximoIndice() {
+
+            return (
+                indiceAtual + 1
+            ) % visoes.length;
+
+        }
+
+
+        function prepararProximaVisao() {
+
+            if (
+                visoes.length <= 1
+            ) {
+                return;
+            }
+
+
+            const proximoIndice =
+                obterProximoIndice();
+
+
+            const proximaVisao =
+                visoes[proximoIndice];
+
+
+            /*
+                A próxima página começa a carregar
+                enquanto a atual ainda está visível.
+            */
+
+            proximoFrame.src =
+                proximaVisao.arquivo;
+
+        }
+
+
+        /* ======================================================
+           TEMPORIZADOR
+           ====================================================== */
+
+        function agendarTroca() {
+
+            if (
+                temporizadorTroca
+            ) {
+
+                clearTimeout(
+                    temporizadorTroca
+                );
+
+            }
+
+
+            const visaoAtual =
+                visoes[indiceAtual];
+
+
+            temporizadorTroca =
+                setTimeout(
+                    trocarVisao,
+                    visaoAtual.tempo
+                );
+
+        }
+
+
+        /* ======================================================
+           TROCA DAS PÁGINAS
+           ====================================================== */
+
+        function trocarVisao() {
+
+            if (
+                visoes.length <= 1
+            ) {
+                return;
+            }
+
+
+            const novoIndice =
+                obterProximoIndice();
+
+
+            /*
+                O próximo frame passa para frente.
+            */
+
+            proximoFrame.classList.add(
+                "ativa"
+            );
+
+            proximoFrame.classList.remove(
+                "preparada"
+            );
+
+
+            /*
+                O frame anterior faz fade-out.
+            */
+
+            frameAtual.classList.remove(
+                "ativa"
+            );
+
+            frameAtual.classList.add(
+                "preparada"
+            );
+
+
+            /*
+                Atualiza índice.
+            */
+
+            indiceAtual =
+                novoIndice;
+
+
+            /*
+                Troca as referências.
+
+                O frame que estava visível
+                passa a ser usado posteriormente
+                para carregar a próxima página.
+            */
+
+            const frameAnterior =
+                frameAtual;
+
+            frameAtual =
+                proximoFrame;
+
+            proximoFrame =
+                frameAnterior;
+
+
+            atualizarIndicador();
+
+
+            /*
+                Aguarda a animação acabar
+                antes de carregar outra página
+                no frame que saiu da tela.
+            */
+
+            setTimeout(
+                () => {
+
+                    prepararProximaVisao();
+
+                },
+                800
+            );
+
+
+            agendarTroca();
+
+        }
+
+
+        /* ======================================================
+           INDICADOR
+           ====================================================== */
+
+        function atualizarIndicador() {
 
             const visao =
                 visoes[indiceAtual];
 
 
-            painel.src =
-                visao.arquivo;
+            if (
+                visoes.length === 1
+            ) {
+
+                indicador.textContent =
+                    visao.nome;
+
+                return;
+
+            }
 
 
-            setTimeout(() => {
-
-                indiceAtual++;
-
-                if (
-                    indiceAtual >= visoes.length
-                ) {
-                    indiceAtual = 0;
-                }
-
-                exibirVisao();
-
-            }, visao.tempo);
+            indicador.textContent =
+                `${indiceAtual + 1}/${visoes.length} • ${visao.nome}`;
 
         }
 
 
-        exibirVisao();
+        /* ======================================================
+           TRATAMENTO DE ERROS
+           ====================================================== */
+
+        frameAtual.addEventListener(
+            "error",
+            function () {
+
+                console.error(
+                    "Falha ao carregar a visão atual."
+                );
+
+            }
+        );
+
+
+        proximoFrame.addEventListener(
+            "error",
+            function () {
+
+                console.error(
+                    "Falha ao carregar a próxima visão."
+                );
+
+            }
+        );
+
+
+        /* ======================================================
+           INÍCIO
+           ====================================================== */
+
+        iniciarApresentacao();
 
     </script>
 
