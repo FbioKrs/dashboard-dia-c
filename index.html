@@ -319,8 +319,11 @@ async function carregarDados() {
         atualizarGrafico(dados);
 
 
+        const agora = new Date();
+
         document.getElementById("status").textContent =
-            "Dados atualizados automaticamente";
+            "Última atualização: " +
+            agora.toLocaleTimeString("pt-BR");
 
     }
 
@@ -520,6 +523,16 @@ function atualizarGrafico(dados) {
 /* INICIAR */
 
 carregarDados();
+
+/*
+Atualiza os dados automaticamente a cada 60 segundos.
+Não recarrega a página inteira.
+Apenas consulta novamente o dados.json.
+*/
+
+setInterval(() => {
+    carregarDados();
+}, 60000);
 
 </script>
 
