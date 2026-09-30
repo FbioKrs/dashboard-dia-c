@@ -7,107 +7,521 @@
 
     <title>Dashboard Dia C</title>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 40px;
-            background: #f5f5f5;
+
+        * {
+            box-sizing: border-box;
         }
 
-        h1 {
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f6f8;
+            color: #222;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: auto;
+            padding: 30px;
+        }
+
+        /* CABEÇALHO */
+
+        .header {
             margin-bottom: 30px;
         }
+
+        .header h1 {
+            margin: 0;
+            font-size: 32px;
+        }
+
+        .header p {
+            margin-top: 5px;
+            color: #666;
+        }
+
+        /* CARDS */
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .card-title {
+            font-size: 13px;
+            font-weight: bold;
+            color: #666;
+            text-transform: uppercase;
+        }
+
+        .card-value {
+            font-size: 38px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        /* PAINÉIS */
+
+        .panel {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+        }
+
+        .panel h2 {
+            margin-top: 0;
+            font-size: 18px;
+        }
+
+        /* GRÁFICO */
+
+        .chart-container {
+            position: relative;
+            height: 380px;
+        }
+
+        /* TABELA */
 
         table {
             width: 100%;
             border-collapse: collapse;
-            background: white;
-        }
-
-        th,
-        td {
-            padding: 12px;
-            border-bottom: 1px solid #ddd;
-            text-align: center;
         }
 
         th {
             background: #333;
             color: white;
+            padding: 12px;
+            font-size: 13px;
         }
 
-        tr:hover {
-            background: #f0f0f0;
+        td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
         }
+
+        tbody tr:hover {
+            background: #f7f7f7;
+        }
+
+        /* STATUS */
+
+        .status {
+            margin-top: 10px;
+            font-size: 12px;
+            color: #777;
+        }
+
+        /* RESPONSIVIDADE */
+
+        @media (max-width: 800px) {
+
+            .cards {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 15px;
+            }
+
+            .table-container {
+                overflow-x: auto;
+            }
+
+        }
+
     </style>
 </head>
 
 <body>
 
-    <h1>Dashboard Dia C</h1>
+<div class="container">
 
-    <table>
+    <!-- CABEÇALHO -->
 
-        <thead>
+    <div class="header">
 
-            <tr>
-                <th>Data</th>
-                <th>Parceira</th>
-                <th>Equipes Mobilizadas</th>
-                <th>Programações Executadas</th>
-                <th>Ligações Executadas</th>
-            </tr>
+        <h1>Dia C</h1>
 
-        </thead>
+        <p>Acompanhamento das execuções</p>
 
-        <tbody id="tabelaDados">
-        </tbody>
+        <div class="status" id="status">
+            Carregando dados...
+        </div>
 
-    </table>
+    </div>
 
-    <script>
 
-        fetch('./dados.json')
+    <!-- INDICADORES -->
 
-            .then(response => {
+    <div class="cards">
 
-                if (!response.ok) {
-                    throw new Error("Erro ao carregar dados.json");
+        <div class="card">
+
+            <div class="card-title">
+                Equipes Mobilizadas
+            </div>
+
+            <div class="card-value" id="totalEquipes">
+                -
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-title">
+                Programações Executadas
+            </div>
+
+            <div class="card-value" id="totalProgramacoes">
+                -
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-title">
+                Ligações Executadas
+            </div>
+
+            <div class="card-value" id="totalLigacoes">
+                -
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- GRÁFICO -->
+
+    <div class="panel">
+
+        <h2>Evolução das Execuções</h2>
+
+        <div class="chart-container">
+
+            <canvas id="graficoEvolucao"></canvas>
+
+        </div>
+
+    </div>
+
+
+    <!-- TABELA -->
+
+    <div class="panel">
+
+        <h2>Detalhamento</h2>
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>Data</th>
+
+                        <th>Parceira</th>
+
+                        <th>Equipes Mobilizadas</th>
+
+                        <th>Programações Executadas</th>
+
+                        <th>Ligações Executadas</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="tabelaDados">
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+let grafico;
+
+
+/* CONVERTER PARA NÚMERO */
+
+function numero(valor) {
+
+    if (valor === null || valor === undefined || valor === "") {
+        return 0;
+    }
+
+    return Number(
+        String(valor)
+            .replace(/\./g, "")
+            .replace(",", ".")
+    ) || 0;
+
+}
+
+
+/* CARREGAR DADOS */
+
+async function carregarDados() {
+
+    try {
+
+        /*
+        O parâmetro abaixo ajuda a evitar que o navegador
+        reutilize uma versão antiga do dados.json.
+        */
+
+        const response = await fetch(
+            "./dados.json?t=" + new Date().getTime()
+        );
+
+        if (!response.ok) {
+            throw new Error("Não foi possível carregar dados.json");
+        }
+
+        const dados = await response.json();
+
+
+        atualizarCards(dados);
+
+        atualizarTabela(dados);
+
+        atualizarGrafico(dados);
+
+
+        document.getElementById("status").textContent =
+            "Dados atualizados automaticamente";
+
+    }
+
+    catch (erro) {
+
+        console.error(erro);
+
+        document.getElementById("status").textContent =
+            "Erro ao carregar os dados";
+
+    }
+
+}
+
+
+/* CARDS */
+
+function atualizarCards(dados) {
+
+    let equipes = 0;
+
+    let programacoes = 0;
+
+    let ligacoes = 0;
+
+
+    dados.forEach(item => {
+
+        equipes += numero(item.EQUIPES_MOBILIZADAS);
+
+        programacoes += numero(item.PROGRAMACOES_EXECUTADAS);
+
+        ligacoes += numero(item.LIGACOES_EXECUTADAS);
+
+    });
+
+
+    document.getElementById("totalEquipes").textContent =
+        equipes.toLocaleString("pt-BR");
+
+
+    document.getElementById("totalProgramacoes").textContent =
+        programacoes.toLocaleString("pt-BR");
+
+
+    document.getElementById("totalLigacoes").textContent =
+        ligacoes.toLocaleString("pt-BR");
+
+}
+
+
+/* TABELA */
+
+function atualizarTabela(dados) {
+
+    const tabela =
+        document.getElementById("tabelaDados");
+
+
+    tabela.innerHTML = "";
+
+
+    dados.forEach(item => {
+
+        const linha =
+            document.createElement("tr");
+
+
+        linha.innerHTML = `
+
+            <td>${item.DATA}</td>
+
+            <td>${item.PARCEIRA}</td>
+
+            <td>${numero(item.EQUIPES_MOBILIZADAS)}</td>
+
+            <td>${numero(item.PROGRAMACOES_EXECUTADAS)}</td>
+
+            <td>${numero(item.LIGACOES_EXECUTADAS)}</td>
+
+        `;
+
+
+        tabela.appendChild(linha);
+
+    });
+
+}
+
+
+/* GRÁFICO */
+
+function atualizarGrafico(dados) {
+
+    const labels =
+        dados.map(item => item.DATA);
+
+
+    const equipes =
+        dados.map(item =>
+            numero(item.EQUIPES_MOBILIZADAS)
+        );
+
+
+    const programacoes =
+        dados.map(item =>
+            numero(item.PROGRAMACOES_EXECUTADAS)
+        );
+
+
+    const ligacoes =
+        dados.map(item =>
+            numero(item.LIGACOES_EXECUTADAS)
+        );
+
+
+    const contexto =
+        document
+            .getElementById("graficoEvolucao")
+            .getContext("2d");
+
+
+    if (grafico) {
+        grafico.destroy();
+    }
+
+
+    grafico = new Chart(contexto, {
+
+        type: "bar",
+
+        data: {
+
+            labels: labels,
+
+            datasets: [
+
+                {
+                    label: "Equipes Mobilizadas",
+                    data: equipes
+                },
+
+                {
+                    label: "Programações Executadas",
+                    data: programacoes
+                },
+
+                {
+                    label: "Ligações Executadas",
+                    data: ligacoes
                 }
 
-                return response.json();
+            ]
 
-            })
+        },
 
-            .then(dados => {
+        options: {
 
-                const tabela = document.getElementById("tabelaDados");
+            responsive: true,
 
-                dados.forEach(item => {
+            maintainAspectRatio: false,
 
-                    const linha = document.createElement("tr");
+            interaction: {
+                mode: "index",
+                intersect: false
+            },
 
-                    linha.innerHTML = `
-                        <td>${item.DATA}</td>
-                        <td>${item.PARCEIRA}</td>
-                        <td>${item.EQUIPES_MOBILIZADAS}</td>
-                        <td>${item.PROGRAMACOES_EXECUTADAS}</td>
-                        <td>${item.LIGACOES_EXECUTADAS}</td>
-                    `;
+            plugins: {
 
-                    tabela.appendChild(linha);
+                legend: {
+                    position: "top"
+                }
 
-                });
+            },
 
-            })
+            scales: {
 
-            .catch(error => {
+                y: {
 
-                console.error("Erro:", error);
+                    beginAtZero: true,
 
-            });
+                    ticks: {
+                        precision: 0
+                    }
 
-    </script>
+                }
+
+            }
+
+        }
+
+    });
+
+}
+
+
+/* INICIAR */
+
+carregarDados();
+
+</script>
 
 </body>
 
