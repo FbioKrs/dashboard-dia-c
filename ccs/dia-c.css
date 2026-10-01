@@ -1,33 +1,350 @@
 /* ================================================================
    DIA C — DC-V1
-   Regras específicas desta visão
+   Ajuste visual específico baseado na referência fornecida.
+   Mantém o PG-V1 intacto.
    ================================================================ */
 
 :root {
-    --equipes: #4f6b82;
-    --programacoes: #d59a35;
-    --ligacoes: #3c8c74;
+    --equipes: #0f63d8;
+    --equipes-claro: #18a7f2;
 
-    --cor-destaque-visao:
-        var(--ligacoes);
+    --programacoes: #ff6a0a;
+    --programacoes-claro: #ffb312;
+
+    --ligacoes: #5142e7;
+    --ligacoes-claro: #8b7cf5;
+
+    --navy-dia-c: #0a226f;
+    --texto-dia-c: #505891;
+    --fundo-dia-c: #f1f9ff;
+
+    --cor-destaque-visao: var(--ligacoes);
 }
 
+/* ================================================================
+   FUNDO GERAL DA VISÃO
+   ================================================================ */
+
+#stage {
+    background:
+        radial-gradient(
+            circle at 11% 92%,
+            rgba(91, 193, 255, 0.17),
+            transparent 32%
+        ),
+        radial-gradient(
+            circle at 88% 14%,
+            rgba(73, 165, 255, 0.12),
+            transparent 35%
+        ),
+        linear-gradient(
+            180deg,
+            #f8fcff 0%,
+            var(--fundo-dia-c) 100%
+        );
+}
+
+/* ================================================================
+   CABEÇALHO ESPECÍFICO DO DIA C
+   ================================================================ */
+
+.topo {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+
+    grid-template-columns:
+        minmax(650px, 1.15fr)
+        minmax(330px, 0.70fr)
+        minmax(480px, 1fr);
+
+    padding:
+        0
+        40px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #16398e 0%,
+            #183f9e 36%,
+            #1d53b7 63%,
+            #178ed4 100%
+        );
+
+    box-shadow:
+        0 3px 14px
+        rgba(22, 63, 130, 0.22);
+}
+
+/* Faixas decorativas inspiradas na referência visual */
+.topo::before {
+    content: "";
+
+    position: absolute;
+    inset: -120px -40px -105px 42%;
+
+    z-index: -2;
+
+    background:
+        conic-gradient(
+            from 209deg at 47% 85%,
+            transparent 0deg 9deg,
+            rgba(12, 210, 255, 0.96) 10deg 16deg,
+            rgba(38, 156, 243, 0.90) 17deg 21deg,
+            transparent 22deg 27deg,
+            rgba(255, 137, 29, 0.98) 28deg 34deg,
+            rgba(255, 195, 59, 0.94) 35deg 38deg,
+            transparent 39deg 43deg,
+            rgba(90, 63, 219, 0.96) 44deg 51deg,
+            rgba(118, 92, 238, 0.90) 52deg 56deg,
+            transparent 57deg 360deg
+        );
+
+    transform:
+        rotate(-4deg)
+        scale(1.20);
+
+    filter:
+        saturate(1.08);
+
+    opacity: 0.94;
+
+    pointer-events: none;
+}
+
+.topo::after {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    z-index: -1;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(8, 27, 89, 0.12),
+            transparent 42%,
+            rgba(0, 38, 119, 0.10) 72%,
+            rgba(0, 141, 222, 0.16)
+        );
+
+    pointer-events: none;
+}
+
+.topo-identidade,
+.topo-centro,
+.topo-rotacao {
+    position: relative;
+    z-index: 2;
+}
+
+.topo-identidade {
+    gap: 22px;
+}
+
+.logo-equatorial {
+    width: 215px;
+    max-height: 82px;
+
+    object-fit: contain;
+
+    flex-shrink: 0;
+}
+
+.separador-marca {
+    width: 4px;
+    height: 58px;
+
+    flex-shrink: 0;
+
+    border-radius: 4px;
+
+    background:
+        rgba(255, 255, 255, 0.92);
+
+    box-shadow:
+        0 0 12px
+        rgba(255, 255, 255, 0.12);
+}
+
+.titulo-bloco {
+    min-width: 0;
+}
+
+.titulo-principal {
+    font-size: 36px;
+
+    letter-spacing: 0.1px;
+
+    text-shadow:
+        0 2px 8px
+        rgba(0, 0, 0, 0.12);
+}
+
+.subtitulo-principal {
+    margin-top: 7px;
+
+    font-size: 17px;
+
+    color:
+        rgba(255, 255, 255, 0.88);
+}
+
+.visao-indicador {
+    min-width: 340px;
+
+    padding:
+        9px
+        28px
+        10px;
+
+    border-radius: 16px;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.18),
+            rgba(255, 255, 255, 0.10)
+        );
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.16);
+
+    box-shadow:
+        inset 0 1px 0
+        rgba(255, 255, 255, 0.10),
+        0 8px 24px
+        rgba(0, 31, 105, 0.12);
+
+    backdrop-filter:
+        blur(4px);
+}
+
+.visao-indicador-label {
+    margin-bottom: 3px;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    letter-spacing: 1.3px;
+
+    color:
+        rgba(255, 255, 255, 0.91);
+}
+
+.visao-indicador-nome {
+    font-size: 25px;
+
+    color: #ffffff;
+}
+
+.topo-rotacao {
+    width: 340px;
+}
+
+.proxima-visao {
+    margin-bottom: 8px;
+
+    font-size: 16px;
+
+    color:
+        rgba(255, 255, 255, 0.92);
+
+    text-shadow:
+        0 1px 4px
+        rgba(0, 0, 0, 0.12);
+}
+
+.barra-tempo {
+    height: 6px;
+
+    background:
+        rgba(255, 255, 255, 0.25);
+
+    box-shadow:
+        inset 0 1px 2px
+        rgba(0, 0, 0, 0.10);
+}
+
+.barra-tempo-preenchimento {
+    background:
+        linear-gradient(
+            90deg,
+            #ffffff,
+            #d7f4ff
+        );
+
+    box-shadow:
+        0 0 10px
+        rgba(255, 255, 255, 0.58);
+}
 
 /* ================================================================
    COMPOSIÇÃO DA VISÃO
    ================================================================ */
 
+.pagina {
+    padding:
+        20px
+        38px
+        13px;
+}
+
 .conteudo {
     display: grid;
 
     grid-template-rows:
-        54px
-        142px
+        64px
+        166px
         minmax(0, 1fr);
 
-    gap: 16px;
+    gap: 22px;
 }
 
+.cabecalho-visao h2 {
+    font-size: 27px;
+
+    color:
+        var(--navy-dia-c);
+}
+
+.cabecalho-visao p {
+    margin-top: 4px;
+
+    font-size: 16px;
+
+    color:
+        #6670a8;
+}
+
+.badge-registros {
+    padding:
+        8px
+        18px;
+
+    border-radius: 24px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #f0f3fa,
+            #e8edf7
+        );
+
+    color:
+        #374376;
+
+    font-size: 15px;
+
+    font-weight: 600;
+
+    box-shadow:
+        inset 0 1px 0
+        rgba(255, 255, 255, 0.9);
+}
 
 /* ================================================================
    KPIs DO DIA C
@@ -45,42 +362,191 @@
             )
         );
 
-    gap: 18px;
+    gap: 22px;
+}
+
+.kpi {
+    min-height: 166px;
+
+    padding:
+        18px
+        34px
+        18px
+        44px;
+
+    border-radius: 18px;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.99),
+            rgba(255, 255, 255, 0.95)
+        );
+
+    border:
+        1px solid
+        rgba(143, 180, 215, 0.14);
+
+    box-shadow:
+        0 10px 28px
+        rgba(70, 137, 189, 0.10);
+}
+
+/* Substitui a barra lateral do PG por um canto diagonal */
+.kpi::before {
+    width: 78px;
+    height: 78px;
+
+    top: 0;
+    left: 0;
+    bottom: auto;
+
+    clip-path:
+        polygon(
+            0 0,
+            100% 0,
+            0 100%
+        );
 }
 
 .kpi-equipes::before {
     background:
-        var(--equipes);
+        linear-gradient(
+            135deg,
+            #0074ef 0% 45%,
+            #5fcfff 46% 64%,
+            #d5f3ff 65% 75%,
+            transparent 76%
+        );
 }
 
 .kpi-programacoes::before {
     background:
-        var(--programacoes);
+        linear-gradient(
+            135deg,
+            #ff6a00 0% 45%,
+            #ffb324 46% 64%,
+            #ffe29c 65% 75%,
+            transparent 76%
+        );
 }
 
 .kpi-ligacoes::before {
     background:
-        var(--ligacoes);
+        linear-gradient(
+            135deg,
+            #5142e7 0% 45%,
+            #8b7cf5 46% 64%,
+            #ded8ff 65% 75%,
+            transparent 76%
+        );
 }
 
-.kpi-equipes
-.kpi-simbolo {
+.kpi > div:first-child {
+    flex: 1;
+
+    min-width: 0;
+
+    padding-left: 44px;
+
+    text-align: center;
+}
+
+.kpi-label {
+    margin-bottom: 7px;
+
+    font-size: 17px;
+
+    font-weight: 700;
+
+    letter-spacing: 0.2px;
+
     color:
-        var(--equipes);
+        #515b92;
 }
 
-.kpi-programacoes
-.kpi-simbolo {
+.kpi-valor {
+    font-size: 64px;
+
+    line-height: 0.95;
+}
+
+.kpi-equipes .kpi-valor {
     color:
-        var(--programacoes);
+        #133caa;
 }
 
-.kpi-ligacoes
-.kpi-simbolo {
+.kpi-programacoes .kpi-valor {
     color:
-        var(--ligacoes);
+        #f05b08;
 }
 
+.kpi-ligacoes .kpi-valor {
+    color:
+        #5142e7;
+}
+
+.kpi-complemento {
+    margin-top: 8px;
+
+    font-size: 15px;
+
+    color:
+        #6770a0;
+}
+
+.kpi-simbolo {
+    width: 74px;
+    height: 74px;
+
+    margin-right: 0;
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.66);
+
+    font-size: 27px;
+
+    box-shadow:
+        inset 0 1px 0
+        rgba(255, 255, 255, 0.75);
+}
+
+.kpi-equipes .kpi-simbolo {
+    color:
+        #0873df;
+
+    background:
+        linear-gradient(
+            135deg,
+            #eef7ff,
+            #d9ebff
+        );
+}
+
+.kpi-programacoes .kpi-simbolo {
+    color:
+        #f17308;
+
+    background:
+        linear-gradient(
+            135deg,
+            #fff7ed,
+            #ffe8cd
+        );
+}
+
+.kpi-ligacoes .kpi-simbolo {
+    color:
+        #5142e7;
+
+    background:
+        linear-gradient(
+            135deg,
+            #f2efff,
+            #ded9ff
+        );
+}
 
 /* ================================================================
    GRÁFICOS DO DIA C
@@ -94,12 +560,95 @@
     grid-template-columns:
         minmax(
             0,
-            1.65fr
+            1.80fr
         )
         minmax(
             0,
-            0.85fr
+            1fr
         );
 
-    gap: 18px;
+    gap: 22px;
+}
+
+.painel {
+    border-radius: 18px;
+
+    border:
+        1px solid
+        rgba(143, 180, 215, 0.13);
+
+    box-shadow:
+        0 10px 30px
+        rgba(70, 137, 189, 0.10);
+}
+
+.painel-grafico {
+    padding:
+        21px
+        24px
+        14px;
+}
+
+.painel-cabecalho {
+    margin-bottom: 12px;
+}
+
+.painel-titulo {
+    font-size: 24px;
+
+    color:
+        var(--navy-dia-c);
+}
+
+.painel-subtitulo {
+    margin-top: 4px;
+
+    font-size: 16px;
+
+    color:
+        #6873a9;
+}
+
+/* ================================================================
+   RODAPÉ
+   ================================================================ */
+
+.rodape {
+    height: 31px;
+
+    padding:
+        0
+        2px;
+
+    font-size: 14px;
+
+    color:
+        #6f78a3;
+}
+
+.status-ok::before {
+    width: 10px;
+    height: 10px;
+
+    background:
+        #16b97d;
+
+    box-shadow:
+        0 0 8px
+        rgba(22, 185, 125, 0.22);
+}
+
+/* ================================================================
+   ERRO
+   ================================================================ */
+
+#erro {
+    border-radius: 12px;
+
+    background:
+        rgba(255, 241, 241, 0.97);
+
+    box-shadow:
+        0 8px 22px
+        rgba(116, 65, 65, 0.10);
 }
