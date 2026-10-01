@@ -5,14 +5,17 @@
    ================================================================ */
 
 :root {
-    --equipes: #0f63d8;
-    --equipes-claro: #18a7f2;
+    --equipes: #1f4e79;
+    --equipes-claro: #4d7297;
+    --equipes-suave: #d6e1ea;
 
-    --programacoes: #ff6a0a;
-    --programacoes-claro: #ffb312;
+    --programacoes: #9a4e00;
+    --programacoes-claro: #c8761e;
+    --programacoes-suave: #f2d9bd;
 
-    --ligacoes: #5142e7;
-    --ligacoes-claro: #8b7cf5;
+    --ligacoes: #2e6a4f;
+    --ligacoes-claro: #4b8469;
+    --ligacoes-suave: #d3e2da;
 
     --navy-dia-c: #0a226f;
     --texto-dia-c: #505891;
@@ -413,9 +416,9 @@
     background:
         linear-gradient(
             135deg,
-            #0074ef 0% 45%,
-            #5fcfff 46% 64%,
-            #d5f3ff 65% 75%,
+            var(--equipes) 0% 45%,
+            var(--equipes-claro) 46% 64%,
+            var(--equipes-suave) 65% 75%,
             transparent 76%
         );
 }
@@ -424,9 +427,9 @@
     background:
         linear-gradient(
             135deg,
-            #ff6a00 0% 45%,
-            #ffb324 46% 64%,
-            #ffe29c 65% 75%,
+            var(--programacoes) 0% 45%,
+            var(--programacoes-claro) 46% 64%,
+            var(--programacoes-suave) 65% 75%,
             transparent 76%
         );
 }
@@ -435,9 +438,9 @@
     background:
         linear-gradient(
             135deg,
-            #5142e7 0% 45%,
-            #8b7cf5 46% 64%,
-            #ded8ff 65% 75%,
+            var(--ligacoes) 0% 45%,
+            var(--ligacoes-claro) 46% 64%,
+            var(--ligacoes-suave) 65% 75%,
             transparent 76%
         );
 }
@@ -473,17 +476,17 @@
 
 .kpi-equipes .kpi-valor {
     color:
-        #133caa;
+        var(--equipes);
 }
 
 .kpi-programacoes .kpi-valor {
     color:
-        #f05b08;
+        var(--programacoes);
 }
 
 .kpi-ligacoes .kpi-valor {
     color:
-        #5142e7;
+        var(--ligacoes);
 }
 
 .kpi-complemento {
@@ -514,37 +517,37 @@
 
 .kpi-equipes .kpi-simbolo {
     color:
-        #0873df;
+        var(--equipes);
 
     background:
         linear-gradient(
             135deg,
-            #eef7ff,
-            #d9ebff
+            #f4f7fa,
+            var(--equipes-suave)
         );
 }
 
 .kpi-programacoes .kpi-simbolo {
     color:
-        #f17308;
+        var(--programacoes);
 
     background:
         linear-gradient(
             135deg,
-            #fff7ed,
-            #ffe8cd
+            #fbf7f2,
+            var(--programacoes-suave)
         );
 }
 
 .kpi-ligacoes .kpi-simbolo {
     color:
-        #5142e7;
+        var(--ligacoes);
 
     background:
         linear-gradient(
             135deg,
-            #f2efff,
-            #ded9ff
+            #f3f8f5,
+            var(--ligacoes-suave)
         );
 }
 
