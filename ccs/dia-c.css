@@ -144,12 +144,9 @@
 }
 
 .logo-equatorial {
-    width: 215px;
-    max-height: 82px;
-
-    object-fit: contain;
-
-    flex-shrink: 0;
+    height: 58px;
+    width: auto;
+    display: block;
 }
 
 .separador-marca {
