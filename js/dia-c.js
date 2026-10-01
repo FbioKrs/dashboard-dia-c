@@ -49,20 +49,93 @@ function corCss(
 const COR_EQUIPES =
     corCss(
         "--equipes",
-        "#4f6b82"
+        "#0f63d8"
+    );
+
+const COR_EQUIPES_CLARO =
+    corCss(
+        "--equipes-claro",
+        "#18a7f2"
     );
 
 const COR_PROGRAMACOES =
     corCss(
         "--programacoes",
-        "#d59a35"
+        "#ff6a0a"
+    );
+
+const COR_PROGRAMACOES_CLARO =
+    corCss(
+        "--programacoes-claro",
+        "#ffb312"
     );
 
 const COR_LIGACOES =
     corCss(
         "--ligacoes",
-        "#3c8c74"
+        "#5142e7"
     );
+
+const COR_LIGACOES_CLARO =
+    corCss(
+        "--ligacoes-claro",
+        "#8b7cf5"
+    );
+
+
+function criarGradienteBarra(
+    context,
+    corInicial,
+    corFinal,
+    horizontal = false
+) {
+
+    const chart =
+        context.chart;
+
+
+    const area =
+        chart.chartArea;
+
+
+    if (!area) {
+        return corInicial;
+    }
+
+
+    const gradiente =
+        horizontal
+        ?
+        chart.ctx.createLinearGradient(
+            area.left,
+            0,
+            area.right,
+            0
+        )
+        :
+        chart.ctx.createLinearGradient(
+            0,
+            area.bottom,
+            0,
+            area.top
+        );
+
+
+    gradiente.addColorStop(
+        0,
+        corInicial
+    );
+
+
+    gradiente.addColorStop(
+        1,
+        corFinal
+    );
+
+
+    return gradiente;
+
+}
 
 
 let dadosGlobais = [];
@@ -1143,7 +1216,12 @@ function renderizarGraficoEvolucao(
                                 ),
 
                             backgroundColor:
-                                COR_EQUIPES,
+                                context =>
+                                    criarGradienteBarra(
+                                        context,
+                                        COR_EQUIPES,
+                                        COR_EQUIPES_CLARO
+                                    ),
 
                             borderRadius:
                                 6,
@@ -1171,7 +1249,12 @@ function renderizarGraficoEvolucao(
                                 ),
 
                             backgroundColor:
-                                COR_PROGRAMACOES,
+                                context =>
+                                    criarGradienteBarra(
+                                        context,
+                                        COR_PROGRAMACOES,
+                                        COR_PROGRAMACOES_CLARO
+                                    ),
 
                             borderRadius:
                                 6,
@@ -1199,7 +1282,12 @@ function renderizarGraficoEvolucao(
                                 ),
 
                             backgroundColor:
-                                COR_LIGACOES,
+                                context =>
+                                    criarGradienteBarra(
+                                        context,
+                                        COR_LIGACOES,
+                                        COR_LIGACOES_CLARO
+                                    ),
 
                             borderRadius:
                                 6,
@@ -1581,7 +1669,13 @@ function renderizarGraficoGeralParceiras() {
                                 ),
 
                             backgroundColor:
-                                COR_EQUIPES,
+                                context =>
+                                    criarGradienteBarra(
+                                        context,
+                                        COR_EQUIPES,
+                                        COR_EQUIPES_CLARO,
+                                        true
+                                    ),
 
                             borderRadius:
                                 6
@@ -1602,7 +1696,13 @@ function renderizarGraficoGeralParceiras() {
                                 ),
 
                             backgroundColor:
-                                COR_PROGRAMACOES,
+                                context =>
+                                    criarGradienteBarra(
+                                        context,
+                                        COR_PROGRAMACOES,
+                                        COR_PROGRAMACOES_CLARO,
+                                        true
+                                    ),
 
                             borderRadius:
                                 6
@@ -1623,7 +1723,13 @@ function renderizarGraficoGeralParceiras() {
                                 ),
 
                             backgroundColor:
-                                COR_LIGACOES,
+                                context =>
+                                    criarGradienteBarra(
+                                        context,
+                                        COR_LIGACOES,
+                                        COR_LIGACOES_CLARO,
+                                        true
+                                    ),
 
                             borderRadius:
                                 6
@@ -1914,15 +2020,41 @@ function renderizarGraficoComposicaoParceira(
 
                             ],
 
-                            backgroundColor: [
+                            backgroundColor:
+                                context => {
 
-                                COR_EQUIPES,
+                                    const paleta = [
+                                        [
+                                            COR_EQUIPES,
+                                            COR_EQUIPES_CLARO
+                                        ],
+                                        [
+                                            COR_PROGRAMACOES,
+                                            COR_PROGRAMACOES_CLARO
+                                        ],
+                                        [
+                                            COR_LIGACOES,
+                                            COR_LIGACOES_CLARO
+                                        ]
+                                    ];
 
-                                COR_PROGRAMACOES,
 
-                                COR_LIGACOES
+                                    const cores =
+                                        paleta[
+                                            context.dataIndex
+                                        ]
+                                        ||
+                                        paleta[0];
 
-                            ],
+
+                                    return criarGradienteBarra(
+                                        context,
+                                        cores[0],
+                                        cores[1],
+                                        true
+                                    );
+
+                                },
 
                             borderRadius:
                                 8,
