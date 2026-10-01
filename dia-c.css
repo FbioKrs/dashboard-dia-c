@@ -1,0 +1,105 @@
+/* ================================================================
+   DIA C — DC-V1
+   Regras específicas desta visão
+   ================================================================ */
+
+:root {
+    --equipes: #4f6b82;
+    --programacoes: #d59a35;
+    --ligacoes: #3c8c74;
+
+    --cor-destaque-visao:
+        var(--ligacoes);
+}
+
+
+/* ================================================================
+   COMPOSIÇÃO DA VISÃO
+   ================================================================ */
+
+.conteudo {
+    display: grid;
+
+    grid-template-rows:
+        54px
+        142px
+        minmax(0, 1fr);
+
+    gap: 16px;
+}
+
+
+/* ================================================================
+   KPIs DO DIA C
+   ================================================================ */
+
+.kpis {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            3,
+            minmax(
+                0,
+                1fr
+            )
+        );
+
+    gap: 18px;
+}
+
+.kpi-equipes::before {
+    background:
+        var(--equipes);
+}
+
+.kpi-programacoes::before {
+    background:
+        var(--programacoes);
+}
+
+.kpi-ligacoes::before {
+    background:
+        var(--ligacoes);
+}
+
+.kpi-equipes
+.kpi-simbolo {
+    color:
+        var(--equipes);
+}
+
+.kpi-programacoes
+.kpi-simbolo {
+    color:
+        var(--programacoes);
+}
+
+.kpi-ligacoes
+.kpi-simbolo {
+    color:
+        var(--ligacoes);
+}
+
+
+/* ================================================================
+   GRÁFICOS DO DIA C
+   ================================================================ */
+
+.area-graficos {
+    min-height: 0;
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(
+            0,
+            1.65fr
+        )
+        minmax(
+            0,
+            0.85fr
+        );
+
+    gap: 18px;
+}
