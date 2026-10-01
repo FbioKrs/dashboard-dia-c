@@ -49,37 +49,37 @@ function corCss(
 const COR_EQUIPES =
     corCss(
         "--equipes",
-        "#0f63d8"
+        "#1f4e79"
     );
 
 const COR_EQUIPES_CLARO =
     corCss(
         "--equipes-claro",
-        "#18a7f2"
+        "#4d7297"
     );
 
 const COR_PROGRAMACOES =
     corCss(
         "--programacoes",
-        "#ff6a0a"
+        "#9a4e00"
     );
 
 const COR_PROGRAMACOES_CLARO =
     corCss(
         "--programacoes-claro",
-        "#ffb312"
+        "#c8761e"
     );
 
 const COR_LIGACOES =
     corCss(
         "--ligacoes",
-        "#5142e7"
+        "#2e6a4f"
     );
 
 const COR_LIGACOES_CLARO =
     corCss(
         "--ligacoes-claro",
-        "#8b7cf5"
+        "#4b8469"
     );
 
 
