@@ -31,6 +31,7 @@ window.PAINEL_CONFIG = {
     visoes: [
         {
             id: "DC-V1",
+            ativo: true,
             nome: "Dia C",
             titulo: "Dia C",
             subtitulo: "Acompanhamento de mobilização e execução",
@@ -40,6 +41,7 @@ window.PAINEL_CONFIG = {
         },
         {
             id: "ME_EXEC-V1",
+            ativo: true,
             nome: "Metas da Executiva",
             titulo: "Metas da Executiva",
             subtitulo: "Acompanhamento das notas por Categoria",

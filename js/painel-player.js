@@ -6,7 +6,15 @@
 (function () {
 
     const config = window.PAINEL_CONFIG || {};
-    const visoes = Array.isArray(config.visoes) ? config.visoes : [];
+    const visoesConfiguradas = Array.isArray(config.visoes)
+        ? config.visoes
+        : [];
+
+    // Uma visão só é excluída quando `ativo` for explicitamente false.
+    // Assim, registros antigos sem essa propriedade continuam compatíveis.
+    const visoes = visoesConfiguradas.filter(
+        visao => visao?.ativo !== false
+    );
 
     const slot = document.getElementById("conteudoVisao");
     const erroPlayer = document.getElementById("erroPlayer");
