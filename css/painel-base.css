@@ -118,7 +118,32 @@ body {
     display: flex;
     align-items: center;
 
-    gap: 16px;
+    gap: 22px;
+}
+
+/* O logo pertence ao shell global do PG-V2.
+   Seu tamanho precisa existir no CSS base para evitar flash
+   no tamanho intrínseco do SVG antes do CSS da visão carregar. */
+.logo-equatorial {
+    display: block;
+    width: 215px;
+    height: auto;
+    max-height: 82px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+.separador-marca {
+    width: 4px;
+    height: 58px;
+    flex-shrink: 0;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.92);
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.12);
+}
+
+.titulo-bloco {
+    min-width: 0;
 }
 
 .marca {
