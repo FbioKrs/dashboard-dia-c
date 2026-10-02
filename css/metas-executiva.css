@@ -1,10 +1,10 @@
 /* ================================================================
    METAS DA EXECUTIVA — ME_EXEC-V1
    Estilos específicos da visão.
-   Mantém o PG-V1 intacto e replica a linguagem estrutural da DC-V1.
+   Atua somente no corpo da visão, preservando o shell global do PG-V2.
    ================================================================ */
 
-:root {
+.pagina.visao-me-exec {
     --meta-critica: #D4353E;
     --meta-atencao: #F9CD17;
     --meta-atingida: #458039;
@@ -17,259 +17,6 @@
     --fundo-metas: #f1f9ff;
 
     --cor-destaque-visao: var(--meta-atingida);
-}
-
-
-/* ================================================================
-   FUNDO GERAL
-   ================================================================ */
-
-#stage {
-    background:
-        radial-gradient(
-            circle at 11% 92%,
-            rgba(91, 193, 255, 0.14),
-            transparent 32%
-        ),
-        radial-gradient(
-            circle at 88% 14%,
-            rgba(73, 165, 255, 0.10),
-            transparent 35%
-        ),
-        linear-gradient(
-            180deg,
-            #f8fcff 0%,
-            var(--fundo-metas) 100%
-        );
-}
-
-
-/* ================================================================
-   CABEÇALHO — MESMA LINGUAGEM DA DC-V1
-   ================================================================ */
-
-.topo {
-    position: relative;
-    overflow: hidden;
-    isolation: isolate;
-
-    grid-template-columns:
-        minmax(650px, 1.15fr)
-        minmax(330px, 0.70fr)
-        minmax(480px, 1fr);
-
-    padding: 0 40px;
-
-    background:
-        linear-gradient(
-            90deg,
-            #16398e 0%,
-            #183f9e 36%,
-            #1d53b7 63%,
-            #178ed4 100%
-        );
-
-    box-shadow:
-        0 3px 14px
-        rgba(22, 63, 130, 0.22);
-}
-
-.topo::before {
-    content: "";
-
-    position: absolute;
-    inset: -120px -40px -105px 42%;
-
-    z-index: -2;
-
-    background:
-        conic-gradient(
-            from 209deg at 47% 85%,
-            transparent 0deg 9deg,
-            rgba(12, 210, 255, 0.96) 10deg 16deg,
-            rgba(38, 156, 243, 0.90) 17deg 21deg,
-            transparent 22deg 27deg,
-            rgba(255, 137, 29, 0.98) 28deg 34deg,
-            rgba(255, 195, 59, 0.94) 35deg 38deg,
-            transparent 39deg 43deg,
-            rgba(90, 63, 219, 0.96) 44deg 51deg,
-            rgba(118, 92, 238, 0.90) 52deg 56deg,
-            transparent 57deg 360deg
-        );
-
-    transform:
-        rotate(-4deg)
-        scale(1.20);
-
-    filter: saturate(1.08);
-    opacity: 0.94;
-    pointer-events: none;
-}
-
-.topo::after {
-    content: "";
-
-    position: absolute;
-    inset: 0;
-
-    z-index: -1;
-
-    background:
-        linear-gradient(
-            90deg,
-            rgba(8, 27, 89, 0.12),
-            transparent 42%,
-            rgba(0, 38, 119, 0.10) 72%,
-            rgba(0, 141, 222, 0.16)
-        );
-
-    pointer-events: none;
-}
-
-.topo-identidade,
-.topo-centro,
-.topo-rotacao {
-    position: relative;
-    z-index: 2;
-}
-
-.topo-identidade {
-    gap: 22px;
-}
-
-.logo-equatorial {
-    width: 215px;
-    max-height: 82px;
-
-    object-fit: contain;
-    flex-shrink: 0;
-}
-
-.separador-marca {
-    width: 4px;
-    height: 58px;
-
-    flex-shrink: 0;
-
-    border-radius: 4px;
-
-    background:
-        rgba(255, 255, 255, 0.92);
-
-    box-shadow:
-        0 0 12px
-        rgba(255, 255, 255, 0.12);
-}
-
-.titulo-bloco {
-    min-width: 0;
-}
-
-.titulo-principal {
-    font-size: 36px;
-    letter-spacing: 0.1px;
-
-    text-shadow:
-        0 2px 8px
-        rgba(0, 0, 0, 0.12);
-}
-
-.subtitulo-principal {
-    margin-top: 7px;
-
-    font-size: 17px;
-
-    color:
-        rgba(255, 255, 255, 0.88);
-}
-
-.visao-indicador {
-    min-width: 340px;
-
-    padding:
-        9px
-        28px
-        10px;
-
-    border-radius: 16px;
-
-    background:
-        linear-gradient(
-            180deg,
-            rgba(255, 255, 255, 0.18),
-            rgba(255, 255, 255, 0.10)
-        );
-
-    border:
-        1px solid
-        rgba(255, 255, 255, 0.16);
-
-    box-shadow:
-        inset 0 1px 0
-        rgba(255, 255, 255, 0.10),
-        0 8px 24px
-        rgba(0, 31, 105, 0.12);
-
-    backdrop-filter: blur(4px);
-}
-
-.visao-indicador-label {
-    margin-bottom: 3px;
-
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 1.3px;
-
-    color:
-        rgba(255, 255, 255, 0.91);
-}
-
-.visao-indicador-nome {
-    max-width: 430px;
-
-    font-size: 24px;
-    color: #ffffff;
-}
-
-.topo-rotacao {
-    width: 340px;
-}
-
-.proxima-visao {
-    margin-bottom: 8px;
-
-    font-size: 16px;
-
-    color:
-        rgba(255, 255, 255, 0.92);
-
-    text-shadow:
-        0 1px 4px
-        rgba(0, 0, 0, 0.12);
-}
-
-.barra-tempo {
-    height: 6px;
-
-    background:
-        rgba(255, 255, 255, 0.25);
-
-    box-shadow:
-        inset 0 1px 2px
-        rgba(0, 0, 0, 0.10);
-}
-
-.barra-tempo-preenchimento {
-    background:
-        linear-gradient(
-            90deg,
-            #ffffff,
-            #d7f4ff
-        );
-
-    box-shadow:
-        0 0 10px
-        rgba(255, 255, 255, 0.58);
 }
 
 
@@ -840,4 +587,282 @@
     box-shadow:
         0 8px 22px
         rgba(116, 65, 65, 0.10);
+}
+
+/* ================================================================
+   ME_EXEC-V1 — DETALHAMENTO EM CARDS
+   Referência visual: imagem aprovada em 02/10/2026.
+   Escopo restrito ao modo-detalhe para preservar a Visão Geral.
+   ================================================================ */
+
+.conteudo.modo-detalhe .metas-eixo {
+    /* Mantém a área/posição do eixo, mas sem elementos visuais no cabeçalho. */
+    visibility: hidden;
+}
+
+.conteudo.modo-detalhe .metas-linhas {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    overflow: visible;
+}
+
+.conteudo.modo-detalhe .meta-linha {
+    position: relative;
+    flex: 1 1 0;
+    min-height: 0;
+    border-top: 0;
+    border-radius: 13px;
+}
+
+/* Categoria principal: card azul claro com marca lateral e maior altura. */
+.conteudo.modo-detalhe .meta-categoria {
+    flex: 1.34 1 0;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(234, 246, 255, 0.96) 0%,
+            rgba(242, 249, 255, 0.94) 55%,
+            rgba(238, 247, 255, 0.92) 100%
+        );
+
+    border: 1px solid rgba(174, 207, 235, 0.72);
+
+    box-shadow:
+        0 5px 18px rgba(55, 120, 175, 0.10),
+        inset 0 1px 0 rgba(255, 255, 255, 0.92);
+}
+
+.conteudo.modo-detalhe .meta-categoria::before {
+    content: "";
+
+    position: absolute;
+    z-index: 5;
+    left: 0;
+    top: 0;
+    bottom: 0;
+
+    width: 14px;
+
+    border-radius: 13px 0 0 13px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #1567dc 0%,
+            #0f56c7 100%
+        );
+}
+
+/* Ícone de barras que identifica a Categoria no detalhamento. */
+.conteudo.modo-detalhe .meta-categoria .meta-rotulo {
+    padding-left: 54px;
+    padding-right: 30px;
+}
+
+.conteudo.modo-detalhe .meta-categoria .meta-rotulo::before {
+    content: "";
+
+    flex: 0 0 36px;
+    width: 36px;
+    height: 36px;
+
+    margin-right: 28px;
+
+    background:
+        linear-gradient(#1567dc, #1567dc) 0 100% / 7px 19px no-repeat,
+        linear-gradient(#3f84e8, #3f84e8) 14px 100% / 7px 30px no-repeat,
+        linear-gradient(#1567dc, #1567dc) 28px 100% / 7px 23px no-repeat;
+}
+
+.conteudo.modo-detalhe .meta-categoria .meta-rotulo-texto {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+
+    white-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    font-size: 27px;
+    font-weight: 800;
+    line-height: 1.25;
+    color: #123279;
+}
+
+/* SubCategorias: cards recuados, preservando alinhamento de Peso/Barra/Nota. */
+.conteudo.modo-detalhe .meta-subcategoria {
+    margin-left: 78px;
+
+    grid-template-columns:
+        calc(var(--label-width) - 78px)
+        var(--peso-width)
+        minmax(0, 1fr)
+        var(--nota-width);
+
+    background: rgba(255, 255, 255, 0.74);
+    border: 1px solid rgba(205, 220, 233, 0.82);
+
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.95);
+}
+
+/* Linha vertical da árvore hierárquica. */
+.conteudo.modo-detalhe .meta-subcategoria::before {
+    content: "";
+
+    position: absolute;
+    left: -47px;
+    top: -19px;
+    bottom: -19px;
+
+    width: 1px;
+
+    background: #adc0dc;
+}
+
+.conteudo.modo-detalhe .meta-subcategoria:last-child::before {
+    bottom: 50%;
+}
+
+/* Ramificação horizontal da árvore. */
+.conteudo.modo-detalhe .meta-subcategoria::after {
+    content: "";
+
+    position: absolute;
+    left: -47px;
+    top: 50%;
+
+    width: 28px;
+    height: 1px;
+
+    background: #adc0dc;
+}
+
+.conteudo.modo-detalhe .meta-subcategoria .meta-rotulo {
+    position: relative;
+    padding-left: 36px;
+    padding-right: 24px;
+}
+
+/* Nó circular da hierarquia. */
+.conteudo.modo-detalhe .meta-subcategoria .meta-rotulo::after {
+    content: "";
+
+    position: absolute;
+    left: -25px;
+    top: 50%;
+
+    width: 9px;
+    height: 9px;
+
+    transform: translateY(-50%);
+
+    border-radius: 50%;
+    background: #7893bf;
+}
+
+.conteudo.modo-detalhe .meta-subcategoria .meta-rotulo-texto {
+    font-size: 23px;
+    font-weight: 500;
+    line-height: 1.18;
+    color: #2b4476;
+}
+
+.conteudo.modo-detalhe .meta-subcategoria .meta-rotulo-texto::before {
+    margin-right: 14px;
+    color: #768cab;
+    font-size: 21px;
+}
+
+/* Peso mantém a coluna existente, ganhando apenas a leitura da referência. */
+.conteudo.modo-detalhe .meta-categoria .meta-peso {
+    font-size: 25px;
+    font-weight: 800;
+    color: #123279;
+}
+
+.conteudo.modo-detalhe .meta-subcategoria .meta-peso {
+    font-size: 23px;
+    font-weight: 500;
+    color: #2b4476;
+}
+
+/* Grade e referências permanecem nos mesmos pontos da escala. */
+.conteudo.modo-detalhe .meta-grade-linha {
+    background: rgba(198, 216, 230, 0.64);
+}
+
+.conteudo.modo-detalhe .meta-grade-linha:first-child,
+.conteudo.modo-detalhe .meta-grade-linha:last-child {
+    background: rgba(181, 203, 221, 0.76);
+}
+
+.conteudo.modo-detalhe .meta-referencia-8 {
+    background: rgba(23, 48, 81, 0.72);
+}
+
+.conteudo.modo-detalhe .meta-referencia-10 {
+    background: rgba(23, 48, 81, 0.86);
+}
+
+.conteudo.modo-detalhe .meta-categoria .meta-barra {
+    height: 42px;
+}
+
+.conteudo.modo-detalhe .meta-subcategoria .meta-barra {
+    height: 30px;
+}
+
+/* Nota em badge, mantendo a mesma coluna e a mesma informação. */
+.conteudo.modo-detalhe .meta-nota {
+    align-self: center;
+    justify-self: center;
+
+    width: calc(100% - 10px);
+    min-height: 58px;
+
+    padding: 8px 8px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 16px;
+
+    text-align: center;
+
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.90);
+}
+
+.conteudo.modo-detalhe .meta-categoria .meta-nota {
+    font-size: 29px;
+    font-weight: 800;
+}
+
+.conteudo.modo-detalhe .meta-subcategoria .meta-nota {
+    font-size: 25px;
+    font-weight: 700;
+}
+
+.conteudo.modo-detalhe .meta-linha.faixa-meta .meta-nota {
+    color: #086440;
+    background: rgba(102, 177, 91, 0.10);
+}
+
+.conteudo.modo-detalhe .meta-linha.faixa-atencao .meta-nota {
+    color: #775d00;
+    background: rgba(249, 205, 23, 0.16);
+}
+
+.conteudo.modo-detalhe .meta-linha.faixa-critica .meta-nota {
+    color: #9c3038;
+    background: rgba(212, 53, 62, 0.10);
+}
+
+.conteudo.modo-detalhe .meta-linha.valor-zero .meta-nota {
+    color: #66737f;
+    background: rgba(116, 128, 138, 0.09);
 }
