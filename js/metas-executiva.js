@@ -1163,6 +1163,23 @@ function renderizarVisao() {
    CARREGAMENTO DO JSON
    ================================================================ */
 
+function extrairListaDados(payload) {
+
+    // Formato canônico do ME_EXEC-V1: array direto na raiz.
+    if (Array.isArray(payload)) {
+        return payload;
+    }
+
+    // Compatibilidade com o formato legado { versao, dados }.
+    if (Array.isArray(payload?.dados)) {
+        return payload.dados;
+    }
+
+    return null;
+
+}
+
+
 async function carregarDados() {
 
     const erro =
@@ -1198,22 +1215,14 @@ async function carregarDados() {
             await resposta.json();
 
         const dados =
-            Array.isArray(json)
-            ? json
-            : (
-                Array.isArray(
-                    json?.dados
-                )
-                ? json.dados
-                : null
-            );
+            extrairListaDados(json);
 
         if (
             !Array.isArray(dados)
         ) {
 
             throw new Error(
-                "metas-executiva.json não contém uma lista válida."
+                "metas-executiva.json deve conter uma lista de registros."
             );
 
         }
