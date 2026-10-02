@@ -50,7 +50,7 @@ Não utilizar `iframe` para a circulação das visões do PG-V2.
 | **PG-V2** | Padrão Geral | Vigente | `index.html`, `css/painel-base.css`, `js/painel-base.js`, `js/painel-config.js`, `js/painel-player.js` |
 | **DC-V1** | Dia C | Em produção | `visoes/dia-c.html` |
 | **ME_EXEC-V1** | Metas da Executiva | Em produção | `visoes/metas-executiva.html` |
-| **ME_GER-V1** | Metas da Gerência | Reservado / ainda não implementado | A definir |
+| **ME_GER-V1** | Metas da Gerência | Em produção | `visoes/metas-gerencia.html` |
 | **OA-V1** | Obras Ágeis | Convenção reservada | Pode não existir ainda |
 | **IND-V1** | Indicadores | Convenção reservada | Pode não existir ainda |
 | **PROD-V1** | Produtividade | Convenção reservada | Pode não existir ainda |
@@ -70,12 +70,14 @@ painel-acompanhamento/
 │
 ├── visoes/
 │   ├── dia-c.html
-│   └── metas-executiva.html
+│   ├── metas-executiva.html
+│   └── metas-gerencia.html
 │
 ├── css/
 │   ├── painel-base.css
 │   ├── dia-c.css
-│   └── metas-executiva.css
+│   ├── metas-executiva.css
+│   └── metas-gerencia.css
 │
 ├── js/
 │   ├── painel-config.js
@@ -84,10 +86,12 @@ painel-acompanhamento/
 │   ├── chart.umd.min.js
 │   ├── chartjs-plugin-datalabels.min.js
 │   ├── dia-c.js
-│   └── metas-executiva.js
+│   ├── metas-executiva.js
+│   └── metas-gerencia.js
 │
 ├── dados/
-│   └── metas-executiva.json
+│   ├── metas-executiva.json
+│   └── metas-gerencia.json
 │
 ├── dados.json
 │
@@ -482,9 +486,7 @@ ORDEM_CAT → ORDEM_SUB
 
 ## 10. ME_GER-V1 — Metas da Gerência
 
-Identificador reservado. Ainda não implementada.
-
-Quando for criada, seguir o mesmo modelo modular:
+### Arquivos
 
 ```text
 visoes/metas-gerencia.html
@@ -493,7 +495,27 @@ js/metas-gerencia.js
 dados/metas-gerencia.json
 ```
 
-Adicionar a nova visão em `PAINEL_CONFIG.visoes`.
+A **ME_GER-V1** replica o comportamento e o padrão visual da **ME_EXEC-V1**. A diferença funcional entre as duas visões é a fonte de dados:
+
+```text
+ME_EXEC-V1 → dados/metas-executiva.json
+ME_GER-V1  → dados/metas-gerencia.json
+```
+
+Portanto, ME_GER-V1 preserva:
+
+- Visão Geral somente com Categorias;
+- criação automática de uma Subvisão para cada Categoria que possua SubCategorias;
+- 15 segundos por Subvisão;
+- cartão horizontal compacto `Nota Geral` em todas as telas;
+- cálculo da Nota Geral por `APURADO × PESO / 100`, considerando somente `NIVEL = CATEGORIA`;
+- escala de 0 a 15;
+- linhas de referência e marcadores em `8,0` e `10,0`;
+- mesmas regras de cores de Categoria e SubCategoria da ME_EXEC-V1;
+- mesma composição de cards, hierarquia, Peso, barras e badges de Nota;
+- atualização de dados a cada 60 segundos, com cache-buster e preservação da última informação válida em caso de falha.
+
+O formato de `dados/metas-gerencia.json` segue os mesmos campos e a mesma ordenação usados pela ME_EXEC-V1.
 
 ---
 
@@ -575,6 +597,17 @@ js/metas-executiva.js
 dados/metas-executiva.json
 ```
 
+### ME_GER-V1
+
+Preferir:
+
+```text
+visoes/metas-gerencia.html
+css/metas-gerencia.css
+js/metas-gerencia.js
+dados/metas-gerencia.json
+```
+
 Não alterar PG-V2 para resolver um problema exclusivo de uma visão.
 
 ---
@@ -651,8 +684,8 @@ Nunca reconstruir arquivos vigentes com base apenas em versões históricas do c
 ---
 
 **Padrão vigente: PG-V2**  
-**Visões ativas: DC-V1 e ME_EXEC-V1**  
-**Visão reservada: ME_GER-V1**
+**Visões cadastradas: DC-V1, ME_EXEC-V1 e ME_GER-V1**  
+**Estado atual em `painel-config.js`: DC-V1 desativada; ME_EXEC-V1 e ME_GER-V1 ativas**
 
 
 ### Inicialização visual do PG-V2

@@ -1,0 +1,121 @@
+<main class="pagina visao-me-ger">
+
+
+        <div id="erro"></div>
+
+
+        <div
+            id="painelConteudo"
+            class="conteudo modo-geral"
+        >
+
+
+            <!-- GRÁFICO -->
+
+            <section class="painel painel-grafico painel-metas">
+
+                <div class="painel-cabecalho painel-cabecalho-metas">
+
+                    <div class="painel-cabecalho-esquerda">
+
+                        <div class="painel-titulo">
+                            Apuração dos Indicadores
+                        </div>
+
+                        <div class="legenda-faixas" aria-label="Legenda das faixas de nota">
+
+                            <span class="legenda-item legenda-critica">
+                                &lt; 8
+                            </span>
+
+                            <span class="legenda-item legenda-atencao">
+                                8 a &lt; 10
+                            </span>
+
+                            <span class="legenda-item legenda-meta">
+                                ≥ 10
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    <div
+                        id="cartaoNotaGeral"
+                        class="cartao-nota-geral faixa-neutra"
+                        aria-label="Nota geral das categorias"
+                    >
+
+                        <span class="cartao-nota-geral-label">
+                            Nota Geral
+                        </span>
+
+                        <span
+                            id="valorNotaGeral"
+                            class="cartao-nota-geral-valor"
+                        >
+                            --
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="grafico-metas">
+
+                    <div class="metas-cabecalho">
+
+                        <div class="metas-coluna-titulo">
+                            Indicador
+                        </div>
+
+                        <div class="metas-coluna-peso">
+                            Peso
+                        </div>
+
+                        <div
+                            id="eixoMetas"
+                            class="metas-eixo"
+                        ></div>
+
+                        <div class="metas-coluna-nota">
+                            Nota
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        id="linhasMetas"
+                        class="metas-linhas"
+                    ></div>
+
+                </div>
+
+            </section>
+
+
+        </div>
+
+
+
+        <!-- RODAPÉ -->
+
+        <footer class="rodape">
+
+            <span>
+                Dados atualizados automaticamente a cada 60 segundos
+            </span>
+
+            <span
+                id="statusAtualizacao"
+                class="status-ok"
+            >
+                Última atualização: --
+            </span>
+
+        </footer>
+
+
+    </main>

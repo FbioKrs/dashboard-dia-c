@@ -48,6 +48,16 @@ window.PAINEL_CONFIG = {
             fragmento: "./visoes/metas-executiva.html",
             css: "./css/metas-executiva.css",
             modulo: "./js/metas-executiva.js"
+        },
+        {
+            id: "ME_GER-V1",
+            ativo: true,
+            nome: "Metas da Gerência",
+            titulo: "Metas da Gerência",
+            subtitulo: "Acompanhamento das notas por Categoria",
+            fragmento: "./visoes/metas-gerencia.html",
+            css: "./css/metas-gerencia.css",
+            modulo: "./js/metas-gerencia.js"
         }
     ]
 
