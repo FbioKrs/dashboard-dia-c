@@ -170,11 +170,21 @@ Cada fragmento deve possuir uma classe raiz própria (por exemplo, `.visao-dia-c
 Registro central das visões:
 
 - ID;
+- estado `ativo`;
 - título/subtítulo;
 - fragmento;
 - CSS;
 - módulo JS;
 - parâmetros globais do player.
+
+A propriedade `ativo` controla a participação da visão no ciclo principal:
+
+```js
+ativo: true   // visão apresentada normalmente
+ativo: false  // visão ignorada pelo player
+```
+
+Por compatibilidade, se `ativo` não estiver informado, a visão é considerada ativa. O player trabalha apenas com registros onde `ativo !== false`, portanto uma visão desabilitada não consome tempo nem deixa intervalo vazio no ciclo.
 
 ### `js/painel-base.js`
 
@@ -190,7 +200,9 @@ Controlador da sequência principal.
 
 Os caminhos registrados em `PAINEL_CONFIG.visoes` são relativos ao `index.html`/raiz da aplicação. O player os resolve explicitamente contra `document.baseURI` antes de carregar fragmentos, CSS ou módulos ES. Isso evita que `import()` interprete `./js/...` relativamente ao próprio arquivo `js/painel-player.js` e produza caminhos incorretos como `js/js/...`.
 
-Para cada visão:
+Antes de iniciar o ciclo, o player filtra `PAINEL_CONFIG.visoes` e mantém somente as visões com `ativo !== false`.
+
+Para cada visão ativa:
 
 1. encerra o módulo anterior;
 2. carrega o CSS específico;
@@ -199,7 +211,7 @@ Para cada visão:
 5. chama `await modulo.iniciar()`;
 6. aguarda a visão concluir seu próprio ciclo;
 7. chama `modulo.destruir()`;
-8. avança para a próxima visão.
+8. avança para a próxima visão ativa.
 
 Após a última visão, recarrega o `index.html` com um token `_ciclo=<timestamp>`.
 
@@ -482,10 +494,39 @@ Adicionar a nova visão em `PAINEL_CONFIG.visoes`.
 2. Criar CSS específico em `css/`.
 3. Criar módulo JS em `js/` com `iniciar()` e `destruir()`.
 4. Criar fonte de dados, se necessária.
-5. Registrar a visão em `PAINEL_CONFIG.visoes`.
+5. Registrar a visão em `PAINEL_CONFIG.visoes`, incluindo `ativo: true` ou `ativo: false`.
 6. Garantir que `iniciar()` só termine quando toda a apresentação daquela visão tiver sido concluída.
 7. Tratar erros localmente para não derrubar o player.
 8. Validar em 1920×1080 e confirmar ausência de scroll.
+
+---
+
+## 11.1. Habilitar e desabilitar visões
+
+A exibição de uma visão deve ser controlada exclusivamente pelo registro em `js/painel-config.js`; não apagar arquivos, comentar blocos inteiros nem alterar `painel-player.js` para suspender temporariamente uma visão.
+
+Exemplo:
+
+```js
+{
+    id: "ME_EXEC-V1",
+    ativo: false,
+    nome: "Metas da Executiva",
+    titulo: "Metas da Executiva",
+    subtitulo: "Acompanhamento das notas por Categoria",
+    fragmento: "./visoes/metas-executiva.html",
+    css: "./css/metas-executiva.css",
+    modulo: "./js/metas-executiva.js"
+}
+```
+
+Com `ativo: false`, a visão continua integralmente no repositório, mas não é carregada nem apresentada. Para reativá-la, alterar somente para:
+
+```js
+ativo: true
+```
+
+A ordem dos objetos ativos em `PAINEL_CONFIG.visoes` continua determinando a ordem de apresentação.
 
 ---
 
