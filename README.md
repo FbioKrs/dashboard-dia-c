@@ -392,6 +392,28 @@ SubCategorias usam tons mais claros equivalentes:
 >= 10      #7FB06F
 ```
 
+### Formato do JSON
+
+O formato canônico de `dados/metas-executiva.json` é uma **lista direta de registros na raiz**:
+
+```json
+[
+  {
+    "INDICADOR": "...",
+    "APURADO": 0,
+    "PESO": 0,
+    "PONDERADO": null,
+    "CATEGORIA": "...",
+    "NIVEL": "CATEGORIA",
+    "SUBCATEGORIA": "",
+    "ORDEM_CAT": 1,
+    "ORDEM_SUB": 0
+  }
+]
+```
+
+O módulo `js/metas-executiva.js` mantém compatibilidade de leitura com o formato legado `{ "versao": "ME_EXEC-V1", "dados": [...] }`, mas novos arquivos devem usar o array direto.
+
 ### Campos do JSON
 
 - `INDICADOR`
