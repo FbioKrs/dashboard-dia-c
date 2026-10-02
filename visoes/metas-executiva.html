@@ -6,36 +6,8 @@
 
         <div
             id="painelConteudo"
-            class="conteudo"
+            class="conteudo modo-geral"
         >
-
-
-            <!-- TÍTULO DA VISÃO -->
-
-            <section class="cabecalho-visao">
-
-                <div class="cabecalho-visao-texto">
-
-                    <h2 id="tituloVisao">
-                        Desempenho das Categorias
-                    </h2>
-
-                    <p id="descricaoVisao">
-                        Apuração consolidada das categorias
-                    </p>
-
-                </div>
-
-
-                <div
-                    id="badgeRegistros"
-                    class="badge-registros"
-                >
-                    0 categorias
-                </div>
-
-            </section>
-
 
 
             <!-- GRÁFICO -->
@@ -44,30 +16,45 @@
 
                 <div class="painel-cabecalho painel-cabecalho-metas">
 
-                    <div>
+                    <div class="painel-cabecalho-esquerda">
 
                         <div class="painel-titulo">
                             Apuração dos Indicadores
                         </div>
 
-                        <div class="painel-subtitulo">
-                            Escala de 0 a 15 • referências em 8,0 e 10,0
+                        <div class="legenda-faixas" aria-label="Legenda das faixas de nota">
+
+                            <span class="legenda-item legenda-critica">
+                                &lt; 8
+                            </span>
+
+                            <span class="legenda-item legenda-atencao">
+                                8 a &lt; 10
+                            </span>
+
+                            <span class="legenda-item legenda-meta">
+                                ≥ 10
+                            </span>
+
                         </div>
 
                     </div>
 
-                    <div class="legenda-faixas" aria-label="Legenda das faixas de nota">
+                    <div
+                        id="cartaoNotaGeral"
+                        class="cartao-nota-geral faixa-neutra"
+                        aria-label="Nota geral das categorias"
+                    >
 
-                        <span class="legenda-item legenda-critica">
-                            &lt; 8
+                        <span class="cartao-nota-geral-label">
+                            Nota Geral
                         </span>
 
-                        <span class="legenda-item legenda-atencao">
-                            8 a &lt; 10
-                        </span>
-
-                        <span class="legenda-item legenda-meta">
-                            ≥ 10
+                        <span
+                            id="valorNotaGeral"
+                            class="cartao-nota-geral-valor"
+                        >
+                            --
                         </span>
 
                     </div>

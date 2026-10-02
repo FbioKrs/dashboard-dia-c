@@ -791,7 +791,7 @@ function concluirCiclo() {
     const contador = document.getElementById("contador");
     const barra = document.getElementById("barraTempo");
 
-    if (contador) contador.textContent = "Ciclo concluído";
+    if (contador) contador.textContent = "0s";
     if (barra) barra.style.width = "0%";
 
     const resolver = resolverCiclo;
