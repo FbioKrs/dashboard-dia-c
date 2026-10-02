@@ -21,6 +21,7 @@
     let cssAtual = null;
     let indiceAtual = -1;
     let tokenCiclo = Date.now();
+    let primeiraExibicao = true;
 
     function urlSemCache(caminho) {
         const url = new URL(caminho, document.baseURI);
@@ -96,8 +97,15 @@
     }
 
     async function trocarConteudo(visao) {
-        slot.classList.add("trocando-visao");
-        await window.PAINEL_BASE.esperar(transicaoMs);
+        const stage = document.getElementById("stage");
+
+        // Na primeira carga não existe uma visão anterior para desaparecer.
+        // Portanto, não aplicamos o atraso de transição: carregamos a primeira
+        // visão e a revelamos diretamente quando fragmento + CSS estiverem prontos.
+        if (!primeiraExibicao) {
+            slot.classList.add("trocando-visao");
+            await window.PAINEL_BASE.esperar(transicaoMs);
+        }
 
         const [html] = await Promise.all([
             carregarFragmento(visao.fragmento),
@@ -106,13 +114,18 @@
 
         slot.innerHTML = html;
         slot.dataset.visao = visao.id;
-        document.getElementById("stage")?.setAttribute("data-visao", visao.id);
+        stage?.setAttribute("data-visao", visao.id);
 
         definirCabecalho(visao);
 
-        // Garante layout antes do fade-in.
+        // Garante layout antes da exibição.
         void slot.offsetWidth;
         slot.classList.remove("trocando-visao");
+
+        if (primeiraExibicao) {
+            primeiraExibicao = false;
+            stage?.classList.remove("painel-iniciando");
+        }
     }
 
     function comTimeout(promessa, ms, idVisao) {
