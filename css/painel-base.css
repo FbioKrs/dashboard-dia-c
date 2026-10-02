@@ -80,6 +80,24 @@ body {
 
 
 /* ================================================================
+   INICIALIZAÇÃO DO SHELL
+   A primeira visão é exibida diretamente, sem tela intermediária.
+   ================================================================ */
+
+#stage.painel-iniciando .topo,
+#stage.painel-iniciando .conteudo-visao-shell {
+    opacity: 0;
+    visibility: hidden;
+}
+
+#stage:not(.painel-iniciando) .topo,
+#stage:not(.painel-iniciando) .conteudo-visao-shell {
+    opacity: 1;
+    visibility: visible;
+}
+
+
+/* ================================================================
    CABEÇALHO
    ================================================================ */
 
