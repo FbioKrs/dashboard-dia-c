@@ -1,0 +1,396 @@
+/* ================================================================
+   DIA C — DC-V1
+   Ajuste visual específico baseado na referência fornecida.
+   Compatível com o PG-V2.
+   ================================================================ */
+
+.pagina.visao-dia-c {
+    --equipes: #1f4e79;
+    --equipes-claro: #4d7297;
+    --equipes-suave: #d6e1ea;
+
+    --programacoes: #9a4e00;
+    --programacoes-claro: #c8761e;
+    --programacoes-suave: #f2d9bd;
+
+    --ligacoes: #2e6a4f;
+    --ligacoes-claro: #4b8469;
+    --ligacoes-suave: #d3e2da;
+
+    --navy-dia-c: #0a226f;
+    --texto-dia-c: #505891;
+    --fundo-dia-c: #f1f9ff;
+
+    --cor-destaque-visao: var(--ligacoes);
+}
+
+/* ================================================================
+   COMPOSIÇÃO DA VISÃO
+   ================================================================ */
+
+.pagina {
+    padding:
+        20px
+        38px
+        13px;
+}
+
+.conteudo {
+    display: grid;
+
+    grid-template-rows:
+        64px
+        166px
+        minmax(0, 1fr);
+
+    gap: 22px;
+}
+
+.cabecalho-visao h2 {
+    font-size: 27px;
+
+    color:
+        var(--navy-dia-c);
+}
+
+.cabecalho-visao p {
+    margin-top: 4px;
+
+    font-size: 16px;
+
+    color:
+        #6670a8;
+}
+
+.badge-registros {
+    padding:
+        8px
+        18px;
+
+    border-radius: 24px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #f0f3fa,
+            #e8edf7
+        );
+
+    color:
+        #374376;
+
+    font-size: 15px;
+
+    font-weight: 600;
+
+    box-shadow:
+        inset 0 1px 0
+        rgba(255, 255, 255, 0.9);
+}
+
+/* ================================================================
+   KPIs DO DIA C
+   ================================================================ */
+
+.kpis {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            3,
+            minmax(
+                0,
+                1fr
+            )
+        );
+
+    gap: 22px;
+}
+
+.kpi {
+    min-height: 166px;
+
+    padding:
+        18px
+        34px
+        18px
+        44px;
+
+    border-radius: 18px;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.99),
+            rgba(255, 255, 255, 0.95)
+        );
+
+    border:
+        1px solid
+        rgba(143, 180, 215, 0.14);
+
+    box-shadow:
+        0 10px 28px
+        rgba(70, 137, 189, 0.10);
+}
+
+/* Substitui a barra lateral do PG por um canto diagonal */
+.kpi::before {
+    width: 78px;
+    height: 78px;
+
+    top: 0;
+    left: 0;
+    bottom: auto;
+
+    clip-path:
+        polygon(
+            0 0,
+            100% 0,
+            0 100%
+        );
+}
+
+.kpi-equipes::before {
+    background:
+        linear-gradient(
+            135deg,
+            var(--equipes) 0% 45%,
+            var(--equipes-claro) 46% 64%,
+            var(--equipes-suave) 65% 75%,
+            transparent 76%
+        );
+}
+
+.kpi-programacoes::before {
+    background:
+        linear-gradient(
+            135deg,
+            var(--programacoes) 0% 45%,
+            var(--programacoes-claro) 46% 64%,
+            var(--programacoes-suave) 65% 75%,
+            transparent 76%
+        );
+}
+
+.kpi-ligacoes::before {
+    background:
+        linear-gradient(
+            135deg,
+            var(--ligacoes) 0% 45%,
+            var(--ligacoes-claro) 46% 64%,
+            var(--ligacoes-suave) 65% 75%,
+            transparent 76%
+        );
+}
+
+.kpi > div:first-child {
+    flex: 1;
+
+    min-width: 0;
+
+    padding-left: 44px;
+
+    text-align: center;
+}
+
+.kpi-label {
+    margin-bottom: 7px;
+
+    font-size: 17px;
+
+    font-weight: 700;
+
+    letter-spacing: 0.2px;
+
+    color:
+        #515b92;
+}
+
+.kpi-valor {
+    font-size: 64px;
+
+    line-height: 0.95;
+}
+
+.kpi-equipes .kpi-valor {
+    color:
+        var(--equipes);
+}
+
+.kpi-programacoes .kpi-valor {
+    color:
+        var(--programacoes);
+}
+
+.kpi-ligacoes .kpi-valor {
+    color:
+        var(--ligacoes);
+}
+
+.kpi-complemento {
+    margin-top: 8px;
+
+    font-size: 15px;
+
+    color:
+        #6770a0;
+}
+
+.kpi-simbolo {
+    width: 74px;
+    height: 74px;
+
+    margin-right: 0;
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.66);
+
+    font-size: 27px;
+
+    box-shadow:
+        inset 0 1px 0
+        rgba(255, 255, 255, 0.75);
+}
+
+.kpi-equipes .kpi-simbolo {
+    color:
+        var(--equipes);
+
+    background:
+        linear-gradient(
+            135deg,
+            #f4f7fa,
+            var(--equipes-suave)
+        );
+}
+
+.kpi-programacoes .kpi-simbolo {
+    color:
+        var(--programacoes);
+
+    background:
+        linear-gradient(
+            135deg,
+            #fbf7f2,
+            var(--programacoes-suave)
+        );
+}
+
+.kpi-ligacoes .kpi-simbolo {
+    color:
+        var(--ligacoes);
+
+    background:
+        linear-gradient(
+            135deg,
+            #f3f8f5,
+            var(--ligacoes-suave)
+        );
+}
+
+/* ================================================================
+   GRÁFICOS DO DIA C
+   ================================================================ */
+
+.area-graficos {
+    min-height: 0;
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(
+            0,
+            1.80fr
+        )
+        minmax(
+            0,
+            1fr
+        );
+
+    gap: 22px;
+}
+
+.painel {
+    border-radius: 18px;
+
+    border:
+        1px solid
+        rgba(143, 180, 215, 0.13);
+
+    box-shadow:
+        0 10px 30px
+        rgba(70, 137, 189, 0.10);
+}
+
+.painel-grafico {
+    padding:
+        21px
+        24px
+        14px;
+}
+
+.painel-cabecalho {
+    margin-bottom: 12px;
+}
+
+.painel-titulo {
+    font-size: 24px;
+
+    color:
+        var(--navy-dia-c);
+}
+
+.painel-subtitulo {
+    margin-top: 4px;
+
+    font-size: 16px;
+
+    color:
+        #6873a9;
+}
+
+/* ================================================================
+   RODAPÉ
+   ================================================================ */
+
+.rodape {
+    height: 31px;
+
+    padding:
+        0
+        2px;
+
+    font-size: 14px;
+
+    color:
+        #6f78a3;
+}
+
+.status-ok::before {
+    width: 10px;
+    height: 10px;
+
+    background:
+        #16b97d;
+
+    box-shadow:
+        0 0 8px
+        rgba(22, 185, 125, 0.22);
+}
+
+/* ================================================================
+   ERRO
+   ================================================================ */
+
+#erro {
+    border-radius: 12px;
+
+    background:
+        rgba(255, 241, 241, 0.97);
+
+    box-shadow:
+        0 8px 22px
+        rgba(116, 65, 65, 0.10);
+}
