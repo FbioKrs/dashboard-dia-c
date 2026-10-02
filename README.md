@@ -122,9 +122,15 @@ Shell único da aplicação. Contém:
 O `index.html` não contém a estrutura específica de DC-V1 ou ME_EXEC-V1.
 
 
-### Cabeçalho global e logo
+### Shell global: cabeçalho, fundo e identidade visual
 
-No PG-V2, o cabeçalho e o logo pertencem ao `index.html`. Por isso, a geometria essencial do logo (`.logo-equatorial`), do separador e do bloco de título deve existir em `css/painel-base.css`, e não depender do CSS específico da primeira visão. O `index.html` também mantém `width="215"` no `<img>` como fallback de primeira renderização. Isso evita o flash do SVG em tamanho intrínseco durante a inicialização.
+No PG-V2, o shell pertence exclusivamente aos arquivos compartilhados. Isso inclui `#stage`, fundo global, cabeçalho, logo, separador, bloco de título, indicador da visão atual, área de próxima visão/barra de tempo, escala 1920×1080 e transições estruturais.
+
+A estrutura fica no `index.html` e sua aparência fica em `css/painel-base.css`. O `index.html` mantém `width="215"` no logo como fallback de primeira renderização.
+
+**CSS específico de visão não deve selecionar nem sobrescrever elementos do shell**, incluindo `#stage`, `.topo`, `.topo-identidade`, `.logo-equatorial`, `.separador-marca`, `.titulo-principal`, `.subtitulo-principal`, `.visao-indicador`, `.topo-rotacao`, `.proxima-visao`, `.barra-tempo` e `.barra-tempo-preenchimento`.
+
+A visão pode fornecer os **conteúdos** do cabeçalho por meio da API compartilhada (`PAINEL_BASE.definirCabecalho`), mas não deve redefinir sua geometria ou identidade visual.
 
 ### `visoes/*.html`
 
@@ -144,17 +150,20 @@ Devem conter somente o markup necessário para a área específica da visão. At
 
 ### `css/painel-base.css`
 
-PG-V2 global:
+PG-V2 global e fonte única do shell:
 
-- 1920×1080;
-- escala;
-- cabeçalho estrutural;
-- superfícies e tipografia compartilhadas;
+- 1920×1080 e escala;
+- `#stage` e fundo global;
+- cabeçalho completo e identidade visual;
+- logo, título, contexto, próxima visão e barra de tempo;
+- superfícies/tipografia compartilhadas;
 - transição do slot de fragmentos.
 
 ### `css/<visao>.css`
 
-Somente aparência específica da visão ativa. O player carrega um CSS específico por vez.
+Somente aparência do **corpo do respectivo módulo**, dentro do fragmento injetado em `#conteudoVisao`.
+
+Cada fragmento deve possuir uma classe raiz própria (por exemplo, `.visao-dia-c` ou `.visao-me-exec`) para permitir escopo claro de variáveis e regras específicas. O CSS de visão não pode estilizar o shell global.
 
 ### `js/painel-config.js`
 
@@ -392,6 +401,20 @@ SubCategorias usam tons mais claros equivalentes:
 >= 10      #7FB06F
 ```
 
+### Referência visual do detalhamento
+
+No modo de detalhamento da **ME_EXEC-V1**, preservar o padrão visual aprovado em 02/10/2026:
+
+- Categoria principal em card azul-claro, com faixa azul lateral e ícone de barras;
+- nome da Categoria pode ocupar até duas linhas;
+- SubCategorias em cards individuais recuados;
+- hierarquia Categoria → SubCategorias indicada por linha vertical, ramificações e nós;
+- colunas `Peso`, `Barra / Escala` e `Nota` permanecem alinhadas entre Categoria e SubCategorias;
+- Nota exibida em badge tonalizado pela mesma faixa de desempenho;
+- linhas verticais de referência em 8,0 e 10,0 permanecem;
+- rótulos numéricos do eixo X não são exibidos;
+- a Visão Geral permanece com a composição já vigente.
+
 ### Formato do JSON
 
 O formato canônico de `dados/metas-executiva.json` é uma **lista direta de registros na raiz**:
@@ -504,6 +527,37 @@ Não alterar PG-V2 para resolver um problema exclusivo de uma visão.
 
 ---
 
+
+## 12.1. Regra de integridade do shell e consentimento para exceções
+
+A separação entre **shell global** e **corpo das visões** é uma regra estrutural obrigatória do PG-V2.
+
+Regra:
+
+```text
+Shell / identidade / player global
+    → index.html + css/painel-base.css + JS compartilhado
+
+Corpo de uma visão
+    → visoes/<visao>.html + css/<visao>.css + js/<visao>.js + dados
+```
+
+Se uma solicitação futura exigir ou induzir uma implementação que viole essa separação — por exemplo, colocar em `css/metas-executiva.css` uma regra que altere `.topo` ou `#stage` — **não implementar automaticamente**.
+
+Antes de abrir uma exceção, é obrigatório:
+
+1. explicar ao usuário qual regra do PG-V2 seria contrariada;
+2. explicar por que a solicitação exigiria desconsiderar a regra e quais efeitos colaterais/manutenções adicionais podem ocorrer;
+3. indicar, quando existir, uma alternativa compatível com o PG-V2;
+4. solicitar consentimento explícito do usuário para a exceção;
+5. somente após o consentimento, implementar a exceção e registrá-la no README, com escopo e justificativa.
+
+**Sem consentimento explícito, prevalece a regra do PG-V2 e a exceção não deve ser aplicada.**
+
+Essa exigência vale também para alterações solicitadas em conversas futuras, desde que este README permaneça vigente no repositório recebido.
+
+---
+
 ## 13. Procedimento obrigatório ao receber um ZIP
 
 ```text
@@ -535,9 +589,9 @@ Nunca reconstruir arquivos vigentes com base apenas em versões históricas do c
 ### PG-V2 — vigente
 
 - único `index.html`;
-- cabeçalho global;
-- fragmentos HTML modulares;
-- CSS específico carregado por visão;
+- shell/cabeçalho/fundo global estilizados exclusivamente em `css/painel-base.css`;
+- fragmentos HTML modulares com classe raiz própria;
+- CSS específico carregado por visão e restrito ao corpo do módulo;
 - módulos JS com ciclo de vida explícito;
 - sequência principal baseada em `await modulo.iniciar()`;
 - reload completo ao fim de cada ciclo principal.
