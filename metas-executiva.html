@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Metas da Executiva | Painel de Acompanhamento</title>
+
+    <!-- PG-V1 -->
+    <link
+        rel="stylesheet"
+        href="../css/painel-base.css"
+    >
+
+    <!-- META-V1 -->
+    <link
+        rel="stylesheet"
+        href="../css/metas-executiva.css"
+    >
+
+    <!-- Configuração e comportamento compartilhados -->
+    <script
+        src="../js/painel-config.js"
+        defer
+    ></script>
+
+    <script
+        src="../js/painel-base.js"
+        defer
+    ></script>
+
+    <!-- Lógica específica das Metas da Executiva -->
+    <script
+        src="../js/metas-executiva.js"
+        defer
+    ></script>
+
+</head>
+
+
+<body>
+
+<div id="stage">
+
+
+    <!-- ==========================================================
+         CABEÇALHO
+         ========================================================== -->
+
+    <header class="topo">
+
+
+        <div class="topo-identidade">
+
+            <img
+                class="logo-equatorial"
+                src="../img/logo-equatorial.svg"
+                alt="Grupo Equatorial Energia"
+            >
+
+            <div class="separador-marca"></div>
+
+            <div class="titulo-bloco">
+
+                <h1 class="titulo-principal">
+                    Metas da Executiva
+                </h1>
+
+                <div class="subtitulo-principal">
+                    Acompanhamento das notas por Categoria
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="topo-centro">
+
+            <div class="visao-indicador">
+
+                <span class="visao-indicador-label">
+                    Visão atual
+                </span>
+
+                <span
+                    id="nomeVisaoHeader"
+                    class="visao-indicador-nome"
+                >
+                    VISÃO GERAL
+                </span>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="topo-rotacao">
+
+            <div
+                id="contador"
+                class="proxima-visao"
+            >
+                Próxima visão em 15 s
+            </div>
+
+            <div class="barra-tempo">
+
+                <div
+                    id="barraTempo"
+                    class="barra-tempo-preenchimento"
+                ></div>
+
+            </div>
+
+        </div>
+
+
+    </header>
+
+
+
+    <!-- ==========================================================
+         CONTEÚDO
+         ========================================================== -->
+
+    <main class="pagina">
+
+
+        <div id="erro"></div>
+
+
+        <div
+            id="painelConteudo"
+            class="conteudo"
+        >
+
+
+            <!-- TÍTULO DA VISÃO -->
+
+            <section class="cabecalho-visao">
+
+                <div class="cabecalho-visao-texto">
+
+                    <h2 id="tituloVisao">
+                        Desempenho das Categorias
+                    </h2>
+
+                    <p id="descricaoVisao">
+                        Apuração consolidada das categorias
+                    </p>
+
+                </div>
+
+
+                <div
+                    id="badgeRegistros"
+                    class="badge-registros"
+                >
+                    0 categorias
+                </div>
+
+            </section>
+
+
+
+            <!-- GRÁFICO -->
+
+            <section class="painel painel-grafico painel-metas">
+
+                <div class="painel-cabecalho painel-cabecalho-metas">
+
+                    <div>
+
+                        <div class="painel-titulo">
+                            Apuração dos Indicadores
+                        </div>
+
+                        <div class="painel-subtitulo">
+                            Escala de 0 a 15 • referências em 8,0 e 10,0
+                        </div>
+
+                    </div>
+
+                    <div class="legenda-faixas" aria-label="Legenda das faixas de nota">
+
+                        <span class="legenda-item legenda-critica">
+                            &lt; 8
+                        </span>
+
+                        <span class="legenda-item legenda-atencao">
+                            8 a &lt; 10
+                        </span>
+
+                        <span class="legenda-item legenda-meta">
+                            ≥ 10
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="grafico-metas">
+
+                    <div class="metas-cabecalho">
+
+                        <div class="metas-coluna-titulo">
+                            Indicador
+                        </div>
+
+                        <div class="metas-coluna-peso">
+                            Peso
+                        </div>
+
+                        <div
+                            id="eixoMetas"
+                            class="metas-eixo"
+                        ></div>
+
+                        <div class="metas-coluna-nota">
+                            Nota
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        id="linhasMetas"
+                        class="metas-linhas"
+                    ></div>
+
+                </div>
+
+            </section>
+
+
+        </div>
+
+
+
+        <!-- RODAPÉ -->
+
+        <footer class="rodape">
+
+            <span>
+                Dados atualizados automaticamente a cada 60 segundos
+            </span>
+
+            <span
+                id="statusAtualizacao"
+                class="status-ok"
+            >
+                Última atualização: --
+            </span>
+
+        </footer>
+
+
+    </main>
+
+
+</div>
+
+</body>
+
+</html>
