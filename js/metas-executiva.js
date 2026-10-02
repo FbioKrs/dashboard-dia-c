@@ -161,20 +161,6 @@ function formatarNota(valor) {
 }
 
 
-function formatarNotaGeral(valor) {
-
-    return numero(valor)
-        .toLocaleString(
-            "pt-BR",
-            {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
-            }
-        );
-
-}
-
-
 function formatarPeso(valor) {
 
     return numero(valor)
@@ -356,30 +342,6 @@ function obterCategorias() {
                     "CATEGORIA"
             )
     );
-
-}
-
-
-function calcularNotaGeralCategorias() {
-
-    return obterCategorias()
-        .reduce(
-            (
-                acumulado,
-                item
-            ) => (
-                acumulado
-                +
-                (
-                    numero(item.apurado)
-                    *
-                    numero(item.peso)
-                    /
-                    100
-                )
-            ),
-            0
-        );
 
 }
 
@@ -664,7 +626,7 @@ function concluirCiclo() {
     const contador = document.getElementById("contador");
     const barra = document.getElementById("barraTempo");
 
-    if (contador) contador.textContent = "0s";
+    if (contador) contador.textContent = "Ciclo concluído";
     if (barra) barra.style.width = "0%";
 
     const resolver = resolverCiclo;
@@ -1113,9 +1075,27 @@ function atualizarTextosVisao(
             "nomeVisaoHeader"
         );
 
+    const titulo =
+        document.getElementById(
+            "tituloVisao"
+        );
+
+    const descricao =
+        document.getElementById(
+            "descricaoVisao"
+        );
+
+    const badge =
+        document.getElementById(
+            "badgeRegistros"
+        );
+
     if (
         !conteudo ||
-        !nomeHeader
+        !nomeHeader ||
+        !titulo ||
+        !descricao ||
+        !badge
     ) {
         return;
     }
@@ -1135,46 +1115,34 @@ function atualizarTextosVisao(
     nomeHeader.textContent =
         visao.nome;
 
-}
+    if (
+        visao.tipo ===
+        "geral"
+    ) {
 
+        titulo.textContent =
+            "Desempenho das Categorias";
 
+        descricao.textContent =
+            "Apuração consolidada das categorias";
 
-function atualizarCartaoNotaGeral() {
+        badge.textContent =
+            `${itens.length} categorias`;
 
-    const cartao =
-        document.getElementById(
-            "cartaoNotaGeral"
-        );
-
-    const valor =
-        document.getElementById(
-            "valorNotaGeral"
-        );
-
-    if (!cartao || !valor) {
         return;
+
     }
 
-    const notaGeral =
-        calcularNotaGeralCategorias();
-
-    valor.textContent =
-        formatarNotaGeral(
-            notaGeral
+    titulo.textContent =
+        limparRotulo(
+            visao.categoria.categoria
         );
 
-    cartao.classList.remove(
-        "faixa-neutra",
-        "faixa-critica",
-        "faixa-atencao",
-        "faixa-meta"
-    );
+    descricao.textContent =
+        "Apuração detalhada da Categoria e suas SubCategorias";
 
-    cartao.classList.add(
-        classeFaixa(
-            notaGeral
-        )
-    );
+    badge.textContent =
+        `1 categoria • ${visao.subcategorias.length} subcategorias`;
 
 }
 
@@ -1187,8 +1155,6 @@ function renderizarVisao() {
     atualizarTextosVisao(
         itens
     );
-
-    atualizarCartaoNotaGeral();
 
     renderizarLinhas(
         itens
