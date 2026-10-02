@@ -31,7 +31,7 @@ window.PAINEL_CONFIG = {
     visoes: [
         {
             id: "DC-V1",
-            ativo: true,
+            ativo: false,
             nome: "Dia C",
             titulo: "Dia C",
             subtitulo: "Acompanhamento de mobilização e execução",
