@@ -269,6 +269,11 @@
     pointer-events: none;
 }
 
+.visao-me-exec .conteudo.modo-geral .meta-categoria::before {
+    width: 36px;
+    height: 36px;
+}
+
 .visao-me-exec .meta-rotulo {
     min-width: 0;
     height: 100%;
@@ -474,10 +479,6 @@
 }
 
 .visao-me-exec .conteudo.modo-detalhe .meta-categoria {
-    --canto-principal: #1567dc;
-    --canto-secundario: #3f84e8;
-    --canto-suave: #d6e6fb;
-
     min-height: 128px;
 
     background: linear-gradient(90deg, rgba(234, 246, 255, 0.96) 0%, rgba(242, 249, 255, 0.94) 55%, rgba(238, 247, 255, 0.92) 100%);
