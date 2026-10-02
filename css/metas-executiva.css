@@ -1,0 +1,868 @@
+/* ================================================================
+   METAS DA EXECUTIVA — ME_EXEC-V1
+   Estilos específicos da visão.
+   Atua somente no corpo da visão, preservando o shell global do PG-V2.
+   ================================================================ */
+
+.pagina.visao-me-exec {
+    --meta-critica: #D4353E;
+    --meta-atencao: #F9CD17;
+    --meta-atingida: #458039;
+
+    --meta-critica-claro: #E8787E;
+    --meta-atencao-claro: #FBE37A;
+    --meta-atingida-claro: #7FB06F;
+
+    --navy-metas: #0a226f;
+    --fundo-metas: #f1f9ff;
+
+    --cor-destaque-visao: var(--meta-atingida);
+}
+
+
+/* ================================================================
+   COMPOSIÇÃO DA VISÃO
+   ================================================================ */
+
+.pagina {
+    padding:
+        20px
+        38px
+        13px;
+}
+
+.conteudo {
+    display: grid;
+
+    grid-template-rows:
+        66px
+        minmax(0, 1fr);
+
+    gap: 18px;
+}
+
+.cabecalho-visao-texto {
+    min-width: 0;
+}
+
+.cabecalho-visao h2 {
+    max-width: 1450px;
+
+    font-size: 28px;
+    color: var(--navy-metas);
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.cabecalho-visao p {
+    margin-top: 4px;
+
+    font-size: 16px;
+    color: #6670a8;
+}
+
+.badge-registros {
+    padding: 8px 18px;
+
+    border-radius: 24px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #f0f3fa,
+            #e8edf7
+        );
+
+    color: #374376;
+
+    font-size: 15px;
+    font-weight: 600;
+
+    box-shadow:
+        inset 0 1px 0
+        rgba(255, 255, 255, 0.9);
+}
+
+
+/* ================================================================
+   PAINEL DO GRÁFICO
+   ================================================================ */
+
+.painel-metas {
+    min-height: 0;
+
+    padding:
+        20px
+        26px
+        18px;
+
+    border-radius: 18px;
+
+    border:
+        1px solid
+        rgba(143, 180, 215, 0.13);
+
+    box-shadow:
+        0 10px 30px
+        rgba(70, 137, 189, 0.10);
+}
+
+.painel-cabecalho-metas {
+    min-height: 62px;
+
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 24px;
+
+    margin-bottom: 6px;
+}
+
+.painel-titulo {
+    font-size: 24px;
+    color: var(--navy-metas);
+}
+
+.painel-subtitulo {
+    margin-top: 4px;
+
+    font-size: 16px;
+    color: #6873a9;
+}
+
+.legenda-faixas {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    padding-top: 3px;
+}
+
+.legenda-item {
+    min-width: 88px;
+
+    padding: 7px 12px;
+
+    border-radius: 16px;
+
+    text-align: center;
+
+    font-size: 15px;
+    font-weight: 700;
+
+    color: #27333d;
+    border: 1px solid rgba(39, 51, 61, 0.08);
+}
+
+.legenda-critica {
+    background: rgba(212, 53, 62, 0.16);
+}
+
+.legenda-atencao {
+    background: rgba(249, 205, 23, 0.28);
+}
+
+.legenda-meta {
+    background: rgba(69, 128, 57, 0.16);
+}
+
+
+/* ================================================================
+   GRÁFICO HORIZONTAL EM LINHAS
+   ================================================================ */
+
+.grafico-metas {
+    --label-width: 760px;
+    --peso-width: 112px;
+    --nota-width: 104px;
+
+    flex: 1;
+    min-height: 0;
+
+    display: grid;
+
+    grid-template-rows:
+        52px
+        minmax(0, 1fr);
+}
+
+.metas-cabecalho {
+    display: grid;
+
+    grid-template-columns:
+        var(--label-width)
+        var(--peso-width)
+        minmax(0, 1fr)
+        var(--nota-width);
+
+    align-items: end;
+
+    color: #27333d;
+
+    font-size: 22px;
+    font-weight: 800;
+}
+
+.metas-coluna-titulo {
+    padding-left: 8px;
+}
+
+.metas-coluna-peso,
+.metas-coluna-nota {
+    text-align: center;
+}
+
+.metas-eixo {
+    position: relative;
+
+    height: 42px;
+
+    margin:
+        0
+        10px
+        0
+        14px;
+}
+
+.metas-tick {
+    position: absolute;
+
+    bottom: 0;
+
+    transform:
+        translateX(-50%);
+
+    font-size: 17px;
+    font-weight: 700;
+
+    color: var(--texto-secundario);
+}
+
+.metas-tick:first-child {
+    transform: none;
+}
+
+.metas-tick:last-child {
+    transform:
+        translateX(-100%);
+}
+
+.metas-tick.referencia {
+    color: #27333d;
+    font-weight: 800;
+}
+
+.metas-tick.referencia::before {
+    content: "";
+
+    position: absolute;
+
+    left: 50%;
+    top: 20px;
+
+    width: 2px;
+    height: 12px;
+
+    transform:
+        translateX(-50%);
+
+    background: currentColor;
+    opacity: 0.66;
+}
+
+.metas-linhas {
+    position: relative;
+
+    min-height: 0;
+
+    display: grid;
+
+    grid-template-rows:
+        repeat(
+            var(--qtd-linhas, 7),
+            minmax(0, 1fr)
+        );
+}
+
+.meta-linha {
+    display: grid;
+
+    grid-template-columns:
+        var(--label-width)
+        var(--peso-width)
+        minmax(0, 1fr)
+        var(--nota-width);
+
+    align-items: center;
+
+    min-height: 0;
+
+    border-top:
+        1px solid
+        rgba(226, 231, 235, 0.65);
+}
+
+.meta-linha:first-child {
+    border-top-color: var(--borda);
+}
+
+.meta-rotulo {
+    min-width: 0;
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+
+    padding-right: 30px;
+}
+
+.meta-rotulo-texto {
+    width: 100%;
+    min-width: 0;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    line-height: 1.15;
+}
+
+.meta-categoria .meta-rotulo-texto {
+    font-size: 24px;
+    font-weight: 700;
+    color: #27333d;
+}
+
+.meta-subcategoria .meta-rotulo {
+    padding-left: 50px;
+}
+
+.meta-subcategoria .meta-rotulo-texto {
+    font-size: 21px;
+    font-weight: 500;
+    color: #56636d;
+}
+
+.meta-subcategoria .meta-rotulo-texto::before {
+    content: "↳";
+
+    display: inline-block;
+
+    margin-right: 10px;
+
+    color: #98a3ab;
+    font-size: 18px;
+}
+
+.meta-peso {
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    white-space: nowrap;
+
+    font-variant-numeric:
+        tabular-nums;
+}
+
+.meta-categoria .meta-peso {
+    font-size: 23px;
+    font-weight: 700;
+    color: #27333d;
+}
+
+.meta-subcategoria .meta-peso {
+    font-size: 21px;
+    font-weight: 500;
+    color: #56636d;
+}
+
+.meta-area-barra {
+    position: relative;
+
+    height: 100%;
+
+    margin:
+        0
+        10px
+        0
+        14px;
+
+    display: flex;
+    align-items: center;
+}
+
+.meta-grade {
+    position: absolute;
+    inset: 0;
+
+    pointer-events: none;
+}
+
+.meta-grade-linha {
+    position: absolute;
+
+    top: 0;
+    bottom: 0;
+
+    width: 1px;
+
+    background: #edf0f2;
+}
+
+.meta-grade-linha:first-child,
+.meta-grade-linha:last-child {
+    background: #dfe5e9;
+}
+
+.meta-referencia {
+    position: absolute;
+
+    top: 0;
+    bottom: 0;
+
+    width: 2px;
+
+    z-index: 3;
+
+    pointer-events: none;
+}
+
+.meta-referencia-8 {
+    left: 53.333333%;
+
+    background:
+        rgba(39, 51, 61, 0.50);
+}
+
+.meta-referencia-10 {
+    left: 66.666667%;
+
+    background:
+        rgba(39, 51, 61, 0.72);
+}
+
+.meta-barra {
+    position: relative;
+
+    z-index: 2;
+
+    min-width: 0;
+
+    border-radius:
+        0
+        6px
+        6px
+        0;
+
+    transition:
+        width
+        0.45s
+        ease;
+}
+
+.meta-categoria .meta-barra {
+    height: 32px;
+}
+
+.meta-subcategoria .meta-barra {
+    height: 25px;
+}
+
+.meta-linha.valor-zero .meta-barra {
+    width: 0 !important;
+}
+
+.meta-linha.valor-zero .meta-area-barra::after {
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+
+    width: 5px;
+    height: 28px;
+
+    border-radius: 4px;
+
+    background: #c7d0d7;
+
+    z-index: 2;
+}
+
+.meta-nota {
+    padding-right: 8px;
+
+    text-align: right;
+
+    font-size: 26px;
+    font-weight: 800;
+
+    color: #27333d;
+
+    font-variant-numeric:
+        tabular-nums;
+}
+
+.meta-subcategoria .meta-nota {
+    font-size: 22px;
+    font-weight: 700;
+    color: #4b5963;
+}
+
+
+/* ================================================================
+   DETALHAMENTO — MENOS LINHAS, MAIOR LEITURA
+   ================================================================ */
+
+.conteudo.modo-detalhe .meta-categoria .meta-rotulo-texto {
+    font-size: 27px;
+}
+
+.conteudo.modo-detalhe .meta-subcategoria .meta-rotulo-texto {
+    font-size: 23px;
+}
+
+.conteudo.modo-detalhe .meta-categoria .meta-peso {
+    font-size: 25px;
+}
+
+.conteudo.modo-detalhe .meta-subcategoria .meta-peso {
+    font-size: 23px;
+}
+
+.conteudo.modo-detalhe .meta-categoria .meta-barra {
+    height: 38px;
+}
+
+.conteudo.modo-detalhe .meta-subcategoria .meta-barra {
+    height: 30px;
+}
+
+.conteudo.modo-detalhe .meta-categoria .meta-nota {
+    font-size: 29px;
+}
+
+.conteudo.modo-detalhe .meta-subcategoria .meta-nota {
+    font-size: 25px;
+}
+
+
+/* ================================================================
+   RODAPÉ / ERRO
+   ================================================================ */
+
+.rodape {
+    height: 31px;
+
+    padding: 0 2px;
+
+    font-size: 14px;
+
+    color: #6f78a3;
+}
+
+.status-ok::before {
+    width: 10px;
+    height: 10px;
+
+    background: #16b97d;
+
+    box-shadow:
+        0 0 8px
+        rgba(22, 185, 125, 0.22);
+}
+
+#erro {
+    border-radius: 12px;
+
+    background:
+        rgba(255, 241, 241, 0.97);
+
+    box-shadow:
+        0 8px 22px
+        rgba(116, 65, 65, 0.10);
+}
+
+/* ================================================================
+   ME_EXEC-V1 — DETALHAMENTO EM CARDS
+   Referência visual: imagem aprovada em 02/10/2026.
+   Escopo restrito ao modo-detalhe para preservar a Visão Geral.
+   ================================================================ */
+
+.conteudo.modo-detalhe .metas-eixo {
+    /* Mantém a área/posição do eixo, mas sem elementos visuais no cabeçalho. */
+    visibility: hidden;
+}
+
+.conteudo.modo-detalhe .metas-linhas {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    overflow: visible;
+}
+
+.conteudo.modo-detalhe .meta-linha {
+    position: relative;
+    flex: 1 1 0;
+    min-height: 0;
+    border-top: 0;
+    border-radius: 13px;
+}
+
+/* Categoria principal: card azul claro com marca lateral e maior altura. */
+.conteudo.modo-detalhe .meta-categoria {
+    flex: 1.34 1 0;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(234, 246, 255, 0.96) 0%,
+            rgba(242, 249, 255, 0.94) 55%,
+            rgba(238, 247, 255, 0.92) 100%
+        );
+
+    border: 1px solid rgba(174, 207, 235, 0.72);
+
+    box-shadow:
+        0 5px 18px rgba(55, 120, 175, 0.10),
+        inset 0 1px 0 rgba(255, 255, 255, 0.92);
+}
+
+.conteudo.modo-detalhe .meta-categoria::before {
+    content: "";
+
+    position: absolute;
+    z-index: 5;
+    left: 0;
+    top: 0;
+    bottom: 0;
+
+    width: 14px;
+
+    border-radius: 13px 0 0 13px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #1567dc 0%,
+            #0f56c7 100%
+        );
+}
+
+/* Ícone de barras que identifica a Categoria no detalhamento. */
+.conteudo.modo-detalhe .meta-categoria .meta-rotulo {
+    padding-left: 54px;
+    padding-right: 30px;
+}
+
+.conteudo.modo-detalhe .meta-categoria .meta-rotulo::before {
+    content: "";
+
+    flex: 0 0 36px;
+    width: 36px;
+    height: 36px;
+
+    margin-right: 28px;
+
+    background:
+        linear-gradient(#1567dc, #1567dc) 0 100% / 7px 19px no-repeat,
+        linear-gradient(#3f84e8, #3f84e8) 14px 100% / 7px 30px no-repeat,
+        linear-gradient(#1567dc, #1567dc) 28px 100% / 7px 23px no-repeat;
+}
+
+.conteudo.modo-detalhe .meta-categoria .meta-rotulo-texto {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+
+    white-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    font-size: 27px;
+    font-weight: 800;
+    line-height: 1.25;
+    color: #123279;
+}
+
+/* SubCategorias: cards recuados, preservando alinhamento de Peso/Barra/Nota. */
+.conteudo.modo-detalhe .meta-subcategoria {
+    margin-left: 78px;
+
+    grid-template-columns:
+        calc(var(--label-width) - 78px)
+        var(--peso-width)
+        minmax(0, 1fr)
+        var(--nota-width);
+
+    background: rgba(255, 255, 255, 0.74);
+    border: 1px solid rgba(205, 220, 233, 0.82);
+
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.95);
+}
+
+/* Linha vertical da árvore hierárquica. */
+.conteudo.modo-detalhe .meta-subcategoria::before {
+    content: "";
+
+    position: absolute;
+    left: -47px;
+    top: -19px;
+    bottom: -19px;
+
+    width: 1px;
+
+    background: #adc0dc;
+}
+
+.conteudo.modo-detalhe .meta-subcategoria:last-child::before {
+    bottom: 50%;
+}
+
+/* Ramificação horizontal da árvore. */
+.conteudo.modo-detalhe .meta-subcategoria::after {
+    content: "";
+
+    position: absolute;
+    left: -47px;
+    top: 50%;
+
+    width: 28px;
+    height: 1px;
+
+    background: #adc0dc;
+}
+
+.conteudo.modo-detalhe .meta-subcategoria .meta-rotulo {
+    position: relative;
+    padding-left: 36px;
+    padding-right: 24px;
+}
+
+/* Nó circular da hierarquia. */
+.conteudo.modo-detalhe .meta-subcategoria .meta-rotulo::after {
+    content: "";
+
+    position: absolute;
+    left: -25px;
+    top: 50%;
+
+    width: 9px;
+    height: 9px;
+
+    transform: translateY(-50%);
+
+    border-radius: 50%;
+    background: #7893bf;
+}
+
+.conteudo.modo-detalhe .meta-subcategoria .meta-rotulo-texto {
+    font-size: 23px;
+    font-weight: 500;
+    line-height: 1.18;
+    color: #2b4476;
+}
+
+.conteudo.modo-detalhe .meta-subcategoria .meta-rotulo-texto::before {
+    margin-right: 14px;
+    color: #768cab;
+    font-size: 21px;
+}
+
+/* Peso mantém a coluna existente, ganhando apenas a leitura da referência. */
+.conteudo.modo-detalhe .meta-categoria .meta-peso {
+    font-size: 25px;
+    font-weight: 800;
+    color: #123279;
+}
+
+.conteudo.modo-detalhe .meta-subcategoria .meta-peso {
+    font-size: 23px;
+    font-weight: 500;
+    color: #2b4476;
+}
+
+/* Grade e referências permanecem nos mesmos pontos da escala. */
+.conteudo.modo-detalhe .meta-grade-linha {
+    background: rgba(198, 216, 230, 0.64);
+}
+
+.conteudo.modo-detalhe .meta-grade-linha:first-child,
+.conteudo.modo-detalhe .meta-grade-linha:last-child {
+    background: rgba(181, 203, 221, 0.76);
+}
+
+.conteudo.modo-detalhe .meta-referencia-8 {
+    background: rgba(23, 48, 81, 0.72);
+}
+
+.conteudo.modo-detalhe .meta-referencia-10 {
+    background: rgba(23, 48, 81, 0.86);
+}
+
+.conteudo.modo-detalhe .meta-categoria .meta-barra {
+    height: 42px;
+}
+
+.conteudo.modo-detalhe .meta-subcategoria .meta-barra {
+    height: 30px;
+}
+
+/* Nota em badge, mantendo a mesma coluna e a mesma informação. */
+.conteudo.modo-detalhe .meta-nota {
+    align-self: center;
+    justify-self: center;
+
+    width: calc(100% - 10px);
+    min-height: 58px;
+
+    padding: 8px 8px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 16px;
+
+    text-align: center;
+
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.90);
+}
+
+.conteudo.modo-detalhe .meta-categoria .meta-nota {
+    font-size: 29px;
+    font-weight: 800;
+}
+
+.conteudo.modo-detalhe .meta-subcategoria .meta-nota {
+    font-size: 25px;
+    font-weight: 700;
+}
+
+.conteudo.modo-detalhe .meta-linha.faixa-meta .meta-nota {
+    color: #086440;
+    background: rgba(102, 177, 91, 0.10);
+}
+
+.conteudo.modo-detalhe .meta-linha.faixa-atencao .meta-nota {
+    color: #775d00;
+    background: rgba(249, 205, 23, 0.16);
+}
+
+.conteudo.modo-detalhe .meta-linha.faixa-critica .meta-nota {
+    color: #9c3038;
+    background: rgba(212, 53, 62, 0.10);
+}
+
+.conteudo.modo-detalhe .meta-linha.valor-zero .meta-nota {
+    color: #66737f;
+    background: rgba(116, 128, 138, 0.09);
+}
