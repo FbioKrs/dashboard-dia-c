@@ -749,11 +749,8 @@ function montarEixo() {
             ? "metas-tick referencia"
             : "metas-tick";
 
-        tick.textContent =
-            item.valor === 8
-            ? "8,0"
-            : String(item.valor)
-                .replace(".", ",");
+        // Mantém as marcações e referências do eixo, mas sem rótulos numéricos.
+        tick.textContent = "";
 
         tick.style.left =
             (
