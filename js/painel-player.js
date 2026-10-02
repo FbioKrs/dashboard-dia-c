@@ -100,7 +100,7 @@
         const contador = document.getElementById("contador");
         const barra = document.getElementById("barraTempo");
 
-        if (contador) contador.textContent = "Preparando visão...";
+        if (contador) contador.textContent = "";
         if (barra) barra.style.width = "100%";
     }
 

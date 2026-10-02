@@ -124,6 +124,8 @@ O `index.html` não contém a estrutura específica de DC-V1 ou ME_EXEC-V1.
 
 ### Shell global: cabeçalho, fundo e identidade visual
 
+O elemento **G6** (área de rotação no topo direito) exibe somente o **contador regressivo em segundos** e a **barra de tempo em escoamento**. O nome da próxima visão/Subvisão não deve ser exibido nesse elemento.
+
 No PG-V2, o shell pertence exclusivamente aos arquivos compartilhados. Isso inclui `#stage`, fundo global, cabeçalho, logo, separador, bloco de título, indicador da visão atual, área de próxima visão/barra de tempo, escala 1920×1080 e transições estruturais.
 
 A estrutura fica no `index.html` e sua aparência fica em `css/painel-base.css`. O `index.html` mantém `width="215"` no logo como fallback de primeira renderização.
@@ -413,12 +415,19 @@ SubCategorias usam tons mais claros equivalentes:
 >= 10      #7FB06F
 ```
 
-### Referência visual do detalhamento
+### Referência visual da ME_EXEC-V1
 
-No modo de detalhamento da **ME_EXEC-V1**, preservar o padrão visual aprovado em 02/10/2026:
+Preservar o padrão visual aprovado em 02/10/2026:
 
-- Visão Geral mostra somente Categorias, agora em cards compactos alinhados visualmente às demais Subvisões;
-- Categoria principal no detalhamento permanece em card azul-claro, com ícone de barras e detalhe diagonal no canto superior esquerdo, no mesmo conceito dos cartões da DC-V1;
+- o corpo da visão inicia diretamente no painel `Apuração dos Indicadores`; não exibir o antigo título interno, descrição interna, badge de quantidade nem o texto auxiliar da escala;
+- a legenda de faixas (`< 8`, `8 a < 10`, `≥ 10`) fica imediatamente após `Apuração dos Indicadores`, na mesma faixa horizontal;
+- no canto superior direito do painel existe um cartão horizontal compacto `Nota Geral`, exibido em todas as Subvisões;
+- o cartão `Nota Geral` exibe somente o rótulo e o valor, sem texto complementar;
+- a `Nota Geral` é calculada pela soma de `APURADO × PESO / 100`, considerando somente registros `NIVEL = CATEGORIA` e desconsiderando SubCategorias;
+- a cor do cartão `Nota Geral` segue as mesmas faixas de desempenho da visão;
+- Visão Geral mostra somente Categorias em cards compactos alinhados visualmente às demais Subvisões;
+- na Visão Geral, o detalhe diagonal no canto superior esquerdo da Categoria permanece reduzido em aproximadamente 50%;
+- Categoria principal no detalhamento permanece em card azul-claro, com ícone de barras e detalhe diagonal no canto superior esquerdo, no mesmo conceito dos cartões da DC-V1; a cor do detalhe diagonal segue a faixa da nota da Categoria;
 - nome da Categoria pode ocupar até duas linhas;
 - SubCategorias em cards individuais recuados;
 - hierarquia Categoria → SubCategorias indicada por linha vertical, ramificações e nós;

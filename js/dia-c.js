@@ -791,7 +791,7 @@ function concluirCiclo() {
     const contador = document.getElementById("contador");
     const barra = document.getElementById("barraTempo");
 
-    if (contador) contador.textContent = "Ciclo concluído";
+    if (contador) contador.textContent = "0s";
     if (barra) barra.style.width = "0%";
 
     const resolver = resolverCiclo;
@@ -872,20 +872,8 @@ function atualizarContador() {
 
     if (!contador || !barra) return;
 
-    const proxima = obterProximaVisao();
-
-    if (proxima) {
-        const nomeProxima =
-            proxima.tipo === "geral"
-                ? "Visão Geral"
-                : proxima.nome;
-
-        contador.textContent =
-            `Próxima: ${nomeProxima} • ${segundosRestantes}s`;
-    } else {
-        contador.textContent =
-            `Fim da visão em ${segundosRestantes}s`;
-    }
+    contador.textContent =
+        `${segundosRestantes}s`;
 
     const percentual = Math.max(
         0,
@@ -895,6 +883,7 @@ function atualizarContador() {
     barra.style.width = percentual + "%";
 
 }
+
 
 
 /* ================================================================
