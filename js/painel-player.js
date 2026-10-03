@@ -31,6 +31,58 @@
     let tokenCiclo = Date.now();
     let primeiraExibicao = true;
 
+    const modoDesenvolvimento =
+        new URLSearchParams(window.location.search)
+            .get("dev") === "1";
+
+    function tratarAtalhoDesenvolvimento(evento) {
+        if (!modoDesenvolvimento || !moduloAtual) return;
+        if (evento.repeat) return;
+
+        const alvo = evento.target;
+        const tag = alvo?.tagName?.toLowerCase();
+
+        if (
+            tag === "input" ||
+            tag === "textarea" ||
+            tag === "select" ||
+            alvo?.isContentEditable
+        ) {
+            return;
+        }
+
+        let nomeFuncao = null;
+
+        if (evento.key === "ArrowRight") {
+            nomeFuncao = "avancarSubvisao";
+        }
+        else if (evento.key === "ArrowLeft") {
+            nomeFuncao = "voltarSubvisao";
+        }
+        else if (
+            evento.key === " " ||
+            evento.code === "Space"
+        ) {
+            nomeFuncao = "alternarPausa";
+        }
+
+        if (!nomeFuncao) return;
+
+        const acao = moduloAtual[nomeFuncao];
+
+        if (typeof acao !== "function") return;
+
+        evento.preventDefault();
+        acao();
+    }
+
+    if (modoDesenvolvimento) {
+        document.addEventListener(
+            "keydown",
+            tratarAtalhoDesenvolvimento
+        );
+    }
+
     function urlSemCache(caminho) {
         const url = new URL(caminho, document.baseURI);
         url.searchParams.set("_ciclo", tokenCiclo);

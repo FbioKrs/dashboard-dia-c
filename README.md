@@ -232,6 +232,14 @@ export function destruir() { ... }
 
 `iniciar()` deve retornar/representar o ciclo completo daquela visão.
 
+Para navegação manual em desenvolvimento, os módulos atuais também expõem as funções opcionais:
+
+```js
+export function avancarSubvisao() { ... }
+export function voltarSubvisao() { ... }
+export function alternarPausa() { ... }
+```
+
 A quantidade de Subvisões é responsabilidade do módulo, nunca do player.
 
 ---
@@ -269,6 +277,38 @@ Cada módulo controla seu próprio tempo interno.
 ### Timeout de segurança
 
 O player possui um limite máximo de segurança por visão (configurado em `painel-config.js`). Esse tempo não é a duração normal da visão; serve apenas para impedir que um erro deixe a TV presa indefinidamente.
+
+---
+
+## 5.1. Navegação manual de desenvolvimento
+
+O PG-V2 possui atalhos de teclado exclusivamente para inspeção rápida durante o desenvolvimento. Eles ficam ativos somente quando o painel é aberto com o parâmetro:
+
+```text
+?dev=1
+```
+
+Exemplo:
+
+```text
+https://<host>/painel-acompanhamento/?dev=1
+```
+
+Atalhos disponíveis:
+
+```text
+→       avança imediatamente para a próxima Subvisão
+←       retorna para a Subvisão anterior da visão atual
+Espaço  pausa ou retoma a contagem regressiva automática
+```
+
+Regras:
+
+- sem `?dev=1`, os atalhos ficam totalmente desabilitados e o comportamento normal da TV permanece inalterado;
+- `→` na última Subvisão conclui a visão atual, permitindo que o player siga para a próxima visão principal ativa;
+- `←` na primeira Subvisão não volta para a visão principal anterior; permanece na primeira Subvisão da visão atual;
+- a pausa congela a contagem e a barra de tempo no ponto atual; ao retomar, a contagem continua do mesmo ponto;
+- não existe indicador visual de modo DEV no shell.
 
 ---
 

@@ -162,6 +162,7 @@ let temporizadorRotacao =
 let temporizadorAtualizacao = null;
 let resolverCiclo = null;
 let cicloAtivo = false;
+let pausado = false;
 
 
 let graficoEvolucao =
@@ -850,7 +851,7 @@ function iniciarRotacao() {
 
     temporizadorRotacao = setInterval(() => {
 
-        if (!cicloAtivo) return;
+        if (!cicloAtivo || pausado) return;
 
         segundosRestantes--;
 
@@ -2504,6 +2505,7 @@ export async function iniciar() {
     indiceVisaoAtual = 0;
     segundosRestantes = TEMPO_VISAO;
     cicloAtivo = true;
+    pausado = false;
 
     await carregarDados();
 
@@ -2532,9 +2534,47 @@ export async function iniciar() {
 }
 
 
+export function avancarSubvisao() {
+
+    if (!cicloAtivo) return;
+
+    avancarVisao();
+
+}
+
+
+export function voltarSubvisao() {
+
+    if (
+        !cicloAtivo ||
+        indiceVisaoAtual <= 0
+    ) {
+        return;
+    }
+
+    indiceVisaoAtual--;
+    segundosRestantes = TEMPO_VISAO;
+
+    trocarVisaoComTransicao();
+    atualizarContador();
+
+}
+
+
+export function alternarPausa() {
+
+    if (!cicloAtivo) return;
+
+    pausado = !pausado;
+    atualizarContador();
+
+}
+
+
 export function destruir() {
 
     cicloAtivo = false;
+    pausado = false;
     pararRotacao();
 
     if (temporizadorAtualizacao) {
